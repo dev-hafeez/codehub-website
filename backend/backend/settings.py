@@ -75,8 +75,14 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'codehub_db',
+        'USER': 'backend',
+        'PASSWORD': 'backend-test-pass',
+        'HOST': '0.tcp.ap.ngrok.io',
+        'PORT': '17868', # This will change if the host machine shuts down.
+                         # Currently, there is no easy way to automatically change this
+                         # without spending money.
     }
 }
 
