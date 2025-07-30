@@ -18,7 +18,7 @@ const MissionSection = () => {
               Our mission is to empower students through technology, innovation, and collaboration. We aim to create a dynamic learning environment where students can enhance their skills, share ideas, and grow as future leaders in tech. Through workshops, competitions, and community events, we strive to inspire and uplift the next generation of computing professionals.
             </p>
             <div className="text-center">
-              <button type="button" className="btn learn-more-btn">Learn More</button>
+              <button type="button" className="btn learn-more-btn">Learn more →</button>
             </div>
           </div>
         </div>
