@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+.heading {
+  font-family: Inter;
+  font-weight: 700;
+  font-style: Bold;
+  line-height: 100%;
+  letter-spacing: -2%;
+  color: rgba(12, 65, 130, 1);
+}
+
+.mission-text {
+    margin-top: 10px;
+  font-family: Inter;
+  font-weight: 400;
+  font-style: Regular;
+  line-height: 30px;
+  letter-spacing: -2%;
+  text-align: center;
+  color: rgba(12, 65, 130, 1);
+}
+
+.learn-more-btn {
+  opacity: 1;
+  margin-top: 10px;
+  padding-top: 15px;
+  padding-right: 40px;
+  padding-bottom: 15px;
+  padding-left: 40px;
+  border-radius: 8px;
+  color: white;
+  background-color: rgba(12, 65, 130, 1);
+}
