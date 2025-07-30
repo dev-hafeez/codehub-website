@@ -1,0 +1,100 @@
+.events-section {
+  position: relative;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+/* Background Ellipse */
+.ellipse-bg {
+  position: absolute;
+  top: -100px;
+  left: -200px;
+  width: 650px;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Events Heading Image */
+.heading-img {
+  max-width: 160px;
+  margin-bottom: 2rem;
+}
+
+/* Scrollable Card Container */
+.event-cards-scroll {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 2rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.event-cards-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.event-cards-scroll::-webkit-scrollbar-thumb {
+  background: #0c4182;
+  border-radius: 8px;
+}
+
+/* Card Wrapper */
+.event-card-wrapper {
+  flex: 0 0 auto;
+  width: 380px;
+}
+
+/* Event Card Style */
+.event-card {
+  min-height: 620px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+}
+
+.event-card .card-body {
+  padding: 1.5rem;
+}
+
+.event-card .card-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .event-card-wrapper {
+    width: 320px;
+  }
+
+  .event-card {
+    min-height: 580px;
+  }
+
+  .heading-img {
+    max-width: 120px;
+  }
+}
+
+@media (max-width: 576px) {
+  .event-card-wrapper {
+    width: 280px;
+  }
+
+  .event-card {
+    min-height: 500px;
+  }
+
+  .heading-img {
+    max-width: 100px;
+  }
+
+  .ellipse-bg {
+    display: none;
+  }
+}
