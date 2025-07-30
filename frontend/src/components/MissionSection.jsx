@@ -6,7 +6,7 @@ import Waves from '../../assets/waves.png';
 
 const MissionSection = () => {
   return (
-    <div className="mission-container border">
+    <div className="mission-container">
       
       <div className="scaled-wrapper">
         <img src={Waves} alt="Waves" className="waves-image" />
