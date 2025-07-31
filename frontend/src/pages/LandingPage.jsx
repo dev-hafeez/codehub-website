@@ -7,9 +7,6 @@ const LandingPage = () => {
   return (
     <div> 
       
-      <EventsSection />
-    
-      <Footer />
     </div>
   );
 };

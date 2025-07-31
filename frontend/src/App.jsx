@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
 import LandingPage from './pages/LandingPage.jsx';
 import './App.css'
 import { Button, Container, Alert } from 'react-bootstrap';
