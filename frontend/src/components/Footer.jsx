@@ -73,8 +73,4 @@ const Footer = () => {
   );
 };
 
-<<<<<<< HEAD
 export default Footer;
-=======
-export default Footer;
->>>>>>> 70e156c (Fixed folders)

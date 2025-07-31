@@ -71,8 +71,4 @@ const EventSection = () => {
   );
 };
 
-<<<<<<< HEAD
 export default EventSection;
-=======
-export default EventSection;
->>>>>>> 70e156c (Fixed folders)
