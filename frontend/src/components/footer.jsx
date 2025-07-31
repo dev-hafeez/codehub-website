@@ -1,5 +1,5 @@
 import React from "react";
-import '../../css/footer.css';
+import '../styles/footer.css';
 import ACMlogo from "../assets/ACMlogo.png";
 
 
