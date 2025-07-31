@@ -1,25 +1,10 @@
 .hero-section {
-    background: linear-gradient(270deg, #1E4F91, #2a5ea8, #1E4F91);
-    background-size: 600% 600%;
-    animation: gradientShift 10s ease infinite;
+    background-color: #2d66ad;
 }
 
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
 
 .hero-box {
-     background-color: #6699CC; /* Soft, neutral gray */
+     background-color: #80a4cc;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 

@@ -1,6 +1,6 @@
 import React from 'react'
-import NavbarComponent from '../Navbar'
-import Hero from '../Hero'
+import NavbarComponent from '../components/Navbar'
+import Hero from '../components/Hero'
 
 const LandingPage = () => {
   return (
