@@ -1,15 +1,16 @@
-import React from 'react'
-import MissionSection from '../components/MissionSection'
-import ClubsSection from '../components/ClubsSection'
+import React from 'react';
+import EventsSection from '../components/EventSection';
+import Footer from '../components/footer'; 
+
 
 const LandingPage = () => {
   return (
-    // <div>LandingPage</div>
-    
-      // <MissionSection />
-      <ClubsSection />
+    <div> 
+      
+      
+    </div>
+  );
+};
 
-  )
-}
+export default LandingPage;
 
-export default LandingPage
