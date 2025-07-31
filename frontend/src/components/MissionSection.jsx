@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './MissionsSection.css';
+import '../styles/MissionsSection.css';
 import Brush from '../../assets/brush.png';
 import Waves from '../../assets/waves.png';
 
