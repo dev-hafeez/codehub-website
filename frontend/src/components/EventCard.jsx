@@ -1,5 +1,5 @@
 
-import './EventSection.css';
+import '../styles/EventSection.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
