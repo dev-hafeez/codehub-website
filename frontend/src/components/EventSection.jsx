@@ -1,7 +1,7 @@
 import React from 'react';
 import eventImage from '../assets/events.jpg';
 import ellipseImage from '../assets/ellipse.png';
-import '../../css/EventSection.css';
+import '../styles/EventSection.css';
 
 
 const events = [
