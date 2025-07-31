@@ -31,9 +31,8 @@
   text-align: center;
   margin-bottom: 6rem;
   text-shadow: 
-    0 0 5px #4792ed, 
-    0 0 10px #4792ed, 
-    0 0 15px #4792ed;
+      0 0 4px rgba(12, 65, 130, 0.4),
+    0 0 6px rgba(12, 65, 130, 0.3);
 }
 
 /* Scrollable Card Container */

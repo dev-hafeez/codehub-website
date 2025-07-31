@@ -24,8 +24,4 @@ EventCard.propTypes = {
   description: PropTypes.string.isRequired,
 };
 
-<<<<<<< HEAD
 export default EventCard;
-=======
-export default EventCard;
->>>>>>> 70e156c (Fixed folders)
