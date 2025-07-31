@@ -16,6 +16,12 @@ body {
   text-align: center;
 }
 
+.scaled-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
 .heading {
   font-size: 3rem;
   font-family: 'Inter', sans-serif;
@@ -38,7 +44,7 @@ body {
 }
 
 
-.learn-more-btn {
+.missions-learn-more-btn {
   margin-top: 1rem;
   padding: 15px 40px;
   border-radius: 8px;
@@ -46,6 +52,13 @@ body {
   background-color: rgba(12, 65, 130, 1);
   font-size: 1rem;
   border: none;
+  cursor: pointer;
+}
+
+.missions-learn-more-btn:hover {
+  background-color: #092f60; 
+  color: #f9f9f9;
+  transform: translateY(-2px); 
   cursor: pointer;
 }
 
@@ -62,11 +75,12 @@ body {
 
  .waves-image {
   position: absolute;
+  overflow: visible;
   top: -70px;
   left: 0;
   width: 30vw; 
   height: auto;
-  z-index: -2;
+  z-index: -1;
   max-width: none;
   min-width: 150px; 
 }
@@ -90,7 +104,7 @@ body {
     z-index: -2;
     position: absolute;
   }
-  .learn-more-btn {
+  .missions-learn-more-btn {
     padding: 12px 30px;
 
   }
