@@ -1,6 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './ClubsSection.css';
+import '../styles/ClubsSection.css'; 
 
 const ClubsSection = () => {
   return (
