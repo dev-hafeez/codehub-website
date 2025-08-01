@@ -1,15 +1,18 @@
-import React from 'react'
-import NavbarComponent from '../components/Navbar'
-import Hero from '../components/Hero'
+
+import React from 'react';
+import EventsSection from '../components/EventSection';
+import Footer from '../components/footer'; 
+
 
 const LandingPage = () => {
   return (
-    <>
-     <NavbarComponent/>
-     <Hero/>
-     
-    </>
-  )
-}
+    <div> 
+      
+      
+    </div>
+  );
+};
 
-export default LandingPage
+export default LandingPage;
+
+
