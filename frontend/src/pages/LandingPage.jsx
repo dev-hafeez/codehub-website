@@ -10,6 +10,7 @@ import Hero from '../components/Hero.jsx';
 import ClubsSection from '../components/ClubsSection.jsx';
 import MissionSection from '../components/MissionSection.jsx';
 import "../styles/LandingPage.css";
+import BlogOwner from '../components/blogowner.jsx';
 
 const LandingPage = () => {
   return (
@@ -18,12 +19,10 @@ const LandingPage = () => {
        <div className="landing-page">
       <NavbarComponent />
       <main className="overflow-hidden"> {/* Prevent overflow */}
-        <Hero />
-       <Achievements/>
-       <ClubsSection/>
-      <Blog/>
-      <EventsSection/>
-      <MissionSection/>
+      {/* <Hero/> */}
+     {/* <ClubsSection/> */}
+      <BlogOwner/>
+
       </main>
       <Footer />
     </div>
