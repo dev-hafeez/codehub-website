@@ -1,7 +1,11 @@
 import React from 'react'
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
 import "./Navbar.css";
+=======
+import "../styles/Navbar.css";
+>>>>>>> feature/achievements-blog
 
 const NavLinks = () => {
   return (

@@ -5,9 +5,14 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  background: #f9f9f9;
+  background: #ffffff;
   font-family: 'Inter', sans-serif;
   overflow: visible;
+  background-image: url('../assets/half.png');
+  background-repeat: no-repeat;
+  background-size: 37%;
+  background-position: 0% 0% ;
+  
 }
 
 /* Center circle */
@@ -42,7 +47,8 @@
   text-align: center;
   z-index: 1;
 }
- .club-box h4 {
+
+.club-box h4 {
   font-weight: 700;
 }
 
@@ -76,16 +82,14 @@
 /* Connectors */
 .connector {
   position: absolute;
-  
   border-right: 4px solid black;
   border-bottom: 4px solid black;
   border-bottom-right-radius: 60px;
   z-index: -1;
-  
 }
 
 .connector-top-left {
-   width: 150px;
+  width: 150px;
   height: 300px;
   transform: translateX(90%) translateY(20%) rotate(90deg);
 }
@@ -94,24 +98,22 @@
   width: 300px;
   height: 130px;
   transform: translateX(-60%) translateY(130%);
-
 }
 
 .connector-bottom-left {
-   width: 450px;
+  width: 450px;
   height: 150px;
   transform: translateX(30%) translateY(-110%) rotate(180deg);
 }
 
 .connector-bottom-right {
-    width: 170px;
+  width: 170px;
   height: 450px;
   transform: translateX(-130%) translateY(-72%) rotate(270deg);
 }
 
 .connector-bottom {
   position: absolute;
-  
   border-right: 4px solid black;
   z-index: -1;
   height: 150px;
@@ -126,7 +128,6 @@
   z-index: 0;
 }
 
-
 .bottom-left-triangle {
   bottom: 50px;
   left: 150px;
@@ -138,22 +139,18 @@
 }
 
 .top-right-triangle {
-
-   
-
-position: absolute;
-width: 360px;
-height: 159px;
-
-background: #0C4182;
-opacity: 0.8;
-border-radius: 50px 50px 0px 0px;
-transform: rotate(26.87deg);
-
+  position: absolute;
+  width: 360px;
+  height: 159px;
+  background: #0C4182;
+  opacity: 0.8;
+  border-radius: 50px 50px 0px 0px;
+  transform: rotate(26.87deg);
   top: 250px;
   right: -200px;
 }
 
+/* Learn More Button */
 .learn-more-btn {
   position: absolute;
   bottom: 20px;
@@ -163,14 +160,18 @@ transform: rotate(26.87deg);
   border-radius: 6px;
   padding: 10px 25px;
   font-size: 0.9rem;
-
-   
 }
+
 .learn-more-btn:hover {
-  background-color: #092f60; 
+  background-color: #092f60;
   color: #f9f9f9;
-  transform: translateY(-2px); 
+  transform: translateY(-2px);
   cursor: pointer;
+}
+
+/* Wrapper for club boxes - added for responsiveness */
+.club-boxes-wrapper {
+  display: contents;
 }
 
 /* Medium screens: tablets */
@@ -180,7 +181,8 @@ transform: rotate(26.87deg);
     height: 300px;
     font-size: 4rem;
   }
-  .decor{
+
+  .decor {
     left: 50%;
     transform: translateX(-20%) translateY(100%);
     bottom: 20%;
@@ -197,7 +199,7 @@ transform: rotate(26.87deg);
     font-size: 1.5rem;
   }
 
-    /* Hide connectors and background shapes */
+  /* Hide connectors and background shapes */
   .connector-top-left,
   .connector-top-right,
   .connector-bottom-left,
@@ -206,32 +208,50 @@ transform: rotate(26.87deg);
     display: none;
   }
 }
-
-/* Small screens: phones */
 @media (max-width: 768px) {
+  .clubs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    height: auto;
+    background-image:none;
+
+  }
+
   .center-circle {
+    position: static;
+    transform: none;
     width: 180px;
     height: 180px;
     font-size: 2.2rem;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.6);
   }
+
+  .club-boxes-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+
   .club-box {
-    width: 150px;
+    position: static;
+     width: 90%;             /* Use relative width for flexibility */
+    max-width: 320px; 
     font-size: 0.7rem;
     border-radius: 30px;
     padding: 6px 8px;
-    margin-top: -20px;
-    margin-bottom: 10px;
+    margin: 0;
+    transform: none !important;  /* <--- This line fixes leftover transforms */
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    top: auto !important;
   }
 
-  .graphics{
-    transform: translateY(-50%) translateX(-20%);
-  }
-  .media-marketing{
-    transform: translateY(-20%) translateX(20%);
-  }
-  .decor{
-    transform: translateX(-10%) translateY(80%);
-  }
   .club-box h4 {
     font-size: 0.9rem;
   }
@@ -241,12 +261,15 @@ transform: rotate(26.87deg);
   .connector-top-right,
   .connector-bottom-left,
   .connector-bottom-right,
-  .connector-bottom {
+  .connector-bottom,
+  .bg-shape {
     display: none;
   }
 
   .learn-more-btn {
+    position: static;
     font-size: 0.75rem;
     padding: 6px 16px;
+    margin-top: 20px;
   }
 }
