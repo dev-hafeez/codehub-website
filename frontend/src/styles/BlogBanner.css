@@ -1,0 +1,41 @@
+.blog-banner {
+  height: 450px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  margin: 3rem; /* increase margin on all sides */
+}
+
+.blog-banner .overlay {
+  background: rgba(0, 0, 0, 0.4); 
+  z-index: 1;
+}
+
+.blog-title {
+  font-size: 1.75rem;
+  max-width: 800px;
+  line-height: 1.4;
+}
+
+.blog-meta {
+  font-size: 0.95rem;
+  color: #e0e0e0;
+}
+
+.blog-meta .dot {
+  font-size: 1.2rem;
+  margin: 0 0.5rem;
+}
+
+.author-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.blog-meta span + span {
+  margin-left: 2rem;
+}
