@@ -1,13 +1,10 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/MissionsSection.css';
-<<<<<<< HEAD
-import Brush from '../../assets/brush.png';
-import Waves from '../../assets/waves.png';
-=======
+
 import Brush from '../assets/brush.png';
 import Waves from '../assets/waves.png';
->>>>>>> feature/achievements-blog
+
 
 const MissionSection = () => {
   return (
