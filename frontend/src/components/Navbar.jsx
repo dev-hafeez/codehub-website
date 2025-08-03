@@ -46,7 +46,7 @@ const Navbar = () => {
         />
 
         <BootstrapNavbar.Collapse id="navbar-nav" className="w-100 mt-2 mt-lg-0">
-          {/* Center Nav Links */}
+          
           <Nav className="nav-links d-flex flex-lg-row flex-column align-items-lg-center align-items-center mx-auto">
             <Nav.Link as={Link} to="/achievement" className="text-white fw-semibold">
               Achievement

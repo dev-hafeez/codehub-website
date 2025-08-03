@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BsSun, BsMoon } from "react-icons/bs"; // ✅ Bootstrap-style icons
-import "../styles/Navbar.css"; // Assuming styles are already defined
+import "../styles/Navbar.css"; 
 
 const ThemeToggle = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
