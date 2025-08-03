@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BsSun, BsMoon } from "react-icons/bs"; // ✅ Bootstrap-style icons
+import { BsSun, BsMoon } from "react-icons/bs"; 
 import "../styles/Navbar.css"; 
 
 const ThemeToggle = () => {

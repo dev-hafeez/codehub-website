@@ -11,7 +11,7 @@ const Navbar = () => {
   return (
     <BootstrapNavbar expand="lg" className="custom-navbar shadow-sm">
       <Container fluid className="px-4">
-        {/* Desktop Logo + Text */}
+        {/* Desktop Logo  */}
         <BootstrapNavbar.Brand as={Link} to="/" className="d-none d-lg-flex align-items-center text-white fw-bold">
           <img src="/acm-comsats-wah-chapter.png" alt="ACM Logo" className="navbar-logo" />
           <span className="ms-2">Acm Cui Wah Chapter</span>
