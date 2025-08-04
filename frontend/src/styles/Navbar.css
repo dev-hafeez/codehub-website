@@ -1,3 +1,139 @@
+
+.custom-navbar {
+  background-color:  #2d66ad;
+  font-family: "Poppins", sans-serif;
+  padding: 10px 0;
+}
+
+/* Logo */
+.navbar-logo {
+  height: 40px;
+}
+
+/* Links */
+.nav-links .nav-link {
+  color: #fff !important;
+  margin: 0 12px;
+  font-weight: 500;
+}
+
+
+
+.search-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666e76;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+
+
+/* Login Button */
+.login-btn {
+  background-color: #ffffff !important;
+  color: #1E4F91 !important;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 14px;
+}
+
+
+/* Pill-shaped background */
+.toggle-switch {
+  width: 50px;
+  height: 26px;
+  background-color: #e0e0e0; /* Grayish background */
+  border-radius: 26px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+/* Inner circle */
+.toggle-circle {
+  width: 22px;
+  height: 22px;
+  background-color: #ffffff; /* White circle */
+  color: #000000; /* Black icon */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  font-size: 14px;
+}
+
+/* Slide to right on dark mode */
+.toggle-switch.dark .toggle-circle {
+  transform: translateX(24px);
+}
+
+/* Dark Mode Body */
+body.dark-mode {
+  background-color: #131A2A; /* Main body */
+  color: #ffffff;
+}
+
+/* Navbar in dark mode */
+body.dark-mode .custom-navbar {
+  background-color: #0D1224 !important; /* Navbar */
+}
+
+/* Nav links */
+body.dark-mode .nav-links .nav-link {
+  color: #ffffff !important;
+}
+
+
+
+/* Search input */
+body.dark-mode .search-input {
+  background-color: #1F2B3D;
+  color: #ffffff;
+  border: 1px solid #3a4a63;
+}
+
+body.dark-mode .search-input::placeholder {
+  color: #bbbbbb;
+}
+
+/* Login button */
+body.dark-mode .login-btn {
+  background-color: #2C354B !important;
+  color: #ffffff !important;
+}
+
+/* Toggle Switch */
+body.dark-mode .toggle-switch {
+  background-color: #3b4c66;
+}
+
+body.dark-mode .toggle-circle {
+  background-color: #ffffff;
+  color: #1E4F91;
+}
+@media (max-width: 991px) {
+  .search-container-mobile {
+    flex: 1;
+    margin-right: 12px;
+  }
+
+  .search-container-mobile .search-input {
+    width: 100%;
+  }
+}
+
+
+
+
+
+
 .navbar-animate {
   opacity: 0;
   transform: translateY(-20px);
@@ -101,5 +237,4 @@
     font-size: 0.95rem;
   }
 }
-
 

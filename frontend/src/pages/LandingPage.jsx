@@ -16,6 +16,7 @@ import BlogOwner from '../components/blogowner.jsx';
 import BlogBanner from '../components/BlogBanner.jsx';
 
 
+
 const LandingPage = () => {
   return (
     <div> 
@@ -24,13 +25,12 @@ const LandingPage = () => {
       <NavbarComponent />
       <main className="overflow-hidden"> {/* Prevent overflow */}
 
-      {/* <Hero/> */}
-     {/* <ClubsSection/> */}
-      <BlogOwner/>
-
-
-        <BlogBanner/>
-      
+        <Hero />
+       <Achievements/>
+       <ClubsSection/>
+      <Blog/>
+      <EventsSection/>
+      <MissionSection/>
 
       </main>
       <Footer />
