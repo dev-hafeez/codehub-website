@@ -5,7 +5,8 @@
   border-radius: 8px;
   overflow: hidden;
   position: relative;
-  margin: 3rem; /* increase margin on all sides */
+
+  
 }
 
 .blog-banner .overlay {
@@ -38,4 +39,44 @@
 
 .blog-meta span + span {
   margin-left: 2rem;
+}
+
+@media (max-width: 576px) {
+  .blog-banner {
+    height: 300px;
+  }
+
+  .blog-banner .container {
+    padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .blog-title {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .blog-meta {
+    font-size: 0.8rem;
+  }
+
+
+  .blog-meta span + span {
+    margin-left: 1rem;
+  }
+
+  .blog-banner .container {
+    padding: 1rem;
+  }
+
+ 
+  .blog-title {
+    margin-bottom: 1rem;
+  }
+
+  
+  .blog-meta {
+    gap: 1rem;
+  }
 }

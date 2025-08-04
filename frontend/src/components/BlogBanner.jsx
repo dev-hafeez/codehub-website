@@ -6,7 +6,8 @@ import profileImg from '../assets/profile-nill.png';
 const BlogBanner = () => {
   return (
     <div
-      className="blog-banner position-relative text-white d-flex align-items-end m-4"
+
+      className="blog-banner position-relative text-white d-flex align-items-end  mx-5"
       style={{
         backgroundImage: `url(${bgImage})`,
       }}
@@ -30,4 +31,6 @@ const BlogBanner = () => {
   );
 };
 
+
 export default BlogBanner;
+

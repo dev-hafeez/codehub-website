@@ -2,10 +2,13 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/BlogCard.css";
 
-const BlogCard = ({ title, author, date, tag, image, authorImg }) => {
+import { Link } from "react-router-dom";
+const BlogCard = ({id, title, author, date, tag, image, authorImg }) => {
   return (
+    <Link to={`/blog/${id}`} style={{ textDecoration: "none" }}>
     <div className="blogCard-wrapper">
-      <div className="blogCard-container border container">
+      <div className="blogCard-container border container " >
+
         <div className="blog-img-container py-3">
           <img src={image} alt="CarImage" className="blog-image img-fluid" />
         </div>
@@ -28,7 +31,10 @@ const BlogCard = ({ title, author, date, tag, image, authorImg }) => {
         </div>
       </div>
     </div>
+
+    </Link>
   );
 };
 
 export default BlogCard;
+

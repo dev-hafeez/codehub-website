@@ -18,7 +18,7 @@ const Navbar = () => {
         </BootstrapNavbar.Brand>
 
         {/* Mobile Search Bar (replaces brand) */}
-        <div className="d-flex d-lg-none flex-grow-1 me-2">
+        <div className="d-flex d-lg-none flex-grow-1 me-2 search-bar" style={{width:'50px'}}>
           <Form className="w-100 position-relative">
             <Form.Control
               type="search"
@@ -61,7 +61,7 @@ const Navbar = () => {
               Contact us
             </Nav.Link>
 
-            {/* ✅ Login Button in Collapse for Mobile */}
+            {/*  Login Button in Collapse for Mobile */}
             <div className="d-flex d-lg-none mt-3 justify-content-center">
               <Link to="/login" className="btn login-btn fw-semibold">
                 Login

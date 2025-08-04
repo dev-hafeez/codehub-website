@@ -4,6 +4,7 @@
   border-radius: 2%;
   overflow: hidden;
   height: 430px;
+  
 }
 
 .blog-img-container {
@@ -62,4 +63,10 @@
   font-weight: 500;
   line-height: 20px;
   color: #97989f;
+}
+@media(max-width:576px) {
+    .blogCard-container{
+        height:100%;
+    }
+    
 }

@@ -1,0 +1,25 @@
+.article-container {
+  height: 100vh;
+  padding: 0;
+}
+
+.sidebar-col {
+   background-color: #3470BA; 
+  
+  /* The linear gradient */
+  background-image: linear-gradient(
+    to bottom, 
+    #2D66AD, 
+    #4A90E2 70%, 
+    #3470BA 92.58%
+  );
+}
+
+.editor-col {
+  background-color: #ffffff; /* White background */
+  overflow-y: auto; /* Enable scrolling for long articles */
+}
+
+.action-panel-col {
+  background-color: #f7f9fc; /* Light gray background */
+}
