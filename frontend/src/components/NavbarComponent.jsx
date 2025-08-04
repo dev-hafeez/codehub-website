@@ -5,7 +5,7 @@ import NavLinks from "./NavLinks";
 
 import "../styles/NavbarComponent.css";
 
-import "../styles/Navbar.css";
+
 
 
 const NavbarComponent = () => {
