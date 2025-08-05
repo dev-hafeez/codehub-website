@@ -16,8 +16,8 @@ class SignupView(APIView):
                 roll_no=data.get("roll_no"),
                 email=data.get("email"),
                 password=data.get("password"),
-                designation=data.get("designation", "General Member"),
-                club=data.get("club", "CodeHub")
+                designation=data.get("designation"),
+                club=data.get("club")
             )
 
             return Response({
