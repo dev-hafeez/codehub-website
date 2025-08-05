@@ -31,9 +31,9 @@ function ActionPanel() {
         <Card.Body className="d-flex flex-column align-items-center">
           <div className="placeholder-image"><FaRegImage  className="image-icon"/></div>
         </Card.Body>
-        <button  className="add-cover-btn mx-auto mt-3">Add Cover</button>  
+        <Button  className="add-cover-btn mx-auto mt-3 mb-1">Add Cover</Button>  
       </Card>
-
+<hr></hr>
       <Card className="tags-card mb-3">
         <Card.Body>
           <div className="placeholder-tags">Tags add</div>
@@ -41,7 +41,7 @@ function ActionPanel() {
       </Card>
       <div className="d-flex flex-column " style={{marginLeft:"30%"}}>
         <Button variant="primary" size="lg" className="publish-btn w-50 mb-2 " onClick={handlePublish}>Publish</Button>
-      <Button variant="outline-secondary" size="lg" className="draft-btn w-50 " style={{fontSize:"16px"}} onClick={handleAddToDraft}>Add to Draft</Button>
+      <Button variant="outline-secondary" size="lg" className="draft-btn w-50 "  onClick={handleAddToDraft}>Add to Draft</Button>
 
       </div>
       

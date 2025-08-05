@@ -16,7 +16,7 @@ const BlogCard = ({id, title, author, date, tag, image, authorImg }) => {
           <span className="tag-text">{tag}</span>
         </div>
         <div className="blog-title pt-2">
-          <h2 className="blog-title-text">{title}</h2>
+          <h2 className="blog-title-text" style={{fontSize:"1rem"}}>{title}</h2>
         </div>
         <div className="d-flex pt-3 flex-row align-items-center justify-content-start bottom">
           <span className="d-flex blog-author-pfp">
@@ -26,8 +26,8 @@ const BlogCard = ({id, title, author, date, tag, image, authorImg }) => {
               className="author-image img-fluid"
             />
           </span>
-          <span className="d-flex pt-1 ps-3 blog-author-name">{author}</span>
-          <span className="d-flex pt-1 ps-3 blog-date">{date}</span>
+          <span className="d-flex pt-1 ps-3 blog-author-name" style={{fontSize:"0.8rem"}}>{author}</span>
+          <span className="d-flex pt-1 ps-3 blog-date" style={{fontSize:"0.8rem"}}>{date}</span>
         </div>
       </div>
     </div>

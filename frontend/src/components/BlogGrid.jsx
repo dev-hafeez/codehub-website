@@ -125,7 +125,7 @@ const BlogGrid = () => {
     <Container className="my-4">
       <Row className="justify-content-center g-4 ">
         {blogs.map((blog, index) => (
-          <Col key={index} xs={10} sm={6} md={4} lg={4} xl={3}>
+          <Col key={index} xs={11} sm={6} md={4} lg={4} xl={3}>
             <BlogCard
             id={blog.id}
               title={blog.title}

@@ -3,8 +3,20 @@
 }
 
 .preview-btn {
-  background-color: #55aaff;
-  border-color: #55aaff;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A font similar to the one in the image */
+  font-size: 18px;
+  font-weight: 600; /* Semi-bold */
+  color: #1a1a1a; /* Dark gray for the text */
+
+  background-color: #ffffff; /* White background */
+  border-radius: 50px; /* Highly rounded corners */
+ 
+  width:30%;
+  border: 2px solid transparent;
+  background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .cover-card {
@@ -23,15 +35,14 @@
 }
 
 .add-cover-btn {
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A font similar to the one in the image */
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
   font-size: 18px;
-  font-weight: 600; /* Semi-bold */
-  color: #1a1a1a; /* Dark gray for the text */
-  padding: 7px 20px;
-  background-color: #ffffff; /* White background */
-  border-radius: 50px; /* Highly rounded corners */
- 
-  width:50%;
+  font-weight: 600; 
+  color: #1a1a1a; 
+  padding:4px 0 4px 0;
+  background-color: #ffffff; 
+  border-radius: 50px; 
+  width:40%;
   border: 2px solid transparent;
   background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
   background-origin: border-box;
@@ -43,7 +54,7 @@
 }
 .add-cover-button:hover {
   box-shadow: 0 6px 15px rgba(29, 29, 29, 0.25);
-  transform: translateY(-2px);
+  
 }
 
 .tags-card {
@@ -77,7 +88,7 @@
 }
 .draft-btn{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A font similar to the one in the image */
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600; /* Semi-bold */
   color: #1a1a1a; /* Dark gray for the text */
   padding: 7px 20px;
@@ -90,8 +101,6 @@
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15); /* Soft, subtle shadow */
 }
 .sidebar-select {
- 
-  
   color: #333;
   padding: 10px;
   -webkit-appearance: none;
@@ -101,4 +110,16 @@
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 16px 12px;
+}
+@media(max-width:768px){
+  .preview-btn{
+    font-size:14px;
+    margin-right:3px;;
+  }
+  .add-cover-btn{
+    font-size: 14px;;
+  }
+  .publish-btn{
+    font-size: 14px;
+  }
 }

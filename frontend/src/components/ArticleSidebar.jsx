@@ -20,7 +20,7 @@ const ArticleSidebar = () => {
       </div>
 
  
-      <InputGroup className="search-bar my-4 ">
+      <InputGroup className="search-bar my-2  ">
         <InputGroup.Text>
           <FiSearch />
         </InputGroup.Text>
@@ -30,8 +30,9 @@ const ArticleSidebar = () => {
       <hr className="sidebar-divider" />
 
       {/* Category Section */}
+       <h3 className="category-title">CATEGORY</h3>
       <div className="category-section">
-        <h3 className="category-title">CATEGORY</h3>
+       
         <ul className="category-list">
           {subheadings.map((item, index) => (
             <li key={index}>
