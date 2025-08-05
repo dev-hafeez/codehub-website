@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "api",
     'rest_framework',
-
 ]
 
 MIDDLEWARE = [
@@ -83,7 +82,7 @@ DATABASES = {
         'USER': 'backend',
         'PASSWORD': 'backend-test-pass',
         'HOST': '0.tcp.ap.ngrok.io',
-        'PORT': '11978', # This will change if the host machine shuts down.
+        'PORT': '17868', # This will change if the host machine shuts down.
                          # Currently, there is no easy way to automatically change this
                          # without spending money.
     }
