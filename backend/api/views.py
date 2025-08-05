@@ -16,8 +16,8 @@ class SignupView(APIView):
                 roll_no=data.get("roll_no"),
                 email=data.get("email"),
                 password=data.get("password"),
-                designation=data.get("designation"),
-                club=data.get("club")
+                designation=data.get("designation", "General Member"),
+                club=data.get("club", "CodeHub")
             )
 
             return Response({
@@ -55,17 +55,21 @@ class LoginView(APIView):
                 return Response({
                     "status": "success",
                     "message": "Login successful",
-                    "student_id": student.id
-                })
+                    "data": {
+                        "student_id": student.id
+                    }
+                },status=status.HTTP_200_OK)
             else:
                 return Response({
                     "status": "error",
-                    "message": "Invalid credentials"
+                    "message": "Invalid credentials",
+                    "data": None
                 }, status=status.HTTP_401_UNAUTHORIZED)
 
         except Student.DoesNotExist:
             return Response({
                 "status": "error",
-                "message": "Student not found"
+                "message": "Student not found",
+                "data": None
             },
             status=status.HTTP_404_NOT_FOUND)
