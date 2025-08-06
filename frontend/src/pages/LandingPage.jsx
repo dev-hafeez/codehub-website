@@ -14,6 +14,7 @@ import BlogBanner from '../components/BlogBanner.jsx';
 import BlogGrid from '../components/BlogGrid.jsx';
 import BlogCard from '../components/BlogCard.jsx';
 import BlogOwner from '../components/BlogOwner.jsx';
+import Regform from '../components/Regform.jsx'; 
 
 
 
@@ -26,14 +27,9 @@ const LandingPage = () => {
 
        <div className="landing-page">
       <NavbarComponent />
-      <main className="overflow-hidden"> {/* Prevent overflow */}
+      <main className="overflow-hidden"> 
 
-        <Hero />
-       <Achievements/>
-       <ClubsSection/>
-      <Blog/>
-      <EventsSection/>
-      <MissionSection/>
+      <Regform/>
 
       </main>
       <Footer />
