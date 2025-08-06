@@ -7,6 +7,7 @@ import BlogListingPage from './pages/BlogListingPage.jsx';
 import SinglePostPage from './pages/SinglePostPage.jsx'
 import { sampleBlog } from "./SampleData.js";
 import ArticlePage from './pages/ArticlePage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
 
 
 function App() { 
@@ -18,6 +19,7 @@ function App() {
          <Route path="/blogs" element={<BlogListingPage/>} />
          <Route path="/blog/:id" element={<SinglePostPage/>}/>
          <Route path="/article" element={<ArticlePage/>}/>
+         <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </Router>
 
