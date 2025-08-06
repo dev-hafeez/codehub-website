@@ -1,6 +1,7 @@
 import React from "react";
 import ACMlogo from "../assets/ACMlogo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../styles/Dashboard.css";
 
 const Dashboard = () => {
   return (
