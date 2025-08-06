@@ -8,7 +8,7 @@ import "../styles/Navbar.css";
 const NavLinks = () => {
   return (
     <>
-        <Nav.Link as={Link} to="/blog" className="fw-semibold mx-2 text-dark">
+        <Nav.Link as={Link} to="/blogs" className="fw-semibold mx-2 text-dark">
               Blog
             </Nav.Link>
             <Nav.Link as={Link} to="/achievement" className="fw-semibold mx-2 text-dark">
