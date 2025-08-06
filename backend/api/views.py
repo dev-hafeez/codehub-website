@@ -12,7 +12,8 @@ class SignupView(APIView):
 
         try:
             student = Student.objects.create(
-                name=data.get("name"),
+                first_name=data.get("first_name"),
+                last_name=data.get("last_name"),
                 roll_no=data.get("roll_no"),
                 email=data.get("email"),
                 password=data.get("password"),
