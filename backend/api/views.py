@@ -16,8 +16,8 @@ class SignupView(APIView):
                 roll_no=data.get("roll_no"),
                 email=data.get("email"),
                 password=data.get("password"),
-                designation=data.get("designation", "General Member"),
-                club=data.get("club", "CodeHub")
+                designation=data.get("designation"),
+                club=data.get("club")
             )
 
             return Response({
@@ -35,7 +35,8 @@ class SignupView(APIView):
         except IntegrityError:
             return Response({
                 "status": "error",
-                "message": "Email or roll number already exists"
+                "message": "Email or roll number already exists",
+                "data": None
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
