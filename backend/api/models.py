@@ -29,18 +29,6 @@ class Student(models.Model):
     club = models.CharField(max_length=100)
 
 
-class Lead(models.Model):
-    """
-    Model representing a lead. Inherits from Student using OneToOne relationship.
-    """
-    student_member = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='lead')
-
-
-class Admin(models.Model):
-    """
-    Model representing an admin. Inherits from User using OneToOne relationship.
-    """
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='admin')
 
 # class Blog(models.Model):
 #     """
