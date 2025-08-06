@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&family=Rubik+Marker+Hatch&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
+.dashboard-container{
+    height: 60vh;
+}
 .acm-branding{
     font-family: Instrument Sans, sans-serif;
     font-size: 1.3rem;
