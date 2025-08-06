@@ -3,14 +3,14 @@
 .acm-branding{
     font-family: Instrument Sans, sans-serif;
     font-size: 1.3rem;
-    width: 270px;
+    width: 300px;
     margin-top: 12px;
     text-align: center;
 }
 
 .acm-logo {
     width: 100px;
-    height: 80px;
+    height: 70px;
 }
 
 .dashboard-action-btn{
@@ -28,7 +28,6 @@
 
 .dashboard-title{
     font-family: Rethink Sans, sans-serif;
-    color: #3B3C3E;
     font-size: 2.5rem;
 }
 
