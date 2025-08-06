@@ -9,27 +9,27 @@ const Dashboard = ({ userRole = "admin" }) => {
       case "admin":
         return (
           <>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Write Article</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Post Article</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Edit Article</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Create Event</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Attendance</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Check Student Details</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Write Article</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Post Article</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Edit Article</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Create Event</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Attendance</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Check Student Details</button>
           </>
         );
       case "lead":
         return (
           <>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Post Article</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Create Event</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Attendance</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Post Article</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Create Event</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Attendance</button>
           </>
         );
       case "student":
         return (
           <>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Write Article</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">Post Article</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Write Article</button>
+            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Post Article</button>
           </>
         );
       default:
@@ -52,14 +52,16 @@ const Dashboard = ({ userRole = "admin" }) => {
 
   return (
     <div className="dashboard-container">
-      {/* <div className="acm-branding-container d-flex mt-4 mx-4">
+            {/* <div className="acm-branding-container d-flex mt-4 mx-4">
         <img src={ACMlogo} alt="ACM Logo" className="acm-logo col-md-1" />
         <p className="acm-branding">Association for Computing Machinery</p>
       </div> */}
       <div className="dashboard-panel d-flex flex-column align-items-center justify-content-center">
-        <div className="dashboard-inner-panel d-flex flex-column align-items-center">
-          <h1 className="dashboard-title mt-5 align-self-center">{getDashboardTitle()}</h1>
-          <div className="dashboard-actions">
+        <div className="dashboard-inner-panel d-flex flex-column align-items-center justify-content-center">
+          <h1 className="dashboard-title mt-5 text-center">{getDashboardTitle()}</h1>
+
+          {/* Centered Button Container with wrapping */}
+          <div className="dashboard-actions d-flex flex-wrap justify-content-center">
             {renderButtons()}
           </div>
         </div>
