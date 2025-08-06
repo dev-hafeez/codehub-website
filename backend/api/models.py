@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import uuid
 
 class UserRole(models.TextChoices):
     STUDENT = "STUDENT", "Student"
@@ -12,7 +11,6 @@ class User(AbstractUser):
     Custom user model extending Django's built-in AbstractUser.
     Includes additional fields and a user role selector.
     """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=10, choices=UserRole.choices)
 
