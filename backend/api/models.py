@@ -42,42 +42,40 @@ class Admin(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='admin')
 
-
-
-class Blog(models.Model):
-    """
-    Model representing a blog post created by users (typically students or leads).
-    """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def displayPreview(self):
-        """
-        Returns a preview (first 100 characters) of the blog content.
-        """
-        return self.content[:100]
-
-class Event(models.Model):
-    """
-    Model representing an event created by an admin.
-    """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=200)
-    date = models.DateTimeField()
-    is_ongoing = models.BooleanField(default=False)
-    created_by = models.ForeignKey(Admin, on_delete=models.SET_NULL, null=True, blank=True)
-
-
-class Attendance(models.Model):
-    """
-    Model representing attendance of a student at an event.
-    """
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
-    marked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='marked_attendances')
+# class Blog(models.Model):
+#     """
+#     Model representing a blog post created by users (typically students or leads).
+#     """
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     title = models.CharField(max_length=200)
+#     content = models.TextField()
+#     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#
+#     def displayPreview(self):
+#         """
+#         Returns a preview (first 100 characters) of the blog content.
+#         """
+#         return self.content[:100]
+#
+# class Event(models.Model):
+#     """
+#     Model representing an event created by an admin.
+#     """
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     name = models.CharField(max_length=200)
+#     date = models.DateTimeField()
+#     is_ongoing = models.BooleanField(default=False)
+#     created_by = models.ForeignKey(Admin, on_delete=models.SET_NULL, null=True, blank=True)
+#
+#
+# class Attendance(models.Model):
+#     """
+#     Model representing attendance of a student at an event.
+#     """
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     event = models.ForeignKey(Event, on_delete=models.CASCADE)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     status = models.BooleanField(default=False)
+#     marked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='marked_attendances')
