@@ -4,9 +4,12 @@ from rest_framework import status
 from .models import Student
 from django.db import IntegrityError
 from django.db.models import Q
+from .permissions import IsLead
 
 
 class SignupView(APIView):
+    permission_classes = [IsLead]
+
     def post(self, request):
         data = request.data
 
@@ -17,6 +20,7 @@ class SignupView(APIView):
                 roll_no=data.get("roll_no"),
                 email=data.get("email"),
                 password=data.get("password"),
+                role=str.lower(data.get("role")),
                 designation=str.lower(data.get("designation")),
                 club=str.lower(data.get("club"))
             )
