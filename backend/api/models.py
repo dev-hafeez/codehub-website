@@ -25,7 +25,7 @@ class Student(models.Model):
     """
     Model representing a student. Inherits from User using OneToOne relationship.
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_member')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
     club = models.CharField(max_length=100)
 
 
