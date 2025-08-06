@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&family=Rubik+Marker+Hatch&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+.dashboard-container{
+    height: 60vh;
+}
+.acm-branding{
+    font-family: Instrument Sans, sans-serif;
+    font-size: 1.3rem;
+    width: 300px;
+    margin-top: 12px;
+    text-align: center;
+}
+
+.acm-logo {
+    width: 100px;
+    height: 70px;
+}
+
+.dashboard-action-btn{
+    background-color: #4A90E2;
+  color: white;
+  border-radius: 20px;
+  padding: 10px 25px;
+  font-size: 0.9rem;
+}
+
+.dashboard-action-btn:hover {
+    background-color: #357ABD;
+    color: white;
+}
+
+.dashboard-title{
+    font-family: Rethink Sans, sans-serif;
+    font-size: 2.5rem;
+}
+
