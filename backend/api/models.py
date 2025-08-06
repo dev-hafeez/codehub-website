@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 class UserRole(models.TextChoices):
-    STUDENT = "STUDENT", "Student"
-    LEAD = "LEAD", "Lead"
-    ADMIN = "ADMIN", "Admin"
+    STUDENT = "STUDENT", "student"
+    LEAD = "LEAD", "lead"
+    ADMIN = "ADMIN", "admin"
 
 class User(AbstractUser):
     """
