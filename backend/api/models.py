@@ -39,9 +39,9 @@ class User(AbstractUser):
         pass
 
 
-class StudentMember(models.Model):
+class Student(models.Model):
     """
-    Model representing a student member. Inherits from User using OneToOne relationship.
+    Model representing a student. Inherits from User using OneToOne relationship.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_member')
     club = models.CharField(max_length=100)
@@ -61,9 +61,9 @@ class StudentMember(models.Model):
 
 class Lead(models.Model):
     """
-    Model representing a lead. Inherits from StudentMember using OneToOne relationship.
+    Model representing a lead. Inherits from Student using OneToOne relationship.
     """
-    student_member = models.OneToOneField(StudentMember, on_delete=models.CASCADE, related_name='lead')
+    student_member = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='lead')
 
     def markAttendance(self, memberId, eventId):
         """
