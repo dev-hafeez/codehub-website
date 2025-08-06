@@ -10,8 +10,9 @@ const Dashboard = () => {
         <img src={ACMlogo} alt="ACM Logo" className="acm-logo col-md-1" />
         <p className="acm-branding">Association for Computing Machinery</p>
       </div>
-      <div className="dashboard-panel d-flex flex-column align-items-center">
-        <h1 className="dashboard-title mt-4">Dashboard</h1>
+      <div className="dashboard-panel d-flex flex-column align-items-end">
+       <div className="dashboard-inner-panel d-flex flex-column align-items-center ">
+         <h1 className="dashboard-title mt-5 align-self-center">Dashboard</h1>
         <div className="dashboard-actions">
           <button className="btn btn-primary dashboard-action-btn p-2 px-5 m-4">
             Write Article
@@ -33,6 +34,7 @@ const Dashboard = () => {
             Check Student Details
           </button>
         </div>
+       </div>
       </div>
     </div>
   );
