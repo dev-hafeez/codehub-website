@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Student
+from .models import User, Student
 from django.db import IntegrityError
 from django.db.models import Q
 from .permissions import IsLead
@@ -14,15 +14,17 @@ class SignupView(APIView):
         data = request.data
 
         try:
-            student = Student.objects.create(
+            user = User.objects.create(
                 first_name=data.get("first_name"),
                 last_name=data.get("last_name"),
-                roll_no=data.get("roll_no"),
                 email=data.get("email"),
                 password=data.get("password"),
                 role=str.lower(data.get("role")),
-                designation=str.lower(data.get("designation")),
-                club=str.lower(data.get("club"))
+            )
+            student = Student.objects.create(
+                user = user,
+                roll_no = data.get("roll_no"),
+                club = str.lower(data.get("club")),
             )
 
             return Response({
@@ -30,7 +32,8 @@ class SignupView(APIView):
                 "message": "Student registered successfully",
                 "data": {
                     "student_id": student.id,
-                    "name": student.name,
+                    "first_name": student.first_name,
+                    "last_name": student.last_name,
                     "roll_no": student.roll_no,
                     "email": student.email
                 }
