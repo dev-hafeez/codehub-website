@@ -52,7 +52,7 @@ class SignupView(APIView):
         first_name = data.get("first_name", "")
         last_name = data.get("last_name", "")
         club = data.get("club")
-        roll_number = data.get("roll_number")
+        roll_number = data.get("roll_no")
         role = data.get("role")
         if not role:
             errors["role"] = "Role is required."
