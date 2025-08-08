@@ -27,6 +27,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')
+        user_data['password'] = make_password(password=user_data['password'])
         user = User.objects.create(**user_data)
         student = Student.objects.create(user=user, **validated_data)
         return student
