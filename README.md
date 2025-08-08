@@ -37,5 +37,5 @@ $ python backend/manage.py runserver
 Now the server should be available at `http://localhost:8000/`. If you are a superuser, you can access the admin panel with
 `http://localhost:8000/admin`. The API is available at `http://localhost:8000/api/`.
 ### API Reference:
-> [!NOTE]
-> In Progress.
+The API reference can be accessed at `api/schema` endpoint when the server is running. Accessing the endpoint will allow you to download
+a `yml` file. Accessing `api/schema/swagger-ui` will direct you to the API docs page. 
