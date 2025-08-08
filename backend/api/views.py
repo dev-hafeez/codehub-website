@@ -29,10 +29,11 @@ class SignupView(APIView):
         400 with error details if validation fails.
     """
     
+    serializer_class = StudentSerializer
     permission_classes = [IsLead]
 
     def post(self, request):
-        serializer = StudentSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
             student = serializer.save()
             user = student.user
@@ -67,10 +68,11 @@ class LoginView(APIView):
         200 with token and user info on success.
         400 if credentials are invalid.
     """
+    serializer_class = LoginSerializer
     permission_classes = [AllowAny]
     
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.validated_data['user']
             token, _ = Token.objects.get_or_create(user=user)
