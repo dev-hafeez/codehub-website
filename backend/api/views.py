@@ -52,6 +52,11 @@ class SignupView(APIView):
                 }
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
+        return Response({
+            'status': 'error',
+            'message': serializer.errors,
+            'data': None
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
@@ -85,4 +90,8 @@ class LoginView(APIView):
                     "role": user.role
                 }
             }, status=status.HTTP_200_OK)
-
+        return Response({
+            'status': 'error',
+            'message': serializer.errors,
+            'data': None
+        }, status=status.HTTP_400_BAD_REQUEST)
