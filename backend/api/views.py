@@ -6,29 +6,51 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from .permissions import IsLead
 from .serializers import StudentSerializer, LoginSerializer
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 
 User = get_user_model()
-class SignupView(APIView):
-    """
-    Handles student registration using a nested serializer.
-    Only users with the 'Lead' role are allowed to access this endpoint.
-    Expects:
-        {
-            "user": {
-                "username": "string",
-                "email": "string",
-                "password": "string",
-                "role": "Student"
-            },
-            "roll_no": "string",
-            "club": "string"
-        }
 
-    Returns:
-        201 with token and user info on success.
-        400 with error details if validation fails.
-    """
-    
+@extend_schema(
+    request=StudentSerializer,
+    responses={
+        201: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "success"},
+                    "message": {"type": "string", "example": "User registered successfully"},
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "token": {"type": "string"},
+                            "user_id": {"type": "integer"},
+                            "username": {"type": "string"},
+                            "email": {"type": "string"},
+                            "role": {"type": "string"},
+                            "club": {"type": "string"},
+                            "roll_number": {"type": "string"},
+                        }
+                    }
+                }
+            },
+            description="User created successfully"
+        ),
+        400: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "error"},
+                    "message": {"type": "object", "example": {"email": ["Email already exists"]}},
+                    "data": {"type": "null"}
+                }
+            },
+            description="Validation error"
+        ),
+        403: OpenApiResponse(description="Forbidden - user does not have Lead permissions"),
+    },
+    description='Handles student registration using a nested serializer.\nOnly users with the \'Lead\' role are allowed to access this endpoint.'
+)
+class SignupView(APIView):
     serializer_class = StudentSerializer
     permission_classes = [IsLead]
 
@@ -58,21 +80,45 @@ class SignupView(APIView):
             'data': None
         }, status=status.HTTP_400_BAD_REQUEST)
 
-
+@extend_schema(
+    request=LoginSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "success"},
+                    "message": {"type": "string", "example": "Login successful"},
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "token": {"type": "string", "example": "a1b2c3d4e5f6"},
+                            "user_id": {"type": "integer", "example": 42},
+                            "role": {"type": "string", "example": "LEAD"}
+                        }
+                    }
+                }
+            },
+            description="Login successful"
+        ),
+        400: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "error"},
+                    "message": {
+                        "type": "object",
+                        "example": {"non_field_errors": ["Invalid username or password"]}
+                    },
+                    "data": {"type": "null"}
+                }
+            },
+            description="Invalid credentials"
+        ),
+    },
+    description='Authenticates a user and returns an auth token.'
+)
 class LoginView(APIView):
-    """
-    Authenticates a user and returns an auth token.
-
-    Expects:
-        {
-            "username": "string",
-            "password": "string"
-        }
-
-    Returns:
-        200 with token and user info on success.
-        400 if credentials are invalid.
-    """
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
     
