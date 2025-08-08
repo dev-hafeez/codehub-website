@@ -55,6 +55,8 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'A REST API that provides endpoints to manage users, attendance, blogs, articles, etc.',
 }
 
+AUTHENTICATION_BACKENDS = ['backend.auth_backends.MultiFieldAuthBackend']
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
