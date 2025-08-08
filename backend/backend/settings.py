@@ -40,11 +40,19 @@ INSTALLED_APPS = [
     "api",
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_spectacular',
 ]
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
-            ],
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'ACM Society Management API',
+    'DESCRIPTION': 'A REST API that provides endpoints to manage users, attendance, blogs, articles, etc.',
 }
 
 MIDDLEWARE = [
