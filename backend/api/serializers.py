@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import make_password
 from .models import User, Student
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,3 +30,33 @@ class StudentSerializer(serializers.ModelSerializer):
         user = User.objects.create(**user_data)
         student = Student.objects.create(user=user, **validated_data)
         return student
+
+class LoginSerializer(serializers.Serializer):
+    """
+    Handles user authentication by validating usernames and password.
+    Fields:
+        username: Required string.
+        password: Required string (write-only).
+    Validates:
+        Credentials using Django's `authenticate` function.
+        Ensures user is active.
+    Returns:
+        Authenticated `user` object in `validated_data` on success.
+        Raises `ValidationError` on failure.
+    """
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(write_only=True, required=True)
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if user:
+                if not user.is_active:
+                    raise serializers.ValidationError("User account is disabled.")
+                data['user'] = user
+                return data
+            else:
+                raise serializers.ValidationError("Unable to log in with provided credentials.")
+        else:
+            raise serializers.ValidationError("Must include 'username' and 'password'.")
