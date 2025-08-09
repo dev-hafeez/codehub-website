@@ -2,11 +2,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema
+from rest_framework_simplejwt.tokens import UntypedToken
+from rest_framework_simplejwt.exceptions import TokenError
+
+
+
 from .utils import get_tokens_for_user
 
 User = get_user_model()
@@ -208,3 +214,32 @@ class OTPView(APIView):
         return Response({
             'errors': serializer.errors
         }, status.HTTP_400_BAD_REQUEST)
+
+class PasswordChangeView(APIView):
+    serializer_class = PasswordChangeSerializer
+
+    def put(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=False):
+            user_obj = get_user_model()
+            token = serializer.validated_data.get('token')
+            password = serializer.validated_data.get('password')
+            try:
+                payload = UntypedToken(token)
+            except TokenError:
+                return Response({
+                    'errors': {
+                        'token': 'Token is invalid'
+                    }
+                }, status=status.HTTP_400_BAD_REQUEST)
+            user_id = payload['user_id']
+            user = user_obj.objects.get(pk=user_id)
+            user.set_password(password)
+            user.save()
+            return Response({
+                'status': 'success',
+                'message': 'Password has been updated.'
+            }, status=status.HTTP_200_OK)
+        return Response({
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
