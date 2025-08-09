@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from .models import User, Student
+from rest_framework.exceptions import ValidationError
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,3 +62,10 @@ class LoginSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Unable to log in with provided credentials.")
         else:
             raise serializers.ValidationError("Must include 'username' and 'password'.")
+class OTPSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate_email(self, value):
+        if not User.objects.filter(email=value).exists():
+                raise ValidationError({"email": "User with this email does not exist."})
+        return value
