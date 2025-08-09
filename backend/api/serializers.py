@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from .models import User, Student
 from rest_framework.exceptions import ValidationError
+# from drf_spectacular.utils import extend_schema_serializer
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,6 +63,8 @@ class LoginSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Unable to log in with provided credentials.")
         else:
             raise serializers.ValidationError("Must include 'username' and 'password'.")
+
+
 class OTPSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
@@ -69,3 +72,7 @@ class OTPSerializer(serializers.Serializer):
         if not User.objects.filter(email=value).exists():
                 raise ValidationError({"email": "User with this email does not exist."})
         return value
+
+class PasswordChangeSerializer(serializers.Serializer):
+    token = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
