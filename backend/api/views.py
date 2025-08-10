@@ -3,10 +3,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead
-from .serializers import StudentSerializer, LoginSerializer
+from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema
+from rest_framework_simplejwt.tokens import UntypedToken
+from rest_framework_simplejwt.exceptions import TokenError
+
+
+
+from .utils import get_tokens_for_user, send_otp
 
 User = get_user_model()
 
@@ -141,3 +147,172 @@ class LoginView(APIView):
             'message': serializer.errors,
             'data': None
         }, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=OTPSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "object",
+                        "properties": {
+                            "refresh": {"type": "string", "example": "eyJ0eXAiOiJKV1QiLC..."},
+                            "access": {"type": "string", "example": "eyJ0eXAiOiJKV1QiLC..."},
+                            "id": {"type": "integer", "example": 1},
+                            "email": {"type": "string", "example": "user@example.com"},
+                            "otp": {"type": "string", "example": "1234"}
+                        }
+                    }
+                }
+            },
+            description="OTP generated and returned with token"
+        ),
+        400: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "email": ["This field is required."]
+                        }
+                    }
+                }
+            },
+            description="Validation failed"
+        ),
+    },
+    description=(
+        "Generates a One-Time Password (OTP) for the provided email address. "
+        "If the email is valid and belongs to an existing user, the API returns "
+        "a JWT token set (access & refresh), along with the user's ID, email, "
+        "and the generated OTP. The OTP is intended for verification purposes "
+        "and should be treated as sensitive information."
+    ),
+)
+class OTPView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = OTPSerializer
+
+    User = get_user_model()
+
+    def post(self, request):
+        import random
+        otp = random.randint(1000, 9999)
+        data = request.data
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid(raise_exception=False):
+            send_otp(data['email'], otp=otp)
+            user = User.objects.get(email=data['email'])
+            token = get_tokens_for_user(user, otp=str(otp))
+            response_data = {
+                'token': token
+            }
+            return Response(data=response_data, status=status.HTTP_200_OK)
+        return Response({
+            'errors': serializer.errors
+        }, status.HTTP_400_BAD_REQUEST)
+
+@extend_schema(
+    request=PasswordChangeSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "success"},
+                    "message": {"type": "string", "example": "Password has been updated."}
+                }
+            },
+            description="Password updated successfully."
+        ),
+        400: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "token": "Token is invalid"
+                        }
+                    }
+                }
+            },
+            description="Invalid token or validation error."
+        )
+    },
+    description=(
+        "Resets the user's password using a valid JWT token.\n\n"
+        "The API user must send a valid `token` obtained from `api/auth/otp` "
+        "and the new password."
+    ),
+)
+class PasswordChangeView(APIView):
+    serializer_class = PasswordChangeSerializer
+
+    def put(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=False):
+            user_obj = get_user_model()
+            token = serializer.validated_data.get('token')
+            password = serializer.validated_data.get('password')
+            try:
+                payload = UntypedToken(token) # Decode token if it's valid
+            except TokenError:
+                return Response({
+                    'errors': {
+                        'token': 'Token is invalid'
+                    }
+                }, status=status.HTTP_400_BAD_REQUEST)
+            user_id = payload['user_id']
+            user = user_obj.objects.get(pk=user_id)
+            user.set_password(password)
+            user.save()
+            return Response({
+                'status': 'success',
+                'message': 'Password has been updated.'
+            }, status=status.HTTP_200_OK)
+        return Response({
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+@extend_schema(
+    request=None,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "success"},
+                    "message": {"type": "string", "example": "Logged out successfully"}
+                }
+            },
+            description="User logged out successfully."
+        ),
+        401: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "detail": {"type": "string", "example": "Authentication credentials were not provided."}
+                }
+            },
+            description="User is not authenticated."
+        ),
+    },
+    description=(
+        "Logs out the currently authenticated user by deleting their auth token "
+        "(this view is **not** for JWT-based authentication)"
+    ),
+)
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        request.user.auth_token.delete() # Not JWT
+        return Response({
+            'status': 'success',
+            'message': 'Logged out successfully'
+        }, status=status.HTTP_200_OK)
