@@ -215,6 +215,40 @@ class OTPView(APIView):
             'errors': serializer.errors
         }, status.HTTP_400_BAD_REQUEST)
 
+@extend_schema(
+    request=PasswordChangeSerializer,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "success"},
+                    "message": {"type": "string", "example": "Password has been updated."}
+                }
+            },
+            description="Password updated successfully."
+        ),
+        400: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "token": "Token is invalid"
+                        }
+                    }
+                }
+            },
+            description="Invalid token or validation error."
+        )
+    },
+    description=(
+        "Resets the user's password using a valid JWT token.\n\n"
+        "The API user must send a valid `token` obtained from `api/auth/otp` "
+        "and the new password."
+    ),
+)
 class PasswordChangeView(APIView):
     serializer_class = PasswordChangeSerializer
 
@@ -225,7 +259,7 @@ class PasswordChangeView(APIView):
             token = serializer.validated_data.get('token')
             password = serializer.validated_data.get('password')
             try:
-                payload = UntypedToken(token)
+                payload = UntypedToken(token) # Decode token if it's valid
             except TokenError:
                 return Response({
                     'errors': {
@@ -244,11 +278,40 @@ class PasswordChangeView(APIView):
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
+
+@extend_schema(
+    request=None,
+    responses={
+        200: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "success"},
+                    "message": {"type": "string", "example": "Logged out successfully"}
+                }
+            },
+            description="User logged out successfully."
+        ),
+        401: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "detail": {"type": "string", "example": "Authentication credentials were not provided."}
+                }
+            },
+            description="User is not authenticated."
+        ),
+    },
+    description=(
+        "Logs out the currently authenticated user by deleting their auth token "
+        "(this view is **not** for JWT-based authentication)"
+    ),
+)
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        request.user.auth_token.delete()
+        request.user.auth_token.delete() # Not JWT
         return Response({
             'status': 'success',
             'message': 'Logged out successfully'
