@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import os 
+import uuid
+from django.conf import settings
 
 
 class UserRole(models.TextChoices):
@@ -14,8 +17,8 @@ class User(AbstractUser):
     """
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=10, choices=UserRole.choices)
-
     username = models.CharField(max_length=150, unique=True)
+
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
     USERNAME_FIELD = 'username'
 
@@ -28,8 +31,36 @@ class Student(models.Model):
     roll_no = models.CharField(max_length=20, default="")
     club = models.CharField(max_length=100)
 
+def blog_image_upload_path(instance, filename):
+    """
+    Store blog images inside a folder for each blog ID.
+    Example: blog_images/<blog_id>/<filename>
+    """
+    return os.path.join('blog_images', str(instance.id), filename)
 
+class Blog(models.Model):
+    """
+    Model representing a blog post created by users.
+    Stores images on the server and paths in DB.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    image = models.ImageField(upload_to=blog_image_upload_path, null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    def display_preview(self):
+        """
+        Returns a preview (first 100 characters) of the blog content.
+        """
+        return self.content[:100]
+
+    def __str__(self):
+        return self.title
+    
+    
 # class Blog(models.Model):
 #     """
 #     Model representing a blog post created by users (typically students or leads).

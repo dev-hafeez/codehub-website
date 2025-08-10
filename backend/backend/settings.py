@@ -156,3 +156,5 @@ AUTH_USER_MODEL = 'api.User'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider's SMTP server
 EMAIL_FILE_PATH = "api/tmp/api_emails"
+
+AUTH_USER_MODEL = 'api.User'
