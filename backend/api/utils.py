@@ -3,6 +3,14 @@ from django.core.mail import send_mail
 
 
 def get_tokens_for_user(user, **claims):
+    """
+    Creates the JWT manually and adds custom claims. The claims will
+    be encoded in the JWT.
+
+    :param user: The User instance
+    :param claims: Dict containing additional claims
+    :return: Encoded access and refresh tokens
+    """
     refresh = RefreshToken.for_user(user)
     refresh['user_id'] = user.id
     refresh['email'] = user.email
