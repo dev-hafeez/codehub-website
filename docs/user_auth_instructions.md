@@ -31,3 +31,18 @@ The typical flow:
 4. The password is updated if the token is valid and unexpired.
 
 This method ensures security while respecting the "LEAD-only register" requirement. 
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Backend
+
+    User->>Frontend: Click "Forgot password?" & enter email
+    Frontend->>Backend: POST /api/auth/otp (email)
+    Backend-->>Frontend: JWT (expires in 5 min)
+    
+    User->>Frontend: Enter new password
+    Frontend->>Backend: POST /api/auth/password/reset (JWT + new password)
+    Backend-->>Frontend: Success (password updated)
+```
