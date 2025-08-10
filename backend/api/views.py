@@ -2,7 +2,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead
@@ -13,7 +12,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 
 
 
-from .utils import get_tokens_for_user
+from .utils import get_tokens_for_user, send_otp
 
 User = get_user_model()
 
@@ -205,6 +204,7 @@ class OTPView(APIView):
         data = request.data
         serializer = self.serializer_class(data=data)
         if serializer.is_valid(raise_exception=False):
+            send_otp(data['email'], otp=otp)
             user = User.objects.get(email=data['email'])
             token = get_tokens_for_user(user, otp=str(otp))
             response_data = {
