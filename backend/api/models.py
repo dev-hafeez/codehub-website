@@ -50,6 +50,9 @@ class Blog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    image = models.ImageField(upload_to=blog_image_upload_path, null=True, blank=True)
+
+
     def displayPreview(self):
         """
         Returns a preview (first 100 characters) of the blog content.
