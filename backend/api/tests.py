@@ -183,7 +183,12 @@ class LoginViewTests(APITestCase):
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # DRF's default error structure
+<<<<<<< HEAD
+        self.assertIn("non_field_errors", response.data["message"])
+
+=======
         self.assertIn("non_field_errors", response.data)
+>>>>>>> 865d002e84379f1dfbc3a3cf04d2fc903dfe55c8
     def test_login_success_returns_existing_token(self):
         data = {"username": "testuser", "password": "testpass123"}
         response = self.client.post(self.url, data, format='json')
