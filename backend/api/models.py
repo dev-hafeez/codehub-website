@@ -55,7 +55,7 @@ class Blog(models.Model):
         Returns a preview (first 100 characters) of the blog content.
          """
         return self.content[:100]
-
+      
 # class Event(models.Model):
 #     """
 #     Model representing an event created by an admin.
