@@ -37,19 +37,13 @@ def blog_image_upload_path(instance, filename):
     return f'blog_images/{instance.blog.id}/{filename}'
 
 class Blog(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
     content = models.TextField()
     createdBy = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blogs')
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
-    def displayPreview(self):
-        # Return first 100 chars as preview (or any logic you want)
-        return self.content[:100] + "..." if len(self.content) > 100 else self.content
-
 class BlogImage(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to=blog_image_upload_path)
 
