@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -158,3 +159,7 @@ EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider's SMTP server
 EMAIL_FILE_PATH = "api/tmp/api_emails"
 
 AUTH_USER_MODEL = 'api.User'
+
+
+
+
