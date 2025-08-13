@@ -322,6 +322,21 @@ class LogoutView(APIView):
 
 
 class BlogListAPIView(generics.ListAPIView):
+    """
+    API endpoint to retrieve a list of blog posts.
+
+    Supports optional query parameters:
+        limit=<int> : Restrict the number of blog posts returned.
+        student_id=<int> : Filter blog posts by the ID of the student who created them.
+
+        Returns all blog posts by default, ordered by creation date (newest first).
+        If `student_id` is provided, filters results by the corresponding user ID.
+        If `limit` is provided, restricts the queryset to that number of results.
+        Each blog post includes absolute URLs for its associated images.
+
+    Serializer:
+        Uses `BlogSerializer` to format the response.
+    """
     serializer_class = BlogSerializer
 
     def get_queryset(self):

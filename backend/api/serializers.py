@@ -80,6 +80,17 @@ class PasswordChangeSerializer(serializers.Serializer):
 
 
 class BlogImageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for blog images.
+
+    Fields:
+        id : Primary key of the image record.
+        image_url : Absolute URL of the image file, generated dynamically.
+
+    Behavior:
+         Uses `get_image_url` to build the absolute URL using the request context.
+         Returns None if the image file is missing or request context is not available.
+    """
     image_url = serializers.SerializerMethodField()
 
     class Meta:
@@ -94,6 +105,22 @@ class BlogImageSerializer(serializers.ModelSerializer):
 
 
 class BlogSerializer(serializers.ModelSerializer):
+    """
+    Serializer for blog posts.
+
+    Fields:
+        id : Primary key of the blog post.
+        title : Title of the blog post.
+        content : Main text content of the post.
+         createdBy : String representation of the user who created the post.
+        createdAt : Timestamp when the post was created.
+        updatedAt : Timestamp when the post was last updated.
+        images : List of associated blog images (serialized using BlogImageSerializer).
+
+    Behavior:
+        `images` field is read-only and populated with associated images.
+        `createdBy` uses `StringRelatedField` to show the user’s readable name instead of ID.
+    """
     images = BlogImageSerializer(many=True, read_only=True)
     createdBy = serializers.StringRelatedField()
 
