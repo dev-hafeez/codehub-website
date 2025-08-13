@@ -18,23 +18,20 @@ import BlogOwner from '../components/BlogOwner.jsx';
 
 
 
+
 const LandingPage = () => {
   return (
-    <div> 
-  
-    
+     <div> 
 
        <div className="landing-page">
       <NavbarComponent />
       <main className="overflow-hidden"> {/* Prevent overflow */}
-
         <Hero />
        <Achievements/>
        <ClubsSection/>
       <Blog/>
       <EventsSection/>
       <MissionSection/>
-
       </main>
       <Footer />
     </div>

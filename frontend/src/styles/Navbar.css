@@ -1,6 +1,23 @@
+/* Navbar Animation */
+.navbar-animate {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInNavbar 0.8s ease-out forwards;
+  position: relative;
+  z-index: 10;
+}
 
+@keyframes fadeInNavbar {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Navbar Styling */
+.nav,
 .custom-navbar {
-  background-color:  #2d66ad;
+  background-color: #2d66ad;
   font-family: "Poppins", sans-serif;
   padding: 10px 0;
 }
@@ -17,8 +34,7 @@
   font-weight: 500;
 }
 
-
-
+/* Search Icon */
 .search-icon {
   position: absolute;
   right: 16px;
@@ -29,8 +45,6 @@
   pointer-events: none;
 }
 
-
-
 /* Login Button */
 .login-btn {
   background-color: #ffffff !important;
@@ -40,12 +54,11 @@
   font-size: 14px;
 }
 
-
-/* Pill-shaped background */
+/* Toggle Switch */
 .toggle-switch {
   width: 50px;
   height: 26px;
-  background-color: #e0e0e0; /* Grayish background */
+  background-color: #e0e0e0;
   border-radius: 26px;
   position: relative;
   cursor: pointer;
@@ -55,12 +68,11 @@
   padding: 2px;
 }
 
-/* Inner circle */
 .toggle-circle {
   width: 22px;
   height: 22px;
-  background-color: #ffffff; /* White circle */
-  color: #000000; /* Black icon */
+  background-color: #ffffff;
+  color: #000000;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -74,25 +86,20 @@
   transform: translateX(24px);
 }
 
-/* Dark Mode Body */
+/* Dark Mode Styling */
 body.dark-mode {
-  background-color: #131A2A; /* Main body */
+  background-color: #131A2A;
   color: #ffffff;
 }
 
-/* Navbar in dark mode */
 body.dark-mode .custom-navbar {
-  background-color: #0D1224 !important; /* Navbar */
+  background-color: #0D1224 !important;
 }
 
-/* Nav links */
 body.dark-mode .nav-links .nav-link {
   color: #ffffff !important;
 }
 
-
-
-/* Search input */
 body.dark-mode .search-input {
   background-color: #1F2B3D;
   color: #ffffff;
@@ -103,13 +110,11 @@ body.dark-mode .search-input::placeholder {
   color: #bbbbbb;
 }
 
-/* Login button */
 body.dark-mode .login-btn {
   background-color: #2C354B !important;
   color: #ffffff !important;
 }
 
-/* Toggle Switch */
 body.dark-mode .toggle-switch {
   background-color: #3b4c66;
 }
@@ -118,6 +123,8 @@ body.dark-mode .toggle-circle {
   background-color: #ffffff;
   color: #1E4F91;
 }
+
+/* Mobile Search */
 @media (max-width: 991px) {
   .search-container-mobile {
     flex: 1;
@@ -128,7 +135,3 @@ body.dark-mode .toggle-circle {
     width: 100%;
   }
 }
-
-
-
-
