@@ -43,7 +43,7 @@ function App() {
           <Route path="/article" element={<ArticlePage />} />
           <Route 
           path="/dashboard" 
-          element={<DashboardPage userRole={role}/>} 
+          element={<DashboardPage/>} 
         />
         <Route path="/signup" element={<Regform />} />
       

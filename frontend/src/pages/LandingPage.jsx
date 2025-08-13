@@ -14,6 +14,7 @@ import BlogBanner from '../components/BlogBanner.jsx';
 import BlogGrid from '../components/BlogGrid.jsx';
 import BlogCard from '../components/BlogCard.jsx';
 import BlogOwner from '../components/BlogOwner.jsx';
+import Regform from '../components/Regform.jsx'; 
 
 
 
