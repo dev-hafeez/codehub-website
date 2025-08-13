@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from .models import User, Student
 from rest_framework.exceptions import ValidationError
+from .models import Blog, BlogImage
 # from drf_spectacular.utils import extend_schema_serializer
 
 class UserSerializer(serializers.ModelSerializer):
@@ -76,3 +77,26 @@ class OTPSerializer(serializers.Serializer):
 class PasswordChangeSerializer(serializers.Serializer):
     token = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
+
+
+class BlogImageSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = BlogImage
+        fields = ['id', 'image_url']
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        if obj.image and request:
+            return request.build_absolute_uri(obj.image.url)
+        return None
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    images = BlogImageSerializer(many=True, read_only=True)
+    createdBy = serializers.StringRelatedField()
+
+    class Meta:
+        model = Blog
+        fields = ['id', 'title', 'content', 'createdBy', 'createdAt', 'updatedAt', 'images']
