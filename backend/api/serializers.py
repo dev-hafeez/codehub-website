@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from .models import User, Student
 from rest_framework.exceptions import ValidationError
+from .models import Blog, BlogImage
 # from drf_spectacular.utils import extend_schema_serializer
 
 class UserSerializer(serializers.ModelSerializer):
@@ -76,3 +77,53 @@ class OTPSerializer(serializers.Serializer):
 class PasswordChangeSerializer(serializers.Serializer):
     token = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
+
+
+class BlogImageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for blog images.
+
+    Fields:
+        id : Primary key of the image record.
+        image_url : Absolute URL of the image file, generated dynamically.
+
+    Behavior:
+         Uses `get_image_url` to build the absolute URL using the request context.
+         Returns None if the image file is missing or request context is not available.
+    """
+    image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = BlogImage
+        fields = ['id', 'image_url']
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        if obj.image and request:
+            return request.build_absolute_uri(obj.image.url)
+        return None
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    """
+    Serializer for blog posts.
+
+    Fields:
+        id : Primary key of the blog post.
+        title : Title of the blog post.
+        content : Main text content of the post.
+         createdBy : String representation of the user who created the post.
+        createdAt : Timestamp when the post was created.
+        updatedAt : Timestamp when the post was last updated.
+        images : List of associated blog images (serialized using BlogImageSerializer).
+
+    Behavior:
+        `images` field is read-only and populated with associated images.
+        `createdBy` uses `StringRelatedField` to show the user’s readable name instead of ID.
+    """
+    images = BlogImageSerializer(many=True, read_only=True)
+    createdBy = serializers.StringRelatedField()
+
+    class Meta:
+        model = Blog
+        fields = ['id', 'title', 'content', 'createdBy', 'createdAt', 'updatedAt', 'images']
