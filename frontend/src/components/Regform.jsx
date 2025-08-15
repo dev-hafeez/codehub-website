@@ -1,4 +1,4 @@
-/* Regform.jsx*/
+/* Regform.jsx */
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import REGlogo from "../assets/Reglogo.png"; 
@@ -27,9 +27,8 @@ function Regform() {
   const handleChange = (e) => {
     const { id, value } = e.target
 
-    // Map UI fields to backend structure
     if (id === 'name') {
-      const [firstName, ...lastParts] = value.split(' ')
+      const [firstName, ...lastParts] = value.trim().split(' ')
       setFormData((prev) => ({
         ...prev,
         user: {
@@ -38,18 +37,29 @@ function Regform() {
           last_name: lastParts.join(' ') || ''
         }
       }))
-    } else if (id === 'reg') {
+    } 
+    else if (id === 'reg') {
       setFormData((prev) => ({ ...prev, roll_no: value }))
-      setFormData((prev) => ({
-        ...prev,
-        user: { ...prev.user, username: value, password: value } // Default username/password = reg no
-      }))
-    } else if (id === 'email') {
+    } 
+    else if (id === 'email') {
       setFormData((prev) => ({
         ...prev,
         user: { ...prev.user, email: value }
       }))
-    } else if (id === 'club') {
+    } 
+    else if (id === 'username') {
+      setFormData((prev) => ({
+        ...prev,
+        user: { ...prev.user, username: value }
+      }))
+    }
+    else if (id === 'pass') {
+      setFormData((prev) => ({
+        ...prev,
+        user: { ...prev.user, password: value }
+      }))
+    }
+    else if (id === 'club') {
       setFormData((prev) => ({ ...prev, club: value }))
     }
   }
@@ -83,6 +93,7 @@ function Regform() {
 
       <div className="form-oval">
         <form className="form" onSubmit={handleSubmit}>
+          {/* Name + Reg No */}
           <div className="form-row d-flex justify-content-between flex-wrap">
             <div className="form-group w-45">
               <label htmlFor="name">NAME</label>
@@ -93,21 +104,33 @@ function Regform() {
               <input type="text" className="form-control" id="reg" onChange={handleChange} />
             </div>
           </div>
+
+          {/* Username + Email */}
           <div className="form-row d-flex justify-content-between flex-wrap">
+            <div className="form-group w-45">
+              <label htmlFor="username">Username</label>
+              <input type="text" className="form-control" id="username" onChange={handleChange} />
+            </div>
             <div className="form-group w-45">
               <label htmlFor="email">Email</label>
               <input type="email" className="form-control" id="email" onChange={handleChange} />
             </div>
-            <div className="form-group w-45">
-              <label htmlFor="phone">Phone no.</label>
-              <input type="text" className="form-control" id="phone" />
-            </div>
           </div>
-          <div className="form-group">
+        {/*Password and club */}
+          <div className="form-row d-flex justify-content-between flex-wrap">
+            <div className="form-group w-45">
+            <label htmlFor="pass">Password</label>
+            <input type="password" className="form-control" id="pass" onChange={handleChange} />
+          </div>
+            <div className="form-group w-45" >
             <label htmlFor="club">Club</label>
-            <input type="text" className="form-control w-75 mx-auto" id="club" onChange={handleChange} />
+            <input type="text" className="form-control" id="club" onChange={handleChange} />
           </div>
 
+          </div>
+
+          
+          
           {error && <p style={{ color: 'red' }}>{error}</p>}
 
           <div className="button-row text-center mt-4">
