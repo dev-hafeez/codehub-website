@@ -1,10 +1,8 @@
 from django.urls import reverse
-from rest_framework.test import APITestCase
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
-from .models import UserRole
 from .models import UserRole, Blog, BlogImage
 from io import BytesIO
 from PIL import Image
@@ -16,7 +14,6 @@ file = SimpleUploadedFile(
     content_type='image/jpeg'
 )
 
-User = get_user_model()
 
 User = get_user_model()
 
@@ -170,7 +167,6 @@ class SignupViewTests(APITestCase):
         self.assertIn('username', response.data['user'])
         
 
-
 class LoginViewTests(APITestCase):
 
     def setUp(self):
@@ -196,12 +192,9 @@ class LoginViewTests(APITestCase):
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # DRF's default error structure
-<<<<<<< HEAD
         self.assertIn("non_field_errors", response.data["message"])
 
-=======
-        self.assertIn("non_field_errors", response.data)
->>>>>>> 865d002e84379f1dfbc3a3cf04d2fc903dfe55c8
+
     def test_login_success_returns_existing_token(self):
         data = {"username": "testuser", "password": "testpass123"}
         response = self.client.post(self.url, data, format='json')
