@@ -40,6 +40,45 @@ const useAuthStore = create((set) => ({
     }
   },
 
+    signup: async (signupData) => {
+    set({ loading: true, error: null })
+    try {
+      const token = localStorage.getItem('token') // Lead user token
+      const res = await axios.post(
+        'http://localhost:8000/api/auth/signup/',
+        signupData,
+        {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        }
+      )
+
+      // Response contains token & user info for the new student
+      const newUserToken = res.data?.data?.token
+      const newUserRole = res.data?.data?.role
+      const newUserId = res.data?.data?.user_id
+
+      console.log('Signup success:', res.data)
+
+      set({ loading: false })
+      return {
+        success: true,
+        data: {
+          token: newUserToken,
+          role: newUserRole,
+          user_id: newUserId
+        }
+      }
+    } catch (err) {
+      set({
+        error: err.response?.data?.message || 'Signup failed',
+        loading: false
+      })
+      return { success: false, error: err.response?.data?.message }
+    }
+  },
+
   logout: () => {
     localStorage.removeItem('token')
      localStorage.removeItem('role')
