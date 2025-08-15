@@ -127,7 +127,7 @@ class BlogSerializer(serializers.ModelSerializer):
     """
     images = BlogImageSerializer(many=True, read_only=True)
     created_by = serializers.SerializerMethodField()
-    createdBy = serializers.StringRelatedField(source="createdBy")
+    createdBy = serializers.StringRelatedField()
 
     class Meta:
         model = Blog
