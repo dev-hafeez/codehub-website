@@ -321,6 +321,7 @@ class LogoutView(APIView):
             'message': 'Logged out successfully'
         }, status=status.HTTP_200_OK)
 
+
 @extend_schema(
     request=BlogUploadSerializer,
     responses={
