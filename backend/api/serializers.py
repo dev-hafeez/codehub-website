@@ -77,38 +77,61 @@ class OTPSerializer(serializers.Serializer):
 class PasswordChangeSerializer(serializers.Serializer):
     token = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
-
-
 # Allowed types & default max size (5 MB)
 ALLOWED_IMAGE_TYPES = ("image/jpeg", "image/png", "image/webp")
 MAX_IMAGE_SIZE = getattr(settings, "MAX_BLOG_IMAGE_SIZE", 5 * 1024 * 1024)  # bytes
 
 
 class BlogImageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for blog images.
+
+    Fields:
+        id : Primary key of the image record.
+        relative_path : Path stored in DB.
+        image_url : Absolute URL of the image file.
+
+    Behavior:
+         Uses `get_image_url` to build the absolute URL using the request context.
+         Returns None if the image file is missing or request context is not available.
+    """
     relative_path = serializers.SerializerMethodField()
-    url = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = BlogImage
-        fields = ("id", "relative_path", "url")
+        fields = ("id", "relative_path", "image_url")
 
     def get_relative_path(self, obj):
         return obj.image.name  # stored path in DB
 
-    def get_url(self, obj):
-        if not obj.image:
-            return None
-        request = self.context.get("request")
-        return request.build_absolute_uri(obj.image.url) if request else obj.image.url
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        if obj.image and request:
+            return request.build_absolute_uri(obj.image.url)
+        return None        
 
 
 class BlogSerializer(serializers.ModelSerializer):
+    """
+    Serializer for blog posts.
+
+    Fields:
+        id : Primary key of the blog post.
+        title : Title of the blog post.
+        content : Main text content of the post.
+        created_by : Dict with ID and username of the creator.
+        createdBy : Human-readable string of the creator (for backward compatibility).
+        createdAt, updatedAt : Timestamps.
+        images : Related blog images (serialized with BlogImageSerializer).
+    """
     images = BlogImageSerializer(many=True, read_only=True)
     created_by = serializers.SerializerMethodField()
+    createdBy = serializers.StringRelatedField(source="createdBy")
 
     class Meta:
         model = Blog
-        fields = ("id", "title", "content", "created_by", "createdAt", "updatedAt", "images")
+        fields = ("id", "title", "content", "created_by", "createdBy", "createdAt", "updatedAt", "images")
 
     def get_created_by(self, obj):
         user = obj.createdBy
@@ -116,6 +139,16 @@ class BlogSerializer(serializers.ModelSerializer):
 
 
 class BlogUploadSerializer(serializers.Serializer):
+    """
+    Serializer for uploading new blog posts with images.
+
+    Validates:
+        - Image file size (max 5MB by default or settings override)
+        - Image file type (JPEG, PNG, WEBP)
+
+    Behavior:
+        Creates a Blog instance and related BlogImage records.
+    """
     title = serializers.CharField(max_length=255)
     content = serializers.CharField()
     images = serializers.ListField(
@@ -146,8 +179,7 @@ class BlogUploadSerializer(serializers.Serializer):
         )
 
         # Create related BlogImage objects
-        images = validated_data["images"]
-        for img in images:
+        for img in validated_data["images"]:
             BlogImage.objects.create(blog=blog, image=img)
 
         return blog

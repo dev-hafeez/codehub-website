@@ -11,10 +11,10 @@ from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
 from rest_framework.parsers import MultiPartParser, FormParser
+
+from rest_framework import generics
 from .models import Blog, BlogImage
 from .serializers import BlogSerializer, BlogUploadSerializer
-
-
 
 from .utils import get_tokens_for_user, send_otp
 
@@ -320,8 +320,6 @@ class LogoutView(APIView):
             'status': 'success',
             'message': 'Logged out successfully'
         }, status=status.HTTP_200_OK)
-
-
 @extend_schema(
     request=BlogUploadSerializer,
     responses={
@@ -354,3 +352,35 @@ class BlogUploadView(APIView):
             "message": serializer.errors,
             "data": None
         }, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class BlogListAPIView(generics.ListAPIView):
+    """
+    API endpoint to retrieve a list of blog posts.
+
+    Supports optional query parameters:
+        limit=<int> : Restrict the number of blog posts returned.
+        student_id=<int> : Filter blog posts by the ID of the student who created them.
+
+        Returns all blog posts by default, ordered by creation date (newest first).
+        If `student_id` is provided, filters results by the corresponding user ID.
+        If `limit` is provided, restricts the queryset to that number of results.
+        Each blog post includes absolute URLs for its associated images.
+
+    Serializer:
+        Uses `BlogSerializer` to format the response.
+    """
+    serializer_class = BlogSerializer
+
+    def get_queryset(self):
+        queryset = Blog.objects.all().order_by('-createdAt')
+
+        student_id = self.request.query_params.get('student_id')
+        if student_id:
+            queryset = queryset.filter(createdBy__id=student_id)
+
+        limit = self.request.query_params.get('limit')
+        if limit and limit.isdigit():
+            queryset = queryset[:int(limit)]
+
+        return queryset
