@@ -68,7 +68,7 @@ function Regform() {
     e.preventDefault()
     const result = await signup(formData)
     if (result.success) {
-      navigate('/students')
+      navigate('/dashboard')
     }
   }
 
