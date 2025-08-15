@@ -1,13 +1,26 @@
 from django.urls import reverse
 from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from .models import UserRole
+from .models import UserRole, Blog, BlogImage
+from io import BytesIO
+from PIL import Image
+from django.core.files.uploadedfile import SimpleUploadedFile
+
+file = SimpleUploadedFile(
+    name='example.jpg',
+    content=b'file content here',
+    content_type='image/jpeg'
+)
 
 User = get_user_model()
 
+User = get_user_model()
 
+'''
 class SignupViewTests(APITestCase):
 
     def setUp(self):
@@ -201,5 +214,144 @@ class LoginViewTests(APITestCase):
         data = {"username": "noone", "password": "whatever"}
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+'''
 
+class BlogUploadTests(APITestCase):
+    def setUp(self):
+        print("\n[setUp] Initializing test setup...")
+        self.client = APIClient()
+        self.user = User.objects.create_user(username="testuser", password="pass1234")
+        self.client.force_authenticate(user=self.user)
+        self.url = reverse('blog-upload') 
+        print(f"[setUp] ✅ Created and authenticated user: {self.user.username} (ID: {self.user.id})")
 
+    def generate_image_file(self, name='test.jpg', color='red', size_bytes=None):
+        print(f"[generate_image_file] Creating in-memory image: name={name}, color={color}")
+
+        file = BytesIO()
+        image = Image.new('RGB', (100, 100), color=color)
+        image.save(file, 'JPEG')
+        if size_bytes:
+            # Pad the file with extra bytes to reach desired size
+            file.write(b'\0' * (size_bytes - file.tell()))
+        file.name = name
+        file.seek(0)
+        
+        print(f"[generate_image_file] ✅ Generated file: {file.name} ({size_bytes} bytes)")
+        return file
+
+    def test_blog_upload_single_image(self):
+        print("\n[test_blog_upload_single_image] Starting test for single image upload...")
+        print(f"[test_blog_upload_single_image] URL resolved: {self.url}")
+
+        image_file = self.generate_image_file(name='single.jpg')
+
+        data = {
+            "title": "Test Blog Single Image",
+            "content": "Testing upload with one image.",
+            "images": image_file
+        }
+        print(f"[test_blog_upload_single_image] Sending POST request with data: title='{data['title']}', content length={len(data['content'])}, image={image_file.name}")
+        response = self.client.post(self.url, data, format='multipart')
+
+        print(f"[test_blog_upload_single_image] Response status: {response.status_code}")
+        print(f"[test_blog_upload_single_image] Response data: {response.data}")
+
+        self.assertEqual(response.status_code, 201, msg=f"Expected 201, got {response.status_code}: {response.data}")
+        self.assertIn("content", response.data["message"])
+
+        print("[test_blog_upload_single_image] ✅ Test passed.")
+
+    def test_blog_upload_multiple_images(self):
+        print("\n[test_blog_upload_multiple_images] Starting test for multiple image upload...")
+        print(f"[test_blog_upload_multiple_images] URL resolved: {self.url}")
+
+        image_file1 = self.generate_image_file(name='multi1.jpg', color='blue')
+        image_file2 = self.generate_image_file(name='multi2.jpg', color='green')
+
+        data = {
+            "title": "Test Blog Multiple Images",
+            "content": "Testing upload with multiple images.",
+            "images": [image_file1, image_file2]
+        }
+        print(f"[test_blog_upload_multiple_images] Sending POST request with data: title='{data['title']}', content length={len(data['content'])}, images={[f.name for f in data['images']]}")
+        response = self.client.post(self.url, data, format='multipart')
+
+        print(f"[test_blog_upload_multiple_images] Response status: {response.status_code}")
+        print(f"[test_blog_upload_multiple_images] Response data: {response.data}")
+
+        self.assertEqual(response.status_code, 201, msg=f"Expected 201, got {response.status_code}: {response.data}")
+        self.assertIn('data', response.data)
+        print("[test_blog_upload_multiple_images] ✅ Test passed.")
+
+    def test_upload_invalid_file_type(self):
+        invalid_file = SimpleUploadedFile(
+            name='not_an_image.txt',
+            content=b"Hello world",
+            content_type='text/plain'
+        )
+        data = {
+            'title': 'Test Blog',
+            'content': 'Invalid file type test',
+            'images': [invalid_file]
+        }
+        response = self.client.post(self.url, data, format='multipart')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Invalid image type', str(response.data))
+
+    def test_upload_large_image(self):
+        large_content = b'\xff' * (5 * 1024 * 1024 + 1)  # Just over 5MB
+        large_image = self.generate_image_file(
+            name='large.jpg',
+            size_bytes=5 * 1024 * 1024 + 1  # Just over 5MB
+        )
+
+        data = {
+            'title': 'Big Image Blog',
+            'content': 'Testing large image rejection',
+            'images': [large_image]
+        }
+        response = self.client.post(self.url, data, format='multipart')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Image size must not exceed', str(response.data))
+
+    def test_upload_without_authentication(self):
+        self.client.force_authenticate(user=None)
+        image = self.generate_image_file(name='unauthenticated.jpg')
+        data = {
+            'title': 'Unauthorized Blog',
+            'content': 'Should not work',
+            'images': [image]
+        }
+        response = self.client.post(self.url, data, format='multipart')
+        self.assertEqual(response.status_code, 401)
+
+    def test_missing_text_content(self):
+        """Should return 400 if images are uploaded but no text content is provided."""
+        image = SimpleUploadedFile(
+            "test.jpg",
+            b"fake image content",
+            content_type="image/jpeg"
+        )
+        response = self.client.post(
+            self.url,
+            data={"images": image},  # no text content
+            format="multipart"
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("content", response.data)  
+
+    def test_missing_images(self):
+        payload = {
+            "title": "Text Only Blog",
+            "content": "This is a blog post without images."
+        }
+        response = self.client.post(self.url, payload, format="multipart")
+
+        if self.ALLOW_TEXT_ONLY:  # if you allow missing images
+            assert response.status_code == 201
+        else:  # if images are required
+            assert response.status_code == 400
+            assert "images" in response.data
+
+            

@@ -9,6 +9,10 @@ from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, Pass
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import TokenError
+from django.db import transaction
+from rest_framework.parsers import MultiPartParser, FormParser
+from .models import Blog, BlogImage
+from .serializers import BlogSerializer, BlogUploadSerializer
 
 
 
@@ -316,3 +320,36 @@ class LogoutView(APIView):
             'status': 'success',
             'message': 'Logged out successfully'
         }, status=status.HTTP_200_OK)
+
+@extend_schema(
+    request=BlogUploadSerializer,
+    responses={
+        201: OpenApiResponse(response=BlogSerializer, description="Blog post created"),
+        400: OpenApiResponse(description="Validation error"),
+        401: OpenApiResponse(description="Authentication required"),
+    },
+    description="Upload a blog post with one or more images. Auth required."
+)
+class BlogUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = BlogUploadSerializer(data=request.data, context={"request": request})
+
+        if serializer.is_valid():
+            with transaction.atomic():  # Ensures all-or-nothing save
+                blog = serializer.save()  # No manual image creation here
+
+            resp = BlogSerializer(blog, context={"request": request})
+            return Response({
+                "status": "success",
+                "message": "Blog post created successfully",
+                "data": resp.data
+            }, status=status.HTTP_201_CREATED)
+
+        return Response({
+            "status": "error",
+            "message": serializer.errors,
+            "data": None
+        }, status=status.HTTP_400_BAD_REQUEST)
