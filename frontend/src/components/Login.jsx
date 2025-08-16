@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault()
     const success = await login(username, password)
     if (success) {
-      navigate('/dashboard') // ✅ redirect after successful login
+      navigate('/dashboard')
     }
   }
 
@@ -36,7 +36,7 @@ const Login = () => {
             />
           </div>
           <div className="form-group mb-4 text-start">
-            <label htmlFor="password" className="text-black">PASSWORD</label>
+            <label htmlFor="password" className="text-black">Password</label>
             <input
               type="password"
               id="password"
@@ -47,12 +47,14 @@ const Login = () => {
               required
             />
           </div>
+
           <button type="submit" className="btn btn-dark login-btn" disabled={loading}>
             {loading ? 'Logging in...' : 'LOGIN'}
           </button>
         </form>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {/* show error as string only */}
+        {error && <p style={{ color: 'red' }}>{String(error)}</p>}
 
         <div className="icon-container">
           <PersonFill size={30} />

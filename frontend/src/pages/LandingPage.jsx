@@ -10,13 +10,6 @@ import Hero from '../components/Hero.jsx';
 import ClubsSection from '../components/ClubsSection.jsx';
 import MissionSection from '../components/MissionSection.jsx';
 import "../styles/LandingPage.css";
-import BlogBanner from '../components/BlogBanner.jsx';
-import BlogGrid from '../components/BlogGrid.jsx';
-import BlogCard from '../components/BlogCard.jsx';
-import BlogOwner from '../components/BlogOwner.jsx';
-import Regform from '../components/Regform.jsx'; 
-
-
 
 
 

@@ -2,6 +2,7 @@ import React from "react";
 import ACMlogo from "../assets/ACMlogo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/Dashboard.css";
+import { Link } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 
 const Dashboard = () => {
@@ -17,6 +18,7 @@ const Dashboard = () => {
             <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Create Event</button>
             <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Attendance</button>
             <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Check Student Details</button>
+            <Link to="/signup" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Signup New Members</Link>
           </>
         );
       case "LEAD":
@@ -25,6 +27,7 @@ const Dashboard = () => {
             <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Post Article</button>
             <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Create Event</button>
             <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Attendance</button>
+              <Link to="/signup" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Signup New Members</Link>
           </>
         );
       case "STUDENT":
