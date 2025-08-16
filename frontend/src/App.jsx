@@ -6,6 +6,8 @@ import BlogListingPage from './pages/BlogListingPage.jsx';
 import SinglePostPage from './pages/SinglePostPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
+
 import './App.css';
 import { Button, Container, Alert } from 'react-bootstrap';
 import { sampleBlog } from "./SampleData.js";
@@ -38,11 +40,15 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/attendance" element={<AdminDashboard />} />
+
           <Route path="/login" element={<LoginPage />} />
           <Route path="/blogs" element={<BlogListingPage />} />
           <Route path="/blog/:id" element={<SinglePostPage />} />
+
           <Route path="/article" element={<ArticlePage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+
           <Route 
           path="/dashboard" 
           element={<DashboardPage/>} 
