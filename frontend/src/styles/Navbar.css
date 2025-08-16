@@ -67,6 +67,12 @@
   align-items: center;
   padding: 2px;
 }
+.dropdown .dropdown-menu.custom-dropdown-menu {
+  min-width: 250px;
+  min-height: 150px;
+  /* You can also use !important if necessary */
+}
+
 
 .toggle-circle {
   width: 22px;

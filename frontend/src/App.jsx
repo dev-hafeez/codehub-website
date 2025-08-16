@@ -10,7 +10,8 @@ import './App.css';
 import { Button, Container, Alert } from 'react-bootstrap';
 import { sampleBlog } from "./SampleData.js";
 import Regform from './components/Regform.jsx';
-
+import ForgotPassword from './components/ForgotPassword.jsx';
+import ResetPassword from './components/ResetPassword.jsx';
 function App() {
   const [role, setRole] = useState(null);
     useEffect(() => {
@@ -41,11 +42,13 @@ function App() {
           <Route path="/blogs" element={<BlogListingPage />} />
           <Route path="/blog/:id" element={<SinglePostPage />} />
           <Route path="/article" element={<ArticlePage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route 
           path="/dashboard" 
           element={<DashboardPage/>} 
         />
         <Route path="/signup" element={<Regform />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       
         </Routes>
       </Router>
