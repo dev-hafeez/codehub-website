@@ -52,44 +52,6 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
-  // ---------- SIGNUP ----------
-  signup: async (signupData) => {
-    set({ loading: true, error: null })
-    try {
-      const token = localStorage.getItem('token')
-      const res = await axios.post(
-        'http://localhost:8000/api/auth/signup/',
-        signupData,
-        { headers: { Authorization: `Token ${token}` } }
-      )
-
-      set({ loading: false })
-      return { success: true, data: res.data }
-    } catch (err) {
-      const apiError = err.response?.data
-      let errorMessage = 'Signup failed'
-
-      if (apiError) {
-        if (apiError.non_field_errors) {
-          errorMessage = apiError.non_field_errors.join(', ')
-        } else if (apiError.detail) {
-          errorMessage = apiError.detail
-        } else if (typeof apiError === 'string') {
-          errorMessage = apiError
-        } else {
-          errorMessage = JSON.stringify(apiError)
-        }
-      }
-
-      set({
-        error: errorMessage,
-        loading: false
-      })
-      return { success: false, error: errorMessage }
-    }
-  },
-
-  // ---------- FORGOT PASSWORD ----------
   requestOtp: async (email) => {
     set({ loading: true, error: null })
     try {
@@ -111,8 +73,6 @@ const useAuthStore = create((set, get) => ({
       return { success: false, error: errorMessage }
     }
   },
-
-  // ---------- RESET PASSWORD ----------
  // ---------- RESET PASSWORD ----------
 resetPassword: async (newPassword) => {
   set({ loading: true, error: null })
@@ -122,8 +82,6 @@ resetPassword: async (newPassword) => {
       token: resetToken,
       password: newPassword
     })
-
-    // 🔑 Clear any existing session after password reset
     localStorage.removeItem('token')
     localStorage.removeItem('role')
     set({ 
@@ -148,8 +106,46 @@ resetPassword: async (newPassword) => {
   }
 },
 
+    signup: async (signupData) => {
+    set({ loading: true, error: null })
+    try {
+      const token = localStorage.getItem('token') // Lead user token
+      const res = await axios.post(
+        'http://localhost:8000/api/auth/signup/',
+        signupData,
+        {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        }
+      )
 
-  // ---------- LOGOUT ----------
+      // Response contains token & user info for the new student
+      const newUserToken = res.data?.data?.token
+      const newUserRole = res.data?.data?.role
+      const newUserId = res.data?.data?.user_id
+
+      console.log('Signup success:', res.data)
+
+      set({ loading: false })
+      return {
+        success: true,
+        data: {
+          token: newUserToken,
+          role: newUserRole,
+          user_id: newUserId
+        }
+      }
+    } catch (err) {
+      set({
+        error: err.response?.data?.message || 'Signup failed',
+        loading: false
+      })
+      return { success: false, error: err.response?.data?.message }
+    }
+  },
+
+
   logout: () => {
     localStorage.removeItem('token')
     localStorage.removeItem('role')
