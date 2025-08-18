@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Permanent+Marker&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rubik+Marker+Hatch&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
 
 .clubs-container {
   position: relative;
@@ -49,7 +50,11 @@
 }
 
 .club-box h4 {
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
+}
+p{
+  font-family: 'Roboto', sans-serif;
 }
 
 /* Boxes positioning */
@@ -152,6 +157,7 @@
 
 /* Learn More Button */
 .learn-more-btn {
+  font-family: 'Montserrat', sans-serif;
   position: absolute;
   bottom: 20px;
   right: 40px;

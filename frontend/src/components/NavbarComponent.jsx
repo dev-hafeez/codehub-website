@@ -26,7 +26,7 @@ const NavbarComponent = () => {
             <Nav.Link
               as={Link}
               to="/login"
-              className="login-link  text-white  px-4 py-2 ms-lg-3 fw-semibold" style = {{backgroundColor: "#0C4182"}}>
+              className="login-link    px-4 py-2 ms-lg-3 fw-semibold" style = {{backgroundColor: "#ffffff"}}>
               Log In
             </Nav.Link>
           </Nav>

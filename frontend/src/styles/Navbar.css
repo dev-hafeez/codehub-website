@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
+
+
 .navbar-animate {
   opacity: 0;
   transform: translateY(-20px);
@@ -13,6 +16,7 @@
   }
 }
 .nav-link {
+  font-family: 'Roboto', sans-serif !important;
   position: relative;
   color: #000; /* Default text color */
   font-weight: 500;
@@ -44,8 +48,9 @@
 }
 .login-link {
    /* Default black */
-  color: #fff;
-  border-radius: 5px;
+   font-family: 'Roboto', sans-serif !important;
+  color: #2d66ad !important;
+  border-radius: 25px;
   transition: all 0.3s ease;
 }
 
@@ -55,6 +60,7 @@
   transform: scale(1.05); /* Slight zoom for effect */
 }
 .navbar-brand p {
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;

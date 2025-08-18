@@ -13,7 +13,7 @@ const Footer = () => {
     
           <div className="col-md-3 mb-4 d-flex align-items-start gap-2">
             <img src={ACMlogo} alt="ACM Logo" style={{ height: "50px" }} />
-            <p className="mb-0 fw-light" style={{ fontSize: "2rem" }}>ACM CUI</p>
+            <p className="font mb-0 fw-light" style={{ fontSize: "2rem" }}>ACM CUI</p>
 
           </div>
 
@@ -65,7 +65,7 @@ const Footer = () => {
             <p>Status</p>
           </div>
           <div className="ms-auto">
-            <p className="mb-0">© 2025 ACM CUI Wah</p>
+            <p className="font mb-0">© 2025 ACM CUI Wah</p>
           </div>
         </div>
       </div>
