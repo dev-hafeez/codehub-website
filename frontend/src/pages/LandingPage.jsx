@@ -11,9 +11,11 @@ import ClubsSection from '../components/ClubsSection.jsx';
 import MissionSection from '../components/MissionSection.jsx';
 import "../styles/LandingPage.css";
 
+
+
 const LandingPage = () => {
   return (
-    <div> 
+     <div> 
 
        <div className="landing-page">
       <NavbarComponent />

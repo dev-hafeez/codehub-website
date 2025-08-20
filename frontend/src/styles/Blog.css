@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Rosario:ital,wght@0,300..700;1,300..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
 
-/* TITLE STYLING */
+
 .title {
   color: #0C4182;
   font-family: "Montserrat", sans-serif !important;
@@ -35,19 +35,18 @@ p{
   }
 }
 
-/* PAGE CONTAINER */
+
 .blogs {
   font-family: sans-serif;
 }
 
-/* OUTER BLOG CONTAINER */
+
 .blog-container {
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
-/* BLOG POST BOX */
 .blog-post-container {
   background-color: #fff;
   overflow: hidden;
@@ -57,39 +56,38 @@ p{
   margin-bottom: 2rem;
 }
 
-/* IMAGE STYLING */
+
 .blog-image {
   max-width: 100%;
   object-fit: cover;
 }
 
-/* BLOG TITLE */
+
 .blog-post-title {
   font-weight: bold;
   color: black;
   margin-bottom: 1rem;
 }
 
-/* HIGHLIGHT TEXT */
+
 .highlight {
   background-color: #fff59d;
   padding: 0.1em 0.3em;
   border-radius: 4px;
 }
 
-/* BLOG TEXT + BUTTON WRAPPER */
+
 .blog-content {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* MAKE TEXT TAKE VERTICAL SPACE */
+
 .blog-content p {
   flex-grow: 1;
 }
 
-/* LEARN MORE BUTTON */
 .learn-more-btn {
   font-family: 'Montserrat', sans-serif;
   border-radius: 5px;
@@ -110,12 +108,12 @@ p{
   border-color: #1976d2;
 }
 
-/* SPACING BELOW MAIN TITLE */
+
 .blogs .title {
   margin-bottom: 20px;
 }
 
-/* MOBILE RESPONSIVENESS */
+
 @media (max-width: 767px) {
   .blogs .title {
     margin-bottom: 15px;

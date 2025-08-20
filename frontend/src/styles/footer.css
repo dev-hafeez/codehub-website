@@ -45,3 +45,10 @@ h5{
 .footer hr {
   opacity: 0.3;
 }
+body.dark-mode {
+  .footer{
+background-color: #0D1224 !important;
+
+  }
+  
+}

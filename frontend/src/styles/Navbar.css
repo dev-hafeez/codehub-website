@@ -1,14 +1,16 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
+
 
 
 .navbar-animate {
   opacity: 0;
   transform: translateY(-20px);
   animation: fadeInNavbar 0.8s ease-out forwards;
+  position: relative;
+  z-index: 10;
 }
-.nav{
-  background-color:#2d66ad ;
-}
+
 @keyframes fadeInNavbar {
   to {
     opacity: 1;
@@ -19,46 +21,94 @@
   font-family: 'Roboto', sans-serif !important;
   position: relative;
   color: #000; /* Default text color */
+
+/* Navbar Styling */
+.nav,
+.custom-navbar {
+  background-color: #2d66ad;
+  font-family: "Poppins", sans-serif;
+  padding: 10px 0;
+}
+
+/* Logo */
+.navbar-logo {
+  height: 40px;
+}
+
+/* Links */
+.nav-links .nav-link {
+  color: #fff !important;
+  margin: 0 12px;
   font-weight: 500;
-  text-decoration: none;
-  transition: color 0.3s ease;
 }
 
-.nav-link::after {
-  content: "";
+/* Search Icon */
+.search-icon {
   position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background-color: #1E4F91; /* ACM blue */
-  transition: width 0.3s ease;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666e76;
+  font-size: 16px;
+  pointer-events: none;
 }
 
-.nav-link:hover {
-  color: #1E4F91;
+/* Login Button */
+.login-btn {
+  background-color: #ffffff !important;
+  color: #1E4F91 !important;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 14px;
 }
 
-.nav-link:hover::after {
-  width: 100%;
+/* Toggle Switch */
+.toggle-switch {
+  width: 50px;
+  height: 26px;
+  background-color: #e0e0e0;
+  border-radius: 26px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 2px;
 }
-.login-link::after {
-  display: none; /* Remove underline effect */
+.dropdown .dropdown-menu.custom-dropdown-menu {
+  min-width: 250px;
+  min-height: 150px;
+  /* You can also use !important if necessary */
 }
+
 .login-link {
    /* Default black */
    font-family: 'Roboto', sans-serif !important;
   color: #2d66ad !important;
   border-radius: 25px;
   transition: all 0.3s ease;
+
+
+
+.toggle-circle {
+  width: 22px;
+  height: 22px;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  font-size: 14px;
+
 }
 
-.login-link:hover {
-  background-color: #2a5ea8; /* ACM Blue */
-  box-shadow: 0 0 15px rgba(30, 79, 145, 0.7); /* Blue glow */
-  transform: scale(1.05); /* Slight zoom for effect */
+/* Slide to right on dark mode */
+.toggle-switch.dark .toggle-circle {
+  transform: translateX(24px);
 }
+
 .navbar-brand p {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
@@ -68,44 +118,54 @@
   /* overflow: hidden; */
   text-overflow: ellipsis;
   max-width: 150px;
+
+/* Dark Mode Styling */
+body.dark-mode {
+  background-color: #131A2A;
+  color: #ffffff;
+
 }
 
-@media (max-width: 375px) {
-  .navbar-brand p {
-    font-size: 1rem;
-    max-width: 100px;
-  }
-
-  .navbar-brand img {
-    height: 32px;
-  }
+body.dark-mode .custom-navbar {
+  background-color: #0D1224 !important;
 }
 
-@media (max-width: 320px) {
-  .navbar-brand p {
-    display: none; /* optional: just hide long text completely on very small screens */
-  }
-}
-/* Navbar tablet styling */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .navbar-brand img {
-    height: 36px;
-  }
-
-  .navbar-brand p {
-    font-size: 1.25rem;
-    max-width: 180px;
-  }
-
-  .nav-link {
-    font-size: 0.95rem;
-    margin: 0 0.5rem;
-  }
-
-  .login-link {
-    padding: 0.4rem 1.2rem;
-    font-size: 0.95rem;
-  }
+body.dark-mode .nav-links .nav-link {
+  color: #ffffff !important;
 }
 
+body.dark-mode .search-input {
+  background-color: #1F2B3D;
+  color: #ffffff;
+  border: 1px solid #3a4a63;
+}
 
+body.dark-mode .search-input::placeholder {
+  color: #bbbbbb;
+}
+
+body.dark-mode .login-btn {
+  background-color: #2C354B !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .toggle-switch {
+  background-color: #3b4c66;
+}
+
+body.dark-mode .toggle-circle {
+  background-color: #ffffff;
+  color: #1E4F91;
+}
+
+/* Mobile Search */
+@media (max-width: 991px) {
+  .search-container-mobile {
+    flex: 1;
+    margin-right: 12px;
+  }
+
+  .search-container-mobile .search-input {
+    width: 100%;
+  }
+}

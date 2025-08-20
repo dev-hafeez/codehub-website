@@ -1,0 +1,50 @@
+  @import url('https://fonts.googleapis.com/css2?family=Rosarivo:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
+  
+  /* Styling for the article editor component */
+  .article-editor-container {
+    padding: 2.5rem; /* Inner padding */
+    min-height: 100%; /* Ensure it takes full height of its parent column */
+  }
+
+  .article-title {
+    font-family: 'Georgia', serif; /* or a similar serif font */
+  font-size: 72px; /* Adjust as needed */
+  font-weight: bold;
+  background: -webkit-linear-gradient(left, #00458C 0%, #76A3C4 50%, #B9BCC0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  }
+
+  .article-subheading {
+    font-family: "Rosarivo", cursive;;
+    font-size: 2rem; /* Smaller than title, larger than content */
+    font-weight: 500;
+    color: #000000; /* Muted gray for subheading */
+    margin-bottom: 2rem;
+  }
+
+  .article-content {
+    font-size: 1.1rem; /* Standard readable font size */
+    line-height: 1.8; /* Good line spacing for readability */
+    color: #000000; /* Slightly lighter gray for content */
+    text-align: justify; /* Justified text for a clean look */
+    font-weight: bold;
+  }
+
+  /* Responsive adjustments for article editor */
+  @media (max-width: 767.98px) {
+    .article-editor-container {
+      padding: 1.5rem;
+    }
+    .article-title {
+      font-size: 2rem;
+    }
+    .article-subheading {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .article-content {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+  }

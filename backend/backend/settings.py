@@ -13,6 +13,9 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "api",
     'rest_framework',
     'rest_framework.authtoken',
@@ -66,6 +70,7 @@ AUTHENTICATION_BACKENDS = ['backend.auth_backends.MultiFieldAuthBackend']
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -98,15 +103,10 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'codehub_db',
-        'USER': 'backend',
-        'PASSWORD': 'backend-test-pass',
-        'HOST': '0.tcp.ap.ngrok.io',
-        'PORT': '14281', # This will change if the host machine shuts down.
-                         # Currently, there is no easy way to automatically change this
-                         # without spending money.
+     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
     }
 }
 
@@ -162,4 +162,9 @@ AUTH_USER_MODEL = 'api.User'
 
 
 
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
