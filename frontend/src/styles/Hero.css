@@ -1,8 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
+
 .hero-section {
     background-color: #2d66ad;
       
 }
 
+h3{
+  font-family: 'Montserrat', sans-serif;
+}
+
+p{
+  font-family: 'Roboto', sans-serif;
+}
 
 .hero-box {
     height:auto;
@@ -14,6 +23,7 @@
 }
 
 .hero-box h2 {
+  font-family: 'Montserrat', sans-serif;
     font-size: 3rem;
     color: #0C4182;
 }
@@ -32,6 +42,7 @@
 }
 
 .hero-section h1 {
+  font-family: 'Montserrat', sans-serif;
     font-size: 2.5rem;
 }
 

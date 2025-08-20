@@ -1,4 +1,8 @@
-/* Navbar Animation */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
+
+
+
 .navbar-animate {
   opacity: 0;
   transform: translateY(-20px);
@@ -13,6 +17,10 @@
     transform: translateY(0);
   }
 }
+.nav-link {
+  font-family: 'Roboto', sans-serif !important;
+  position: relative;
+  color: #000; /* Default text color */
 
 /* Navbar Styling */
 .nav,
@@ -73,6 +81,14 @@
   /* You can also use !important if necessary */
 }
 
+.login-link {
+   /* Default black */
+   font-family: 'Roboto', sans-serif !important;
+  color: #2d66ad !important;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+
+
 
 .toggle-circle {
   width: 22px;
@@ -85,6 +101,7 @@
   justify-content: center;
   transition: transform 0.3s ease;
   font-size: 14px;
+
 }
 
 /* Slide to right on dark mode */
@@ -92,10 +109,21 @@
   transform: translateX(24px);
 }
 
+.navbar-brand p {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+  max-width: 150px;
+
 /* Dark Mode Styling */
 body.dark-mode {
   background-color: #131A2A;
   color: #ffffff;
+
 }
 
 body.dark-mode .custom-navbar {

@@ -1,8 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Rosario&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
 
 :root {
   --footer-font-size: 1.15rem; 
 }
+.font{
+  font-family: 'Montserrat', sans-serif !important;
+}
+h5{
+  font-family: 'Montserrat', sans-serif;
+}
+
 
 .footer {
   font-family: 'Rosario', sans-serif;
@@ -20,6 +28,7 @@
 
 .footer p,
 .footer ul li {
+  font-family: 'Roboto', sans-serif;
   margin: 4px 0;
   cursor: pointer;
 }
