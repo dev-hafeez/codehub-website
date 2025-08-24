@@ -183,3 +183,35 @@ class BlogUploadSerializer(serializers.Serializer):
             BlogImage.objects.create(blog=blog, image=img)
 
         return blog
+
+
+
+class BlogUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for updating blog posts.
+    Allows updating title, content, and optionally replacing images.
+    """
+    images = serializers.ListField(
+        child=serializers.ImageField(),
+        required=False
+    )
+
+    class Meta:
+        model = Blog
+        fields = ("title", "content", "images")
+
+    def update(self, instance, validated_data):
+        images = validated_data.pop("images", None)
+
+        # Update fields
+        instance.title = validated_data.get("title", instance.title)
+        instance.content = validated_data.get("content", instance.content)
+        instance.save()
+
+        # Replace images if provided
+        if images is not None:
+            instance.images.all().delete()
+            for img in images:
+                BlogImage.objects.create(blog=instance, image=img)
+
+        return instance
