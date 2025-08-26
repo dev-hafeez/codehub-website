@@ -9,11 +9,13 @@ from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, Pass
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import TokenError
+from django.db import transaction
+from rest_framework.parsers import MultiPartParser, FormParser
+
 from rest_framework import generics
-from .models import Blog
-from .serializers import BlogSerializer
-
-
+from .models import Blog, BlogImage
+from .serializers import BlogSerializer, BlogUploadSerializer
+from django.http import QueryDict
 
 from .utils import get_tokens_for_user, send_otp
 
@@ -320,6 +322,76 @@ class LogoutView(APIView):
             'message': 'Logged out successfully'
         }, status=status.HTTP_200_OK)
 
+@extend_schema(
+    request=BlogUploadSerializer,
+    responses={
+        201: OpenApiResponse(response=BlogSerializer, description="Blog post created"),
+        400: OpenApiResponse(description="Validation error"),
+        401: OpenApiResponse(description="Authentication required"),
+    },
+    description="Upload a blog post with one or more images. Auth required."
+)
+class BlogUploadView(APIView):
+    """
+    API endpoint to upload a new blog post with one or more images.
+
+    Permissions:
+        - Only authenticated users can create a blog post.
+
+    Parsers:
+        - MultiPartParser and FormParser to handle file uploads.
+
+    Behavior:
+        - Accepts 'title', 'content', and 'images' via POST request.
+        - Normalizes single or multiple image uploads into a list.
+        - Validates images for type and size using BlogUploadSerializer.
+        - Creates a Blog instance and related BlogImage instances atomically.
+        - Returns serialized blog data including absolute image URLs on success.
+    """
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests to create a new blog post with images.
+
+        Steps:
+            1. Normalize 'images' from request.FILES to a list (single or multiple files).
+            2. Populate a mutable QueryDict with request data and the normalized images.
+            3. Validate and save data using BlogUploadSerializer.
+            4. Return a structured JSON response with serialized blog data on success,
+               or errors on failure.
+
+        Returns:
+            Response: DRF Response object with status, message, and data keys.
+        """
+        # 1) Normalize "images" to a list for both single/multi uploads
+        data = QueryDict(mutable=True)
+        data.update(request.data)
+        files = request.FILES.getlist('images')
+        if not files and 'images' in request.FILES:
+            files = [request.FILES['images']]  # single -> list
+        if files:
+            data.setlist('images', files)
+        serializer = BlogUploadSerializer(data=data, context={"request": request})
+
+        if serializer.is_valid():
+            with transaction.atomic():  # Ensures all-or-nothing save
+                blog = serializer.save()  # No manual image creation here
+
+            resp = BlogSerializer(blog, context={"request": request})
+            return Response({
+                "status": "success",
+                "message": "Blog post created successfully",
+                "data": resp.data
+            }, status=status.HTTP_201_CREATED)
+
+        return Response({
+            "status": "error",
+            "message": serializer.errors,
+            "data": None
+        }, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class BlogListAPIView(generics.ListAPIView):
     """
