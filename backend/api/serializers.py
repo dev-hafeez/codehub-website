@@ -195,23 +195,33 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
         child=serializers.ImageField(),
         required=False
     )
+    images_to_delete = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        write_only=True,
+        help_text="IDs of images to delete"
+    )
 
     class Meta:
         model = Blog
-        fields = ("title", "content", "images")
+        fields = ("title", "content", "images", "images_to_delete")
 
     def update(self, instance, validated_data):
-        images = validated_data.pop("images", None)
+        new_images = validated_data.pop("images", None)
+        images_to_delete = validated_data.pop("images_to_delete", [])
 
         # Update fields
         instance.title = validated_data.get("title", instance.title)
         instance.content = validated_data.get("content", instance.content)
         instance.save()
 
-        # Replace images if provided
-        if images is not None:
-            instance.images.all().delete()
-            for img in images:
+        # Handle image deletions
+        if images_to_delete:
+            BlogImage.objects.filter(blog=instance, id__in=images_to_delete).delete()
+
+        # Handle new image uploads (append)
+        if new_images:
+            for img in new_images:
                 BlogImage.objects.create(blog=instance, image=img)
 
         return instance
