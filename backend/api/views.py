@@ -428,7 +428,8 @@ class BlogListAPIView(generics.ListAPIView):
 
 class BlogEditView(APIView):
     """
-    Allow the author of a blog to edit their own post.
+    Allow authenticated users (author/lead/admin) to edit a blog.
+    Restriction of "who can edit what" will be handled by frontend.
     """
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
@@ -442,10 +443,6 @@ class BlogEditView(APIView):
                 "message": "Blog post not found",
                 "data": None
             }, status=status.HTTP_404_NOT_FOUND)
-
-        # Only author can edit
-        if blog.createdBy != request.user:
-            raise PermissionDenied("You do not have permission to edit this blog post.")
 
         data = request.data.copy()
         files = request.FILES.getlist('images')
