@@ -6,7 +6,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead,IsAdmin
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer
-from drf_spectacular.utils import OpenApiResponse, extend_schema
+from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
@@ -324,13 +325,69 @@ class LogoutView(APIView):
         }, status=status.HTTP_200_OK)
 
 @extend_schema(
-    request=BlogUploadSerializer,
-    responses={
-        201: OpenApiResponse(response=BlogSerializer, description="Blog post created"),
-        400: OpenApiResponse(description="Validation error"),
-        401: OpenApiResponse(description="Authentication required"),
+    summary="Upload a new blog post with images",
+    description=(
+        "Creates a new blog post. Only authenticated users can create blogs.\n\n"
+        "The request accepts `title`, `content`, and one or more `images`. "
+        "Images must be uploaded as multipart form data."
+    ),
+    request={
+        "multipart/form-data": {
+            "type": "object",
+            "properties": {
+                "title": {"type": "string", "example": "My First Blog Post"},
+                "content": {"type": "string", "example": "This is the content of the blog post."},
+                "images": {
+                    "type": "array",
+                    "items": {"type": "string", "format": "binary"},
+                    "description": "One or more images to attach to the blog post"
+                },
+            },
+            "required": ["title", "content"]
+        }
     },
-    description="Upload a blog post with one or more images. Auth required."
+    responses={
+        201: OpenApiResponse(
+            response=BlogSerializer,
+            description="Blog post created successfully.",
+            examples=[
+                OpenApiExample(
+                    "Success Example",
+                    value={
+                        "status": "success",
+                        "message": "Blog post created successfully",
+                        "data": {
+                            "id": 1,
+                            "title": "My First Blog Post",
+                            "content": "This is the content of the blog post.",
+                            "images": [
+                                "http://localhost:8000/media/blog_images/img1.jpg",
+                                "http://localhost:8000/media/blog_images/img2.jpg"
+                            ],
+                            "created_at": "2025-08-27T12:34:56Z",
+                            "author": {"id": 5, "username": "john_doe"}
+                        }
+                    }
+                )
+            ]
+        ),
+        400: OpenApiResponse(
+            description="Validation error - invalid input",
+            examples=[
+                OpenApiExample(
+                    "Error Example",
+                    value={
+                        "status": "error",
+                        "message": {
+                            "title": ["This field is required."],
+                            "images": ["Invalid file type."]
+                        },
+                        "data": None
+                    }
+                )
+            ]
+        ),
+    }
 )
 class BlogUploadView(APIView):
     """
@@ -393,22 +450,42 @@ class BlogUploadView(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
         
 
+@extend_schema(
+    summary="List blog posts",
+    description=(
+        "Retrieve a list of blog posts.\n\n"
+        "- **limit** (optional, int): Restrict the number of blog posts returned.\n"
+        "- **student_id** (optional, int): Filter blog posts by the ID of the student who created them.\n\n"
+        "Returns all blog posts by default, ordered by creation date (newest first). "
+        "If `student_id` is provided, only posts from that student are included. "
+        "If `limit` is provided, restricts the number of results."
+    ),
+    parameters=[
+        OpenApiParameter(
+            name="limit",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            required=False,
+            description="Restrict the number of blog posts returned."
+        ),
+        OpenApiParameter(
+            name="student_id",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            required=False,
+            description="Filter blog posts by the ID of the student who created them."
+        ),
+    ],
+    responses={
+        200: OpenApiResponse(
+            response=BlogSerializer(many=True),
+            description="List of blog posts retrieved successfully."
+        ),
+        400: OpenApiResponse(description="Bad request. Invalid query parameter."),
+        403: OpenApiResponse(description="Permission denied."),
+    }
+)
 class BlogListAPIView(generics.ListAPIView):
-    """
-    API endpoint to retrieve a list of blog posts.
-
-    Supports optional query parameters:
-        limit=<int> : Restrict the number of blog posts returned.
-        student_id=<int> : Filter blog posts by the ID of the student who created them.
-
-        Returns all blog posts by default, ordered by creation date (newest first).
-        If `student_id` is provided, filters results by the corresponding user ID.
-        If `limit` is provided, restricts the queryset to that number of results.
-        Each blog post includes absolute URLs for its associated images.
-
-    Serializer:
-        Uses `BlogSerializer` to format the response.
-    """
     serializer_class = BlogSerializer
 
     def get_queryset(self):
@@ -423,14 +500,82 @@ class BlogListAPIView(generics.ListAPIView):
             queryset = queryset[:int(limit)]
 
         return queryset
-    
 
-
+@extend_schema(
+    summary="Edit a blog post",
+    description=(
+        "Allows authenticated users (author/lead/admin) to edit an existing blog post. "
+        "Editing permissions are enforced on the frontend side. "
+        "Supports updating text fields (title, content) and optionally replacing images."
+    ),
+    request=BlogUpdateSerializer,
+    responses={
+        200: OpenApiResponse(
+            response=BlogSerializer,
+            description="Blog post updated successfully",
+            examples=[
+                OpenApiExample(
+                    "Successful Update",
+                    value={
+                        "status": "success",
+                        "message": "Blog post updated successfully",
+                        "data": {
+                            "id": 1,
+                            "title": "Updated Blog Title",
+                            "content": "Updated content here...",
+                            "images": [
+                                "http://example.com/media/blogs/updated_image1.jpg"
+                            ],
+                            "createdAt": "2025-08-27T12:34:56Z",
+                            "createdBy": {"id": 5, "username": "student123"},
+                        }
+                    },
+                )
+            ],
+        ),
+        400: OpenApiResponse(
+            response=OpenApiTypes.OBJECT,
+            description="Validation error",
+            examples=[
+                OpenApiExample(
+                    "Validation Error",
+                    value={
+                        "status": "error",
+                        "message": {"title": ["This field is required."]},
+                        "data": None,
+                    },
+                )
+            ],
+        ),
+        404: OpenApiResponse(
+            response=OpenApiTypes.OBJECT,
+            description="Blog post not found",
+            examples=[
+                OpenApiExample(
+                    "Not Found",
+                    value={
+                        "status": "error",
+                        "message": "Blog post not found",
+                        "data": None,
+                    },
+                )
+            ],
+        ),
+    },
+    examples=[
+        OpenApiExample(
+            "Update Blog Example",
+            value={
+                "title": "New Blog Title",
+                "content": "Updated blog content...",
+                "images": ["(binary image file)"]
+            },
+            request_only=True,
+            media_type="multipart/form-data",
+        )
+    ],
+)
 class BlogEditView(APIView):
-    """
-    Allow authenticated users (author/lead/admin) to edit a blog.
-    Restriction of "who can edit what" will be handled by frontend.
-    """
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
@@ -466,10 +611,45 @@ class BlogEditView(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema(
+    summary="Delete a blog post",
+    description=(
+        "Allows only admins to delete a blog post. "
+        "If the blog does not exist, a 404 error is returned."
+    ),
+    request=None,
+    responses={
+        200: OpenApiResponse(
+            response=OpenApiTypes.OBJECT,
+            description="Blog post deleted successfully",
+            examples=[
+                OpenApiExample(
+                    "Successful Deletion",
+                    value={
+                        "status": "success",
+                        "message": "Blog post deleted successfully",
+                        "data": None,
+                    },
+                )
+            ],
+        ),
+        404: OpenApiResponse(
+            response=OpenApiTypes.OBJECT,
+            description="Blog post not found",
+            examples=[
+                OpenApiExample(
+                    "Not Found",
+                    value={
+                        "status": "error",
+                        "message": "Blog post not found",
+                        "data": None,
+                    },
+                )
+            ],
+        ),
+    },
+)
 class BlogDeleteView(APIView):
-    """
-    Allow only admins to delete a blog post.
-    """
     permission_classes = [IsAuthenticated, IsAdmin]
 
     def delete(self, request, pk, *args, **kwargs):
