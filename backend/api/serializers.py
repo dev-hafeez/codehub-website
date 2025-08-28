@@ -183,3 +183,45 @@ class BlogUploadSerializer(serializers.Serializer):
             BlogImage.objects.create(blog=blog, image=img)
 
         return blog
+
+
+
+class BlogUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for updating blog posts.
+    Allows updating title, content, and optionally replacing images.
+    """
+    images = serializers.ListField(
+        child=serializers.ImageField(),
+        required=False
+    )
+    images_to_delete = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        write_only=True,
+        help_text="IDs of images to delete"
+    )
+
+    class Meta:
+        model = Blog
+        fields = ("title", "content", "images", "images_to_delete")
+
+    def update(self, instance, validated_data):
+        new_images = validated_data.pop("images", None)
+        images_to_delete = validated_data.pop("images_to_delete", [])
+
+        # Update fields
+        instance.title = validated_data.get("title", instance.title)
+        instance.content = validated_data.get("content", instance.content)
+        instance.save()
+
+        # Handle image deletions
+        if images_to_delete:
+            BlogImage.objects.filter(blog=instance, id__in=images_to_delete).delete()
+
+        # Handle new image uploads (append)
+        if new_images:
+            for img in new_images:
+                BlogImage.objects.create(blog=instance, image=img)
+
+        return instance

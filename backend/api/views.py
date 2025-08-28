@@ -4,18 +4,19 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .permissions import IsLead
+from .permissions import IsLead,IsAdmin
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
 from rest_framework.parsers import MultiPartParser, FormParser
-
 from rest_framework import generics
 from .models import Blog, BlogImage
-from .serializers import BlogSerializer, BlogUploadSerializer
+from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
 from django.http import QueryDict
+from rest_framework import permissions
+from rest_framework.exceptions import PermissionDenied
 
 from .utils import get_tokens_for_user, send_otp
 
@@ -366,8 +367,7 @@ class BlogUploadView(APIView):
             Response: DRF Response object with status, message, and data keys.
         """
         # 1) Normalize "images" to a list for both single/multi uploads
-        data = QueryDict(mutable=True)
-        data.update(request.data)
+        data = request.data.copy()
         files = request.FILES.getlist('images')
         if not files and 'images' in request.FILES:
             files = [request.FILES['images']]  # single -> list
@@ -423,3 +423,68 @@ class BlogListAPIView(generics.ListAPIView):
             queryset = queryset[:int(limit)]
 
         return queryset
+    
+
+
+class BlogEditView(APIView):
+    """
+    Allow authenticated users (author/lead/admin) to edit a blog.
+    Restriction of "who can edit what" will be handled by frontend.
+    """
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def put(self, request, pk, *args, **kwargs):
+        try:
+            blog = Blog.objects.get(pk=pk)
+        except Blog.DoesNotExist:
+            return Response({
+                "status": "error",
+                "message": "Blog post not found",
+                "data": None
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data.copy()
+        files = request.FILES.getlist('images')
+        if files:
+            data.setlist('images', files)
+
+        serializer = BlogUpdateSerializer(blog, data=data, partial=True, context={"request": request})
+        if serializer.is_valid():
+            serializer.save()
+            resp = BlogSerializer(blog, context={"request": request})
+            return Response({
+                "status": "success",
+                "message": "Blog post updated successfully",
+                "data": resp.data
+            }, status=status.HTTP_200_OK)
+
+        return Response({
+            "status": "error",
+            "message": serializer.errors,
+            "data": None
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BlogDeleteView(APIView):
+    """
+    Allow only admins to delete a blog post.
+    """
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def delete(self, request, pk, *args, **kwargs):
+        try:
+            blog = Blog.objects.get(pk=pk)
+        except Blog.DoesNotExist:
+            return Response({
+                "status": "error",
+                "message": "Blog post not found",
+                "data": None
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        blog.delete()
+        return Response({
+            "status": "success",
+            "message": "Blog post deleted successfully",
+            "data": None
+        }, status=status.HTTP_200_OK)
