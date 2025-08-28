@@ -1,3 +1,5 @@
+from typing import Optional
+
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
@@ -102,10 +104,10 @@ class BlogImageSerializer(serializers.ModelSerializer):
         model = BlogImage
         fields = ("id", "relative_path", "image_url")
 
-    def get_relative_path(self, obj):
+    def get_relative_path(self, obj) -> str:
         return obj.image.name  # stored path in DB
 
-    def get_image_url(self, obj):
+    def get_image_url(self, obj) -> Optional[str]:
         request = self.context.get('request')
         if obj.image and request:
             return request.build_absolute_uri(obj.image.url)
@@ -133,7 +135,7 @@ class BlogSerializer(serializers.ModelSerializer):
         model = Blog
         fields = ("id", "title", "content", "created_by", "createdBy", "createdAt", "updatedAt", "images")
 
-    def get_created_by(self, obj):
+    def get_created_by(self, obj) -> dict:
         user = obj.createdBy
         return {"id": user.id, "username": getattr(user, "username", None)}
 
