@@ -333,3 +333,70 @@ class BlogUploadTests(APITestCase):
         else:
             self.assertEqual(response.status_code, 400)
             self.assertIn("images", response.data["message"])
+
+class BlogEditViewTests(APITestCase):
+    def setUp(self):
+        print("\n[setUp] Initializing test setup...")
+        self.client = APIClient()
+        self.user = User.objects.create_user(username="testuser", password="pass1234")
+        self.client.force_authenticate(user=self.user)
+        self.blog = Blog.objects.create(
+            title="Test Blog",
+            content="Some content",
+            createdBy=self.user
+        )
+        self.url = f'http://localhost:8000/api/blogs/{self.blog.pk}/edit/'
+        print(f"[setUp] ✅ Created and authenticated user: {self.user.username} (ID: {self.user.id})")
+
+    def test_edit_blog_as_user(self):
+        self.client.force_authenticate(user=self.user)
+        print(f'To-be-deleted blog\'s pk: {self.blog.pk}')
+        response = self.client.put(self.url, {"title": "Updated Title"}, format="multipart")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["status"], "success")
+        self.blog.refresh_from_db()
+        self.assertEqual(self.blog.title, "Updated Title")
+
+    def test_edit_nonexistent_blog(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.put("/api/blogs/9999/edit/", {"title": "Updated Title"}, format="multipart")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_edit_blog_with_invalid_data(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.put(self.url, {"title": ""}, format="multipart")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class BlogDeleteViewTests(APITestCase):
+    def setUp(self):
+        print("\n[setUp] Initializing test setup...")
+        self.client = APIClient()
+        self.user = User.objects.create_user(username="testadmin", password="pass1234", role=UserRole.ADMIN, email='testadmin@gmail.com ')
+        self.non_admin_user = User.objects.create_user(username='testuser', password='pass1234', role=UserRole.STUDENT, email='test@gmail.com')
+        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(user=self.non_admin_user)
+        self.blog = Blog.objects.create(
+            title="Test Blog",
+            content="Some content",
+            createdBy=self.non_admin_user
+        )
+        self.url = f'http://localhost:8000/api/blogs/{self.blog.pk}/delete/'
+        print(f"[setUp] ✅ Created and authenticated user: {self.user.username} (ID: {self.user.id})")
+
+    def test_delete_blog_as_admin(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["status"], "success")
+        self.assertFalse(Blog.objects.filter(pk=self.blog.pk).exists())
+
+    def test_delete_blog_as_non_admin_forbidden(self):
+        self.client.force_authenticate(user=self.non_admin_user)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_nonexistent_blog(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete("/api/blogs/9999/delete/")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
