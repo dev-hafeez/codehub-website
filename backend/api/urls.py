@@ -7,8 +7,8 @@ urlpatterns = [
     path('auth/logout', LogoutView.as_view(), name='logout'),
     path('auth/otp/', OTPView.as_view(), name='otp'),
     path('auth/password/reset', PasswordChangeView.as_view(), name='reset-password'),path('auth/password/reset', PasswordChangeView.as_view(), name='reset-password'),
-    path("blog/upload/", BlogUploadView.as_view(), name="blog-upload"),
     path('blogs/', BlogListAPIView.as_view(), name='blog-list'),
+    path("blogs/upload/", BlogUploadView.as_view(), name="blog-upload"),
     path("blogs/<int:pk>/edit/", BlogEditView.as_view(), name="blog-edit"),
     path("blogs/<int:pk>/delete/", BlogDeleteView.as_view(), name="blog-delete"),
 ]
