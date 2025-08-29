@@ -4,16 +4,17 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .permissions import IsLead,IsAdmin
-from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer
-from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample
+from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly
+from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, EventSerializer, \
+    AttendanceSerializer
+from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
-from .models import Blog, BlogImage
+from .models import Blog, BlogImage, Event, Attendance
 from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
 from django.http import QueryDict
 from rest_framework import permissions
@@ -668,3 +669,142 @@ class BlogDeleteView(APIView):
             "message": "Blog post deleted successfully",
             "data": None
         }, status=status.HTTP_200_OK)
+
+@extend_schema(
+    tags=["Events"],
+    request=EventSerializer,
+    summary="List or create events",
+    description=(
+        "Retrieve a list of all events (accessible by anyone).\n\n"
+        "Admins can create new events by sending a POST request."
+    ),
+    responses={
+        status.HTTP_200_OK: OpenApiResponse(
+            response=EventSerializer(many=True),
+            description="List of events retrieved successfully."
+        ),
+        status.HTTP_201_CREATED: OpenApiResponse(
+            response=EventSerializer,
+            description="Event created successfully (admins only)."
+        ),
+        status.HTTP_403_FORBIDDEN: OpenApiResponse(
+            description="Permission denied. Only admins can create events."
+        ),
+    }
+)
+class EventListCreateView(generics.ListCreateAPIView):
+    """
+    List all events or create a new event.
+    Only admins can create.
+    """
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+
+@extend_schema(
+    tags=["Events"],
+    summary="Retrieve, update, or delete a specific event",
+    request=EventSerializer,
+    description=(
+        "Retrieve details of a specific event by ID.\n\n"
+        "Admins can update or delete the event."
+    ),
+    responses={
+        status.HTTP_200_OK: OpenApiResponse(
+            response=EventSerializer,
+            description="Event retrieved successfully."
+        ),
+        status.HTTP_404_NOT_FOUND: OpenApiResponse(
+            description="Event not found."
+        ),
+        status.HTTP_403_FORBIDDEN: OpenApiResponse(
+            description="Permission denied. Only admins can update/delete events."
+        ),
+        status.HTTP_204_NO_CONTENT: OpenApiResponse(
+            description="Event deleted successfully."
+        ),
+    }
+)
+class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update, or delete a specific event by ID.
+    Only admins can update/delete.
+    """
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+@extend_schema_view(
+    get=extend_schema(
+        summary="List attendance for an event",
+        description="Retrieve all attendance records for a specific event. "
+                    "Requires the event ID in the URL.",
+        parameters=[
+            OpenApiParameter(
+                name="event_id",
+                description="ID of the event whose attendance is being listed",
+                required=True,
+                type=int,
+                location=OpenApiParameter.PATH,
+            )
+        ],
+        responses={200: AttendanceSerializer(many=True)},
+    ),
+    post=extend_schema(
+        summary="Mark attendance for an event",
+        description="Create a new attendance record for a student in the specified event. "
+                    "The event is inferred from the URL, and the `marked_by` field is set automatically.",
+        request=AttendanceSerializer,
+        responses={201: AttendanceSerializer},
+    ),
+)
+class AttendanceListCreateView(generics.ListCreateAPIView):
+    serializer_class = AttendanceSerializer
+    permission_classes = [IsLead]
+
+    def get_queryset(self):
+        event_id = self.kwargs["event_id"]
+        return Attendance.objects.filter(event_id=event_id)
+
+    def perform_create(self, serializer):
+        event_id = self.kwargs["event_id"]
+        event = Event.objects.get(pk=event_id)
+        serializer.save(event=event, marked_by=self.request.user)
+
+@extend_schema_view(
+    get=extend_schema(
+        summary="Retrieve an attendance record",
+        description="Get a specific attendance record by its ID, scoped to the given event.",
+        parameters=[
+            OpenApiParameter("event_id", type=int, location=OpenApiParameter.PATH)
+        ],
+        responses={200: AttendanceSerializer},
+    ),
+    put=extend_schema(
+        summary="Update an attendance record",
+        description="Update an existing attendance record. "
+                    "Both the event ID and attendance record ID are required in the URL.",
+        request=AttendanceSerializer,
+        responses={200: AttendanceSerializer},
+    ),
+    delete=extend_schema(
+        summary="Delete an attendance record",
+        description="Delete a specific attendance record, scoped to an event.",
+        parameters=[
+            OpenApiParameter("event_id", type=int, location=OpenApiParameter.PATH),
+            OpenApiParameter("pk", type=int, location=OpenApiParameter.PATH),
+        ],
+        responses={204: None},
+    ),
+)
+class AttendanceDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = AttendanceSerializer
+    permission_classes = [IsLead]
+
+    def get_queryset(self):
+        event_id = self.kwargs["event_id"]
+        return Attendance.objects.filter(event_id=event_id)
