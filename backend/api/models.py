@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 import os 
 import uuid
 from django.conf import settings
@@ -50,23 +51,24 @@ class BlogImage(models.Model):
     def __str__(self):
         return f'Image for blog {self.blog.id}'
 
-# class Event(models.Model):
-#     """
-#     Model representing an event created by an admin.
-#     """   
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     name = models.CharField(max_length=200)
-#     date = models.DateTimeField()
-#     is_ongoing = models.BooleanField(default=False)
-#     created_by = models.ForeignKey(Admin, on_delete=models.SET_NULL, null=True, blank=True)
-#
-#
-# class Attendance(models.Model):
-#     """
-#     Model representing attendance of a student at an event.
-#     """
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     status = models.BooleanField(default=False)
-#     marked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='marked_attendances')
+class Event(models.Model):
+    """
+    Model representing an event created by an admin.
+    """
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    start_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField()
+    # is_ongoing = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+
+class Attendance(models.Model):
+    """
+    Model representing attendance of a student at an event.
+    """
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    attended = models.BooleanField(default=False)
+    # This must be a lead of the club the attending student is in
+    marked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='marked_attendances')
