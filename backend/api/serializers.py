@@ -3,7 +3,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage
+from .models import User, Student, Blog, BlogImage, Event, Attendance
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 # from drf_spectacular.utils import extend_schema_serializer
@@ -227,3 +227,15 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
                 BlogImage.objects.create(blog=instance, image=img)
 
         return instance
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = "__all__"
+        read_only_fields = ["created_by"]
+
+class AttendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = "__all__"
+        read_only_fields = ("marked_by",)
