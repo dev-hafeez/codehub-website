@@ -7,3 +7,12 @@ class IsLead(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == 'LEAD'
+
+class IsAdmin(permissions.BasePermission):
+    """
+    Allows access only to users with role = 'ADMIN'.
+    """
+    message = 'Only admins are allowed to perform this action.'
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == 'ADMIN'

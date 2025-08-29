@@ -104,7 +104,7 @@ DATABASES = {
         'USER': 'backend',
         'PASSWORD': 'backend-test-pass',
         'HOST': '0.tcp.ap.ngrok.io',
-        'PORT': '14281', # This will change if the host machine shuts down.
+        'PORT': '11338', # This will change if the host machine shuts down.
                          # Currently, there is no easy way to automatically change this
                          # without spending money.
     }
@@ -158,8 +158,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider's SMTP server
 EMAIL_FILE_PATH = "api/tmp/api_emails"
 
-AUTH_USER_MODEL = 'api.User'
-
-
+# Media files configuration
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
