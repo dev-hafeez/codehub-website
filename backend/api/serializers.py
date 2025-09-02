@@ -3,9 +3,10 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage
+from .models import User, Student, Blog, BlogImage, blog_image_upload_path, InlineImage
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
+from .utils import finalize_inline_images
 # from drf_spectacular.utils import extend_schema_serializer
 
 class UserSerializer(serializers.ModelSerializer):
@@ -155,7 +156,8 @@ class BlogUploadSerializer(serializers.Serializer):
     content = serializers.CharField()
     images = serializers.ListField(
         child=serializers.ImageField(),
-        allow_empty=False
+        allow_empty=True,
+        required = False
     )
 
     def validate_images(self, images):
@@ -169,25 +171,34 @@ class BlogUploadSerializer(serializers.Serializer):
                 raise serializers.ValidationError(f"{img.name} has invalid content type ({content_type}).")
         return images
 
+    
     def create(self, validated_data):
         request = self.context.get("request")
         user = request.user
 
-        # Create the blog
         blog = Blog.objects.create(
             title=validated_data["title"],
             content=validated_data["content"],
             createdBy=user
         )
 
-        # Create related BlogImage objects
+        # Finalize inline images
+        blog.content = finalize_inline_images(blog.content, blog.id)
+        blog.save()
+
+        # Save gallery/cover images
         for img in validated_data["images"]:
             BlogImage.objects.create(blog=blog, image=img)
 
         return blog
 
 
-
+TEMP_INLINE_PREFIX = "/media/temp_inline/"
+class InlineImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InlineImage
+        fields = ['id', 'image', 'uploaded_at']
+        
 class BlogUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer for updating blog posts.
