@@ -1,7 +1,9 @@
 import React from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
-import { BsArrowRight } from 'react-icons/bs'; // Importing the arrow icon
+import { BsArrowRight } from 'react-icons/bs';
+import { Link } from 'react-router-dom'; // <-- import Link
 import "../styles/Blog.css";
+
 const BlogPost = ({ title, description, imageUrl, imageAlt, reverseOrder }) => {
   const imageCol = (
     <Col md={6} className="d-flex justify-content-center align-items-center p-3">
@@ -14,9 +16,11 @@ const BlogPost = ({ title, description, imageUrl, imageAlt, reverseOrder }) => {
       <div className="blog-content">
         <h2 className="blog-post-title">{title}</h2>
         <p className="text-black">{description}</p>
-        <button className="learn-more-btn ">
-          Learn more <BsArrowRight />
-        </button>
+
+        {/* Use Link to navigate */}
+        <Link to="/blogs" className="learn-more-btn btn btn-primary d-inline-flex align-items-center">
+          Learn more <BsArrowRight className="ms-2" />
+        </Link>
       </div>
     </Col>
   );
@@ -24,7 +28,6 @@ const BlogPost = ({ title, description, imageUrl, imageAlt, reverseOrder }) => {
   return (
     <div className="blog-post-container">
       <Row className={`align-items-center ${reverseOrder ? 'flex-md-row-reverse' : 'flex-md-row'} flex-column`}>
-
         {imageCol}
         {textCol}
       </Row>

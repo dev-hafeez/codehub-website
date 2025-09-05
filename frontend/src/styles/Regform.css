@@ -22,12 +22,14 @@ body, html {
   right: 0;
   width: 60vw;
   height: 100vh; 
-  background: linear-gradient(
+  /* background: linear-gradient(
     325.78deg,  
     rgba(255, 255, 255, 0.5) 14.49%,
     rgba(74, 144, 226, 0.754328) 53.15%,
     rgba(45, 102, 173, 0.85) 87.43%
-  );
+  ); */
+  
+  background: linear-gradient(135deg, #ffffff 2%, #2d66ad 50%, #0C4182 85%);
   border-top-right-radius: 400px 400px;
   border-bottom-right-radius: 400px 400px;
   transform: scaleX(-1);
@@ -218,7 +220,7 @@ body, html {
 }
 
 
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 991px) {
   .registration-heading {
     color: #fff;
     font-size: 20px;

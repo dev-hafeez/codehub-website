@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/authStore'
+import NavbarComponent from './NavbarComponent'
+import Footer from './Footer'
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('')
@@ -17,6 +19,8 @@ const ResetPassword = () => {
   }
 
   return (
+    <>
+    <NavbarComponent/>
     <div className="login-container d-flex flex-column align-items-center">
       <div className="login-card text-center">
         <h2 className="welcome-text text-black">Reset Password</h2>
@@ -40,6 +44,8 @@ const ResetPassword = () => {
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
     </div>
+    <Footer/>
+    </>
   )
 }
 

@@ -43,13 +43,22 @@
   display: none; /* Remove underline effect */
 }
 .login-link {
-   /* Default black */
   color: #fff;
   border-radius: 5px;
   transition: all 0.3s ease;
 }
 
 .login-link:hover {
+  background-color: #2a5ea8; /* ACM Blue */
+  box-shadow: 0 0 15px rgba(30, 79, 145, 0.7); /* Blue glow */
+  transform: scale(1.05); /* Slight zoom for effect */
+}
+.dashboard-link{
+    color:#2a5ea8 ;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+.dashboard-link:hover {
   background-color: #2a5ea8; /* ACM Blue */
   box-shadow: 0 0 15px rgba(30, 79, 145, 0.7); /* Blue glow */
   transform: scale(1.05); /* Slight zoom for effect */
@@ -61,9 +70,13 @@
   white-space: nowrap;
   /* overflow: hidden; */
   text-overflow: ellipsis;
-  max-width: 150px;
+  width: 500px;
 }
-
+.navbar-collapse {
+  background-color: #2d66ad;
+  padding: 1rem;
+  border-radius: 0 0 8px 8px;
+}
 @media (max-width: 375px) {
   .navbar-brand p {
     font-size: 1rem;
@@ -75,12 +88,12 @@
   }
 }
 
-@media (max-width: 320px) {
-  .navbar-brand p {
+@media (max-width: 1024px) {
+  .navbar-brand span{
     display: none; /* optional: just hide long text completely on very small screens */
   }
 }
-/* Navbar tablet styling */
+
 @media (min-width: 768px) and (max-width: 1024px) {
   .navbar-brand img {
     height: 36px;
@@ -102,4 +115,16 @@
   }
 }
 
+@media (max-width: 991px) {
+  .navbar-collapse .nav-link {
+    margin-bottom: 0.75rem; /* space between links */
+  }
+  .navbar-collapse{
+    color:'#386193';
+  }
 
+  /* Optional: remove bottom margin from last link */
+  .navbar-collapse .nav-link:last-child {
+    margin-bottom: 0;
+  }
+}

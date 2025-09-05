@@ -72,3 +72,99 @@
     
     
 }
+
+
+.blogCard-wrapper {
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.blogCard-wrapper:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.blogCard-container {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0.5rem;
+  position: relative;
+}
+
+/* Blog Image */
+.blog-img-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.blog-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.blogCard-wrapper:hover .blog-image {
+  transform: scale(1.05);
+}
+
+/* Tag */
+.blog-tag {
+  margin-top: 0.5rem;
+}
+
+.tag-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: #007bff;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+/* Title */
+.blog-title-text {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Author & Date */
+.bottom {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.blog-author-pfp img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.blog-author-name, .blog-date {
+  margin-left: 0.5rem;
+  color: #555;
+}
+
+/* Edit/Delete Icons */
+.ms-auto {
+  display: flex;
+  gap: 0.75rem;
+  opacity: 1;             /* always visible */
+}
+
+.ms-auto svg {
+  font-size: 1.2rem;      /* make icons bigger */
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.ms-auto svg:hover {
+  transform: scale(1.3);
+}

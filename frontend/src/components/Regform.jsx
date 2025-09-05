@@ -6,7 +6,7 @@ import ACMlogo from "../assets/ACMlogo.png";
 import CircleLogo from "../assets/Reglogo.png"; 
 import useAuthStore from '../store/authStore'
 import '../styles/Regform.css';
-import Navbar from './Navbar';
+import NavbarComponent from './NavbarComponent';
 
 function Regform() {
   const [formData, setFormData] = useState({
@@ -64,18 +64,18 @@ function Regform() {
       setFormData((prev) => ({ ...prev, club: value }))
     }
   }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    const result = await signup(formData)
-    if (result.success) {
-      navigate('/dashboard')
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  const result = await signup(formData)
+  if (result.success) {
+    alert("User registered successfully!");
+    navigate('/dashboard')
   }
+}
 
   return (
     <>
-    <Navbar/>
+    <NavbarComponent/>
     <div className="regform-container container-fluid">
       <h2 className="registration-heading text-center">WELCOME TO REGISTRATION</h2>
 

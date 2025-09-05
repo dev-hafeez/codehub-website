@@ -19,18 +19,19 @@ const LandingPage = () => {
 
        <div className="landing-page">
       <NavbarComponent />
-      <main className="overflow-hidden"> {/* Prevent overflow */}
-        <Hero />
-       <Achievements/>
-       <ClubsSection/>
-      <Blog/>
-      <EventsSection/>
-      <MissionSection/>
-      </main>
+      <main className="overflow-hidden">
+  <div id="hero"><Hero /></div>
+  <div id="achievement"><Achievements /></div>
+  <div id="clubs"><ClubsSection /></div>
+  <div id="blogs"><Blog /></div>
+  <div id="events"><EventsSection /></div>
+  <div id="mission"><MissionSection /></div>
+</main>
       <Footer />
     </div>
       
     </div>
+  
   );
 };
 

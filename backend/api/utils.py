@@ -1,6 +1,8 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
-
+import os, re, shutil
+from django.conf import settings
+from .models import InlineImage
 
 def get_tokens_for_user(user, **claims):
     """
@@ -35,3 +37,42 @@ def send_otp(destination: str, **data):
         [destination],
         fail_silently=False,
     )
+
+
+TEMP_INLINE_PREFIX = "/media/temp_inline/"
+
+def finalize_inline_images(content, blog_id):
+    """
+    Moves inline images from temp_inline/ to blog_images/<blog_id>/,
+    updates the blog content paths, and cleans up InlineImage rows.
+    """
+    if not content:
+        return content
+
+    temp_pattern = r'src="/media/temp_inline/([^"]+)"'
+    matches = re.findall(temp_pattern, content)
+
+    if not matches:
+        return content
+
+    blog_dir = os.path.join(settings.MEDIA_ROOT, f'blog_images/{blog_id}')
+    os.makedirs(blog_dir, exist_ok=True)
+
+    for filename in matches:
+        src_path = os.path.join(settings.MEDIA_ROOT, "temp_inline", filename)
+        dst_path = os.path.join(blog_dir, filename)
+
+        if os.path.exists(src_path):
+            # Move the file to blog_images/<blog_id>/
+            shutil.move(src_path, dst_path)
+
+            # Update the content path
+            content = content.replace(
+                f'/media/temp_inline/{filename}',
+                f'/media/blog_images/{blog_id}/{filename}'
+            )
+
+            # Delete InlineImage row if it exists
+            InlineImage.objects.filter(image=f"temp_inline/{filename}").delete()
+
+    return content

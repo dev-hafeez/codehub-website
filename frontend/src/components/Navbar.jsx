@@ -27,7 +27,8 @@ const Navbar = () => {
   const renderAuthButtons = () => {
     if (!token) {
       return (
-        <Link to="/login" className="btn login-btn fw-semibold ms-2 mb-3">
+        <Link to="/login" className="login-link px-4 py-2 ms-lg-3 fw-semibold"
+                style={{ backgroundColor: "#ffffff", cursor: "pointer" }}>
           Login
         </Link>
       );
@@ -38,7 +39,8 @@ const Navbar = () => {
       <>
        <Button 
     type="button" 
-    className="btn login-btn fw-semibold ms-2 "  
+    className="login-link px-4 py-2 ms-lg-3 fw-semibold"
+    style={{ backgroundColor: "#ffffff", cursor: "pointer" }}
     onClick={() => navigate('/forgot-password')}
   >
     Reset password
@@ -46,8 +48,9 @@ const Navbar = () => {
 
       <Button
         onClick={handleLogout}
-        className="btn login-btn fw-semibold ms-2"
-        variant="danger"
+        className="login-link px-4 py-2 ms-lg-3 fw-semibold"
+                style={{ backgroundColor: "#ffffff", cursor: "pointer" }}
+        
       >
         Logout
       </Button>

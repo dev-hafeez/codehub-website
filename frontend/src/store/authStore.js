@@ -10,7 +10,7 @@ const useAuthStore = create((set, get) => ({
   loading: false,
   error: null,
 
-  // ---------- LOGIN ----------
+  
   login: async (username, password) => {
     set({ loading: true, error: null })
     try {

@@ -1,143 +1,175 @@
-import React from "react";
-import BlogCard from './BlogCard';
+// import React, { useEffect, useState } from "react";
+// import BlogCard from "./BlogCard";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import { Container, Row, Col } from "react-bootstrap";
+// import axios from "axios";
+// import useAuthStore from "../store/authStore.js";
+
+// const BlogGrid = ({ userId = null, userRole }) => {
+//   const { user_id } = useAuthStore(); // current logged-in user ID
+//   const [blogs, setBlogs] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     const fetchBlogs = async () => {
+//       try {
+//         setLoading(true);
+//         const res = await axios.get("http://localhost:8000/api/blogs/");
+
+//         let mappedBlogs = res.data.map((blog) => ({
+//           id: blog.id,
+//           title: blog.title,
+//           author: blog.createdBy || "Unknown",
+//           authorId: blog.createdById || blog.user,
+//           date: new Date(blog.createdAt).toLocaleDateString("en-US", {
+//             month: "long",
+//             day: "numeric",
+//             year: "numeric",
+//           }),
+//           tag: "General",
+//           image: blog.images?.length > 0 ? blog.images[0].image_url : null,
+//           authorImg: null,
+//         }));
+
+//         // Filter by userId if passed (only show their blogs)
+//         if (userId) {
+//           mappedBlogs = mappedBlogs.filter((b) => b.authorId === userId);
+//         }
+
+//         setBlogs(mappedBlogs);
+//       } catch (err) {
+//         console.error("Error fetching blogs:", err);
+//         setError("Failed to load blogs");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchBlogs();
+//   }, [userId]);
+
+//   // ✅ handle delete from BlogCard
+//   const handleDeleteBlog = (deletedId) => {
+//     setBlogs((prev) => prev.filter((b) => b.id !== deletedId));
+//   };
+
+//   if (loading) return <p>Loading blogs...</p>;
+//   if (error) return <p style={{ color: "red" }}>{error}</p>;
+//   if (blogs.length === 0) return <p>No blogs found.</p>;
+
+//   return (
+//     <Container className="my-4">
+//       <Row className="justify-content-center g-4">
+//         {blogs.map((blog) => (
+//           <Col key={blog.id} xs={11} sm={6} md={4} lg={4} xl={3}>
+//             <BlogCard
+//               {...blog}
+//               role={userRole}
+//               currentUserId={user_id}
+//               onDelete={handleDeleteBlog} // 👈 pass delete handler
+//             />
+//           </Col>
+//         ))}
+//       </Row>
+//     </Container>
+//   );
+// };
+
+// export default BlogGrid;
+
+
+
+import React, { useEffect, useState } from "react";
+import BlogCard from "./BlogCard";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col } from "react-bootstrap";
-import Image01 from "../assets/iphone-image.jpg";
-import Image02 from "../assets/car-image.jpg";
-import Image03 from "../assets/psv-controller.jpg";
-import AuthorImg01 from "../assets/author-1.jpg";
-import AuthorImg02 from "../assets/author-2.jpg";
-import AuthorImg03 from "../assets/author-3.jpg";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import axios from "axios";
+import useAuthStore from "../store/authStore.js";
 
-const blogs = [
-  {
-    id:1,
-    title: "5 Tips to Master Competitive Programming",
-    author: "Ayaan Ahmed Khan",
-    date: "July 25, 2025",
-    tag: "Programming",
-    image: Image01,
-    authorImg: AuthorImg01,
-  },
-  {
-    id:2,
-    title: "Why AI is the Future of Education",
-    author: "Fatima Noor",
-    date: "July 20, 2025",
-    tag: "AI & Education",
-    image: Image02,
-    authorImg: AuthorImg02,
-  },
-  {
-    id:3,
-    title: "Beginner’s Guide to Web Development in 2025",
-    author: "Hamza Ali",
-    date: "July 15, 2025",
-    tag: "Web Dev",
-    image: Image03,
-    authorImg: AuthorImg03,
-  },
-    {
-      id:4,
-    title: "5 Tips to Master Competitive Programming",
-    author: "Ayaan Ahmed Khan",
-    date: "July 25, 2025",
-    tag: "Programming",
-    image: Image01,
-    authorImg: AuthorImg01,
-  },
-  {
-    id:5,
-    title: "Why AI is the Future of Education",
-    author: "Fatima Noor",
-    date: "July 20, 2025",
-    tag: "AI & Education",
-    image: Image02,
-    authorImg: AuthorImg02,
-  },
-  {
-    id:6,
-    title: "Beginner’s Guide to Web Development in 2025",
-    author: "Hamza Ali",
-    date: "July 15, 2025",
-    tag: "Web Dev",
-    image: Image03,
-    authorImg: AuthorImg03,
-  },
-    {
-      id:7,
-    title: "5 Tips to Master Competitive Programming",
-    author: "Ayaan Ahmed Khan",
-    date: "July 25, 2025",
-    tag: "Programming",
-    image: Image01,
-    authorImg: AuthorImg01,
-  },
-  {
-    id:8,
-    title: "Why AI is the Future of Education",
-    author: "Fatima Noor",
-    date: "July 20, 2025",
-    tag: "AI & Education",
-    image: Image02,
-    authorImg: AuthorImg02,
-  },
-  {
-    id:9,
-    title: "Beginner’s Guide to Web Development in 2025",
-    author: "Hamza Ali",
-    date: "July 15, 2025",
-    tag: "Web Dev",
-    image: Image03,
-    authorImg: AuthorImg03,
-  },
-    {
-      id:10,
-    title: "5 Tips to Master Competitive Programming",
-    author: "Ayaan Ahmed Khan",
-    date: "July 25, 2025",
-    tag: "Programming",
-    image: Image01,
-    authorImg: AuthorImg01,
-  },
-  {
-    id:11,
-    title: "Why AI is the Future of Education",
-    author: "Fatima Noor",
-    date: "July 20, 2025",
-    tag: "AI & Education",
-    image: Image02,
-    authorImg: AuthorImg02,
-  },
-  {
-    id:12,
-    title: "Beginner’s Guide to Web Development in 2025",
-    author: "Hamza Ali",
-    date: "July 15, 2025",
-    tag: "Web Dev",
-    image: Image03,
-    authorImg: AuthorImg03,
-  },
-];
+const BlogGrid = ({ userId = null, userRole }) => {
+  const { user_id } = useAuthStore(); // current logged-in user ID
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const BlogGrid = () => {
+  // pagination state
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get("http://localhost:8000/api/blogs/");
+
+        let mappedBlogs = res.data.map((blog) => ({
+          id: blog.id,
+          title: blog.title,
+          author: blog.createdBy || "Unknown",
+          authorId: blog.createdById || blog.user,
+          date: new Date(blog.createdAt).toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          }),
+          tag: "General",
+          image: blog.images?.length > 0 ? blog.images[0].image_url : null,
+          authorImg: null,
+        }));
+
+        // Filter by userId if passed (only show their blogs)
+        if (userId) {
+          mappedBlogs = mappedBlogs.filter((b) => b.authorId === userId);
+        }
+
+        setBlogs(mappedBlogs);
+      } catch (err) {
+        console.error("Error fetching blogs:", err);
+        setError("Failed to load blogs");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, [userId]);
+
+  // ✅ handle delete from BlogCard
+  const handleDeleteBlog = (deletedId) => {
+    setBlogs((prev) => prev.filter((b) => b.id !== deletedId));
+  };
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 12);
+  };
+
+  if (loading) return <p>Loading blogs...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (blogs.length === 0) return <p>No blogs found.</p>;
+
   return (
     <Container className="my-4">
-      <Row className="justify-content-center g-4 ">
-        {blogs.map((blog, index) => (
-          <Col key={index} xs={11} sm={6} md={4} lg={4} xl={3}>
+      <Row className="justify-content-center g-4">
+        {blogs.slice(0, visibleCount).map((blog) => (
+          <Col key={blog.id} xs={11} sm={6} md={4} lg={4} xl={3}>
             <BlogCard
-            id={blog.id}
-              title={blog.title}
-              author={blog.author}
-              date={blog.date}
-              tag={blog.tag}
-              image={blog.image}
-              authorImg={blog.authorImg}
+              {...blog}
+              role={userRole}
+              currentUserId={user_id}
+              onDelete={handleDeleteBlog}
             />
           </Col>
         ))}
       </Row>
+
+      {/* Show load more button if blogs remain */}
+      {visibleCount < blogs.length && (
+        <div className="text-center mt-4">
+          <Button onClick={handleLoadMore} variant="primary">
+            Load More
+          </Button>
+        </div>
+      )}
     </Container>
   );
 };

@@ -48,7 +48,8 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-dark login-btn" disabled={loading}>
+          <button type="submit" className="login-link px-4 py-2 ms-lg-3 fw-semibold"
+                style={{ backgroundColor: "#ffffff", cursor: "pointer" }} disabled={loading}>
             {loading ? 'Logging in...' : 'LOGIN'}
           </button>
         </form>

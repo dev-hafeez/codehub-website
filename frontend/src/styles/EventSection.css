@@ -1,10 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
 
 
 .events-section {
   position: relative;
   overflow: hidden;
   background-color: #ffffff;
+}
+h1 ,h5, a {
+  font-family: 'Montserrat', sans-serif !important;
+}
+p{
+  font-family: 'Roboto', sans-serif;
 }
 
 .ellipse-bg {

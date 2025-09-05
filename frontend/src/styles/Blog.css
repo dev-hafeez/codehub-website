@@ -1,15 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rosario:ital,wght@0,300..700;1,300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
 
 
 .title {
   color: #0C4182;
-  font-family: "M PLUS Rounded 1c", sans-serif;
+  font-family: "Montserrat", sans-serif !important;
   font-weight: 700;
   font-size: clamp(2.2rem, 5vw, 4rem); /* Responsive size */
   text-shadow: -4px 0 4px #0c4182dc;
   letter-spacing: 2px;
   animation: glow 1.5s ease-in-out infinite;
+}
+h2 {
+  font-family: 'Montserrat', sans-serif;
+}
+p{
+  font-family: 'Roboto', sans-serif;
 }
 .bgstyle{
   width:100%;
@@ -82,6 +89,7 @@
 }
 
 .learn-more-btn {
+  font-family: 'Montserrat', sans-serif;
   border-radius: 5px;
   background-color: #0C4182;
   font-weight: 500;
