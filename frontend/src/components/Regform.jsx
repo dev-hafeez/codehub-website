@@ -56,7 +56,7 @@ function Regform() {
         user: { ...prev.user, password: value },
       }));
     } else if (id === "club") {
-      setFormData((prev) => ({ ...prev, club: value }));
+      setFormData((prev) => ({ ...prev, club: value.trim() }));
     }
   };
   const handleSubmit = async (e) => {
@@ -96,10 +96,6 @@ function Regform() {
         alert("Registration failed. Please try again.");
       }
       return;
-    }
-    
-    else {
-      alert("Signup failed. Please try again.");
     }
   };
 
