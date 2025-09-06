@@ -68,6 +68,21 @@ function Regform() {
       return;
     }
 
+
+    const validClubs = [
+      "Codehub",
+      "Graphics & Media",
+      "Social Media & Marketing",
+      "Decor & Registrations",
+      "Events & Logistics"
+    ];
+
+    if (!validClubs.includes(formData.club)) {
+      alert("Invalid Club. Please select a valid club.");
+      return; 
+    }
+
+
     const result = await signup(formData);
     if (result.success) {
       alert("User registered successfully!");
