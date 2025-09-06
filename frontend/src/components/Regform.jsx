@@ -88,6 +88,16 @@ function Regform() {
       alert("User registered successfully!");
       navigate("/dashboard");
     }
+
+    else if (!result.success) {
+      if (result.message && result.message.toLowerCase().includes("email")) {
+        alert("This email is already registered. Please use another one.");
+      } else {
+        alert("Registration failed. Please try again.");
+      }
+      return;
+  }
+
   };
 
   return (
