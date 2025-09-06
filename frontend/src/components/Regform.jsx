@@ -96,8 +96,11 @@ function Regform() {
         alert("Registration failed. Please try again.");
       }
       return;
-  }
-
+    }
+    
+    else {
+      alert("Signup failed. Please try again.");
+    }
   };
 
   return (
