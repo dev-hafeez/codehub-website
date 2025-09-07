@@ -1,12 +1,10 @@
 from typing import Optional
-
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, Event, Attendance
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
-# from drf_spectacular.utils import extend_schema_serializer
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -228,14 +226,22 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
 
         return instance
 
-class EventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Event
-        fields = "__all__"
-        read_only_fields = ["created_by"]
+class MeetingAttendanceSerializer(serializers.ModelSerializer):
 
-class AttendanceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Attendance
-        fields = "__all__"
-        read_only_fields = ("marked_by",)
+        model = MeetingAttendance
+        fields = '__all__'
+
+class MeetingSerializer(serializers.ModelSerializer):
+    attendance = MeetingAttendanceSerializer(many=True, required=True)
+
+    class Meta:
+        model = Meeting
+        fields = '__all__'
+
+    def create(self, validated_data):
+        attendance_data = validated_data.pop('attendance')
+        meeting = Meeting.objects.cerate(**validated_data)
+        for entry in attendance_data:
+            MeetingAttendance.objects.create(meeting=meeting, **entry)
+        return meeting
