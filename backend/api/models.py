@@ -6,6 +6,11 @@ class UserRole(models.TextChoices):
     LEAD = "LEAD", "lead"
     ADMIN = "ADMIN", "admin"
 
+class AttendanceStatus(models.TextChoices):
+    PRESENT = 'PRESENT', 'present'
+    ABSENT = 'ABSENT', 'absent'
+    LEAVE = 'LEAVE', 'leave'
+
 class User(AbstractUser):
     """
     Custom user model extending Django's built-in AbstractUser.
