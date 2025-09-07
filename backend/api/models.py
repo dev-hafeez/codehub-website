@@ -1,10 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
-import os 
-import uuid
-from django.conf import settings
-
 
 class UserRole(models.TextChoices):
     STUDENT = "STUDENT", "student"
