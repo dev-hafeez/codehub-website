@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from datetime import date, datetime
 
 class UserRole(models.TextChoices):
     STUDENT = "STUDENT", "student"
@@ -52,4 +53,11 @@ class BlogImage(models.Model):
         return f'Image for blog {self.blog.id}'
 
 
+class Meeting(models.Model):
+    date = models.DateField(default=date.today)
+    start_time = models.TimeField(default=datetime.now().time().strftime('%I:%M %p')) # 12-hour format
+    end_time = models.TimeField()
+    venue = models.CharField(max_length=50)
+    agenda = models.TextField(null=True, blank=True)
+    highlights = models.TextField(null=True, blank=True)
 
