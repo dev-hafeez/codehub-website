@@ -51,24 +51,5 @@ class BlogImage(models.Model):
     def __str__(self):
         return f'Image for blog {self.blog.id}'
 
-class Event(models.Model):
-    """
-    Model representing an event created by an admin.
-    """
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    start_date = models.DateTimeField(default=timezone.now)
-    end_date = models.DateTimeField()
-    # is_ongoing = models.BooleanField(default=False)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
 
-class Attendance(models.Model):
-    """
-    Model representing attendance of a student at an event.
-    """
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    attended = models.BooleanField(default=False)
-    # This must be a lead of the club the attending student is in
-    marked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='marked_attendances')
