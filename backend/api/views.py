@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly
-from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer
+from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -668,3 +668,7 @@ class BlogDeleteView(APIView):
             "message": "Blog post deleted successfully",
             "data": None
         }, status=status.HTTP_200_OK)
+
+class MeetingCreateView(generics.CreateAPIView):
+    serializer_class = MeetingSerializer
+    permission_classes = [IsLead]
