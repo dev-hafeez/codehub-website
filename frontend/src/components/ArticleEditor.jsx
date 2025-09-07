@@ -204,7 +204,6 @@
 
 
 
-
 import React, { useState, useRef, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
@@ -225,7 +224,7 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
     if (mode === "edit" && blogData) {
       setTitle(blogData.title || "");
       setContent(blogData.content || "");
-      setCoverPreview(blogData.images[0].image_url|| null);
+      setCoverPreview(blogData.images[0].image_url || null);
     }
   }, [mode, blogData]);
 
@@ -259,7 +258,7 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
         const range = editor.getSelection();
         editor.insertEmbed(range.index, "image", imageUrl);
       } catch {
-        alert("Image upload failed. Please try again.");
+        alert("❌ Image upload failed. Please try again.");
       }
     };
   };
@@ -291,8 +290,23 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // ✅ Validation with simple alerts
+    if (!title.trim()) {
+      alert("⚠️ Title is required!");
+      return;
+    }
+    if (!coverImage && !coverPreview) {
+      alert("⚠️ Please upload a cover image.");
+      return;
+    }
+    if (!content.trim() || content === "<p><br></p>") {
+      alert("⚠️ Content cannot be empty.");
+      return;
+    }
+
     try {
-      const data = await saveBlog({
+      await saveBlog({
         mode,
         blogData,
         title,
@@ -300,7 +314,7 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
         coverImage,
       });
 
-      alert(mode === "edit" ? "Blog updated!" : "Blog created!");
+      alert(mode === "edit" ? "✅ Blog updated successfully!" : "✅ Blog created successfully!");
 
       if (mode === "create") {
         setTitle("");
@@ -309,9 +323,10 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
         setCoverPreview(null);
       }
 
-      if (onSuccess) onSuccess(data);
+      if (onSuccess) onSuccess();
     } catch (err) {
       console.error(err);
+      alert("❌ Failed to save blog. Please try again.");
     }
   };
 
