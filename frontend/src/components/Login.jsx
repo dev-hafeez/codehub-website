@@ -11,12 +11,15 @@ const Login = () => {
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const success = await login(username, password)
-    if (success) {
-      navigate('/dashboard')
-    }
+  e.preventDefault()
+  const success = await login(username, password)
+  if (success) {
+    navigate('/dashboard')
+  } else {
+    alert("Invalid credentials. Please try again.")
   }
+}
+
 
   return (
     <div className="login-container d-flex flex-column align-items-center">
