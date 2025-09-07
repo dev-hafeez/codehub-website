@@ -61,3 +61,7 @@ class Meeting(models.Model):
     agenda = models.TextField(null=True, blank=True)
     highlights = models.TextField(null=True, blank=True)
 
+class MeetingAttendance(models.Model):
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='attendance')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attending_student')
+    status = models.CharField(max_length=10, choices=AttendanceStatus.choices)
