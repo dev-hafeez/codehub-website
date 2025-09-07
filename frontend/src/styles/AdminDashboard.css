@@ -1,430 +1,544 @@
-@import url('https://fonts.googleapis.com/css2?family=Ropa+Sans:wght@400&family=Rosario:wght@400;600;700&display=swap');
+/* Import Google Fonts */
+@import url('https://fonts.com/css2?family=Ropa+Sans&family=Rosario:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
-.admin-dashboard {
-  display: flex;
-  height: 100vh;
-  background-color: #f4f6f9;
-  font-family: "Inter", sans-serif;
-  color: #1e1e1e;
-  font-size: 18px;
+body {
+    background-color: #f4f6f9;
 }
 
-.sidebar .nav {
-  background: transparent !important;
+.dashboard-container {
+    font-family: "Inter", sans-serif;
+    color: #1e1e1e;
+    margin-top: 0%;
 }
 
-
-
-.sidebar {
-  width: 250px;
-  min-height: 100vh;
-  background: #1e5aa8;
-  color: white;
-  padding: 20px 15px;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0;
-  left: 0;
-  transition: none !important;
+/* --- Responsive Navbar Styling --- */
+.navbar1 {
+    background-color: #1e5aa8 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.navbar1 .logo {
+    width: 50px;
+    height: auto;
 }
 
-.sidebar .logo {
-  width: 60px;
-  height: 40px;
-  margin: 0;
+.navbar1 .acm-title {
+    font-family: "Rosario", sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
 }
 
-.sidebar .acm-title {
-  font-family: "Rosario", sans-serif;
-  font-weight: 400;
-  font-size: 25px;
-  line-height: 50px;
-  letter-spacing: -0.25px;
-  color: white;
+.navbar1 .nav-link {
+    font-family: "Ropa Sans", sans-serif;
+    font-size: 1.1rem;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.25rem;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding-left: 0;
-  margin-top: 15px;
-  flex-grow: 1;
+.navbar1 .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-.sidebar .nav-item {
-  background: transparent !important;
-  color: white !important;
-  padding: 2px 4px;
-  margin: 4px 0;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: "Ropa Sans", sans-serif;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 50px;
-  letter-spacing: -0.25px;
+.navbar1 .nav-link.active {
+    background-color: #f7a421; /* Highlight color for active item */
+    color: #1e1e1e !important;
+    font-weight: bold;
 }
 
-.sidebar .nav-item:hover,
-.sidebar .nav-item.active {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #fff !important;
-}
-
+/* --- Main Content Area --- */
 .main-content {
-  flex-grow: 1;
-  padding: 20px;
-  overflow-y: auto;
-  margin-left: 220px;
-  background: #f5f5f5;
-  min-height: 100vh;
+   margin-top: 0%;
+    padding: 50px 20px 20px 20px;
+}
+.btn-design {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A font similar to the one in the image */
   font-size: 18px;
+  font-weight: 600; /* Semi-bold */
+  color: #1a1a1a; /* Dark gray for the text */
+  padding: 7px 20px;
+  background-color: #ffffff; /* White background */
+  border-radius: 50px; /* Highly rounded corners */
+  border: 2px solid transparent;
+  background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+
+}
+.btn-design:hover{
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15); /* Soft, subtle shadow */
+
 }
 
+/* --- Content-Specific Styles (Mostly unchanged) --- */
 .dashboard-title {
-  font-weight: 700;
-  font-size: 33px;
-  margin-bottom: 20px;
-  color: #120808;
+    font-weight: 700;
+    font-size: 33px;
+    margin-bottom: 20px;
+    color: #120808;
 }
 
-.filter-btn {
-  padding: 8px 20px;
-  border-radius: 20px;
-  background-color: #5ba3ea;
-  border: none;
-  color: #120808;
-  font-family: "Kokoro", sans-serif;
-  font-size: 20px;
-  font-weight: 600;
+/* .filter-btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    background-color: #5ba3ea;
+    border: none;
+    color: #120808;
+    font-size: 1rem;
+    font-weight: 600;
+} */
+
+
+
+.chart-box, .stats-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    text-align: center;
+    width: 280px;
+    min-height: 220px;
 }
 
-.filter-btn:hover {
-  background-color: #2d66ad;
-}
-
-.chart-box {
-  text-align: center;
-  width: 280px;
-  min-height: 220px;
-  border-radius: 20px;
-  background: #fff;
-  padding: 15px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-  font-size: 18px;
-}
-
-.stats-box {
-  width: 280px;
-  min-height: 220px;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-}
-
-.stats-box p {
-  font-family: "Rosario", sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  color: #2D66AD;
-  margin: 8px 0;
-}
-
-.stats-box .stat-number {
-  font-weight: 700;
-  font-size: 20px;
-  margin-left: 5px;
-  color: #9BA0A4;
-  font-family: "RocknRoll One", sans-serif;
-}
-
-.legend {
-  font-size: 16px;
-  margin-top: 10px;
-}
+.stats-box { text-align: left; }
+.stats-box p { font-size: 1.1rem; }
+.stat-number { font-weight: bold; float: right; color: #2D66AD; }
 
 .legend-item {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin-right: 5px;
-  border-radius: 50%;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    vertical-align: middle;
 }
-
 .legend-item.present { background-color: #2d66ad; }
 .legend-item.absent { background-color: #9ba0a4; }
 .legend-item.leave { background-color: #5ba3ea; }
-
-.attendance-columns {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 25px;
+/* Attendance Section */
+.attendance-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+    max-width: 800px; /* Adjust as needed */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
-.col-card {
-  width: 300px;
-  max-height: 350px;
-  padding: 12px;
-  font-family: "Halant", sans-serif;
-  border-radius: 50px;
-  background: linear-gradient(180deg, rgba(155, 160, 164, 0.8) 0%, rgba(155, 160, 164, 0.64) 100%);
-  box-shadow: 0px 4px 100px 0px #9BA0A4CC;
-  text-align: center;
-  font-size: 25px;
+.attendance-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* Aligns "Status" with P A L */
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    font-weight: bold;
+    color: #2D66AD;
 }
 
-.col-card h5 {
-  font-size: 17px;
-  margin-bottom: 10px;
-  font-weight: 700;
-  letter-spacing: 5%;
+.attendance-header-row h5 {
+    margin: 0;
+    font-size: 16px;
 }
 
-.col-card ol,
-.col-card p {
-  font-size: 17px;
-  margin: 6px 0;
-  font-weight: 500;
-  font-family: "Halant", sans-serif;
+.col-name-header {
+    flex: 3; 
+    text-align: left;
+    padding-left: 20px; 
 }
 
-.status-header {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  font-family: "Rosario", sans-serif;
+.col-reg-header {
+    flex: 2; /* Allocate space for registration number */
+    text-align: left;
 }
 
-.status-row {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 10px;
+.col-status-header {
+    flex: 1.5; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+.status-header-labels {
+    display: flex;
+    gap: 15px; /* Space between P, A, L */
+    margin-top: 5px; /* Space between "STATUS" and P A L */
+}
+
+.status-header-labels span {
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+}
+
+
+
+.attendance-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+}
+
+.student-attendance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    padding: 8px 0;
+    border-bottom: 1px dotted #eee; 
+}
+
+.student-attendance-row:last-child {
+    border-bottom: none;
+}
+
+.student-name {
+    flex: 3;
+    text-align: left;
+    padding-left: 20px;
+    font-size: 15px;
+    color: #444;
+}
+
+.student-reg {
+    flex: 2;
+    text-align: left;
+    font-size: 15px;
+    color: #666;
+}
+
+.student-status-controls {
+    flex: 1.5;
+    display: flex;
+    justify-content: center; 
+    gap: 10px; 
+}
+
 
 .circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 28px; 
+    height: 28px; 
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
 }
 
-.circle input {
-  display: none;
-}
-
-.circle.present.active {
-  background: #2D66AD;
-}
-
-.circle.absent.active {
-  background: #ffffff;
-  border: 2px solid #000000;
-}
-
-.circle.leave.active {
-  background: linear-gradient(180deg, rgba(155, 160, 164, 0.8) 2%, rgba(87, 88, 89, 0.64) 100%);
-}
-
-.name h5 {
-  padding-bottom: 27px;
-}
-.name li {
-  padding-bottom: 6px;
-}
-.reg h5 {
-  padding-bottom: 26px;
+.circle input[type="radio"] {
+    position: absolute; 
+    opacity: 0;
+    width: -px;
+    height: 1px;
+    overflow: hidden;
 }
 
 
-@media (max-width: 768px) {
-  .attendance-columns {
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-  }
-
-  .col-card {
-    width: 100%;
-    max-width: 350px;
-    padding: 15px;
-    border-radius: 20px;
-    background: #fff;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    font-size: 18px;
-     background: linear-gradient(180deg, rgba(155, 160, 164, 0.8) 0%, rgba(155, 160, 164, 0.64) 100%);
-  box-shadow: 0px 4px 100px 0px #9BA0A4CC;
-  }
-
-  .status-row {
-    justify-content: first baseline;
-    gap: 15px;
-  }
-
-  .name, .reg {
-    display: none; 
-  }
-  .circle {
-  width: 23px;
-  height: 23px;
-  border-radius: 50%;
-  border: 2px solid #999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.circle input {
-  display: none;
+.circle.active::before {
+    content: '';
+    display: block;
+    width: 12px; 
+    height: 12px; 
+    border-radius: 50%;
+    background-color: #fff; 
 }
 
 .circle.present.active {
-  background: #2D66AD;
+    background-color: #4CAF50; 
+    border-color: #4CAF50;
 }
-
 .circle.absent.active {
-  background: #ffffff;
-  border: 2px solid #000000;
+    background-color: #F44336; 
+    border-color: #F44336;
 }
-
 .circle.leave.active {
-  background: linear-gradient(180deg, rgba(155, 160, 164, 0.8) 2%, rgba(87, 88, 89, 0.64) 100%);
-
+    background-color: #FFC107; 
+    border-color: #FFC107;
 }
+@media (max-width:768px){
+    .col-name-header{
+        font-size:15px;
+        padding-left: 5px;
+    }
+    col-reg-header{
+        font-size:13px;
+       padding-left: 2px;
+    }
 }
 
-@media (max-width: 991px) {
+/* ---  STYLES FOR CALENDAR AND SUBMIT BUTTON --- */
 
-.navbar {
-
-  height: 60px;
-  padding: 0 15px;
-  z-index: 1050;
+/* Positioning wrapper for the filter buttons and calendar */
+.filter-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+   
 }
 
-.navbar .navbar-brand {
-  font-family: "Rosario", sans-serif;
+/* Styles for the calendar popup */
+.calendar-popup {
+    position: absolute;
+    top: 100%; /* Position it right below the filter buttons */
+    z-index: 1000;
+    margin-top: 5px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Customizing react-datepicker's appearance */
+.react-datepicker {
+    border: none !important;
+    font-family: "Inter", sans-serif;
+}
+
+.react-datepicker__header {
+    background-color: #1e5aa8 !important;
+    color: white !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.react-datepicker__day--selected {
+    background-color: #f7a421 !important;
+    color: white !important;
+}
+
+.react-datepicker__day:hover {
+    background-color: #eef4ff !important;
+}
+
+/* Re-style attendance-columns to remove old background/shadow */
+.attendance-columns {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+/* Container for the submit button */
+.submit-container {
+    display: flex;
+    justify-content: flex-end; /* Aligns button to the right */
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* Styles for the submit button */
+.btn-submit {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  font-size: 1.1rem;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
   font-weight: 600;
-  font-size: 22px;
-  color: white;
+  align-self: flex-end; /* Keep it aligned to the right, or 'center' if you prefer */
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
 }
 
-  .sidebar {
-    display: none;
-  }
-
-  .main-content {
-    margin-top: 50px;
-    margin-left: 0;
-    padding: 10px;
-  }
-
-.offcanvas {
-  z-index: 1100 !important; 
+.btn-submit:hover {
+  background: linear-gradient(135deg, #0056b3, #004085);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
 }
 
 
-.offcanvas-start {
-  width: 220px; 
-  background-color: #1e5aa8;
-  color: white;
+/* Styles for Time and Venue Inputs */
+.meeting-input {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    width: 180px; /* Adjust width as needed */
+    transition: border-color 0.3s ease;
 }
 
-.offcanvas .nav-item {
-  color: white !important;
+.meeting-input:focus {
+    outline: none;
+    border-color: #2D66AD;
+    box-shadow: 0 0 0 2px rgba(45, 102, 173, 0.2);
 }
 
-.offcanvas .nav-item.active,
-.offcanvas .nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #fff !important;
+/* Styles for Highlight Options Section */
+.highlight-options-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+     
 }
 
-.offcanvas-start {
-  width: 220px; 
-  background: #1e5aa8;
-  color: white;
-  padding: 20px 15px;
+.agenda-options-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+     
+}
+.agenda-options-section h5 {
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+.highlight-options-section h5 {
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* NEW: Styles for the Highlights text input */
+.highlight-input {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+     
+    min-height: 80px;
+  max-height: 300px;
+  overflow-y: hidden; /* hide scrollbar */
+  resize: none;       /* optional: prevent manual resize */
+  
+}
+
+.highlight-input:focus {
+    outline: none;
+    border-color: #2D66AD;
+    box-shadow: 0 0 0 2px rgba(45, 102, 173, 0.2);
 }
 
 
-.offcanvas-header {
-  border-bottom: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding-bottom: 15px;
+/* Container for the button and the dropdown list */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
 }
 
-.offcanvas-header .offcanvas-title {
-  font-family: "Rosario", sans-serif;
-  font-weight: 400;
-  font-size: 25px;
-  color: white;
-}
-
-.offcanvas .nav {
-  background: transparent !important;
-}
-.offcanvas-header img.logo {
-  width: 60px;
-  height: 40px;
-}
-
-
-.offcanvas-body {
-  padding: 0;
-}
-
-.offcanvas-body ul {
+/* Style for the dropdown menu */
+.club-dropdown-menu {
+  position: absolute;
+  top: 100%; /* Position below the button */
+  left: 0;
+  z-index: 1000;
+  display: block; /* 'show' class from Bootstrap handles this */
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
   list-style: none;
-  padding-left: 0;
-  margin-top: 15px;
-  flex-grow: 1;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
 }
-.navbar {
-  background-color: #2D66AD !important;
-  color: white; 
-}
-.offcanvas-body .nav-item {
-  background: transparent !important;
-  color: white !important;
-  padding: 2px 4px;
-  margin: 4px 0;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: "Ropa Sans", sans-serif;
+
+/* Style for the dropdown menu items */
+.club-dropdown-menu .dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1rem;
+  clear: both;
   font-weight: 400;
-  font-size: 20px;
-  line-height: 50px;
-  letter-spacing: -0.25px;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
 }
 
-.offcanvas-body .nav-item:hover,
-.offcanvas-body .nav-item.active {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #fff !important;
+/* Style on hover */
+.club-dropdown-menu .dropdown-item:hover,
+.club-dropdown-menu .dropdown-item:focus {
+  color: #1e2125;
+  text-decoration: none;
+  background-color: #e9ecef;
 }
 
-
-.offcanvas-header .btn-close {
-  filter: invert(1); 
+/* Active item style */
+.club-dropdown-menu .dropdown-item.active {
+  color: #fff;
+  text-decoration: none;
+  background-color: #0d6efd;
 }
 
+/* The filter button style you already have in place */
+.filter-btn {
+  /* ... your existing styles for filter-btn ... */
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* View Attedance */
+/* src/styles/AdminDashboard.css - Add or replace these styles */
+
+.meeting-details-box {
+  background-color: #ffffff; /* White background for a clean look */
+  border: 1px solid #e0e0e0; /* Subtle border */
+  border-radius: 12px; /* Slightly more rounded corners */
+  padding: 25px 30px; /* More padding */
+  margin-top: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* More pronounced shadow for depth */
+  width: 100%; /* Ensure it takes full width if space allows */
+  max-width: 600px; /* Max width for better readability on larger screens */
+  margin-left: auto; /* Center the box */
+  margin-right: auto; /* Center the box */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between detail lines */
+}
+
+.meeting-details-box h5 {
+  color: #2D66AD; /* Use your primary blue color */
+  font-size: 1.4rem; /* Slightly larger heading */
+  font-weight: 700; /* Bolder heading */
+  padding-bottom: 10px;
+  margin-bottom: 15px; /* Space after heading */
+  border-bottom: 2px solid #e0e0e0; /* Lighter separator line */
+  text-align: center; /* Center the heading */
+}
+
+.meeting-details-box p {
+  margin-bottom: 0; /* Remove default paragraph margin */
+  color: #333; /* Darker text for better contrast */
+  font-size: 1rem;
+  line-height: 1.5;
+  display: flex; /* Use flex for alignment of strong and text */
+  align-items: baseline; /* Align text baselines */
+}
+
+.meeting-details-box p strong {
+  color: #555; /* Slightly muted color for labels */
+  font-weight: 600; /* Make label bold */
+  min-width: 100px; /* Give a minimum width to labels for alignment */
+  flex-shrink: 0; /* Prevent label from shrinking */
+  margin-right: 10px; /* Space between label and value */
 }

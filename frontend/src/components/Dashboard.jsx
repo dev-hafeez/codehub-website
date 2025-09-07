@@ -12,23 +12,19 @@ const Dashboard = () => {
       case "ADMIN":
         return (
           <>
-            <Link to="/article" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Post Article</Link>
-            <Link to="/attendance" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Attendance</Link>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Edit Article</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Create Event</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Check Student Details</button>
-            <Link to="/signup" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Signup New Members</Link>
-            <Link to="/myblog" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">My Articles</Link>
+            <Link to="/" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Member Management</Link>
+            <Link to="/admin-blogs" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Handle Blogs</Link>
+            
           </>
         );
       case "LEAD":
         return (
           <>
-            <Link to="/article" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Post Article</Link>
+            <Link to="/mark-attendance" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Mark Attendance</Link>
+            <Link to="/meeting-history" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">View Attendance</Link>
             <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Create Event</button>
-            <Link to="/attendance" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Attendance</Link>
-            <Link to="/myblog" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">My Articles</Link>
             <Link to="/signup" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Signup New Members</Link>
+            <Link to="/myblog" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">My Articles</Link>
           </>
         );
       case "STUDENT":

@@ -6,7 +6,7 @@ import BlogListingPage from './pages/BlogListingPage.jsx';
 import SinglePostPage from './pages/SinglePostPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
-import AdminDashboard from './pages/AdminDashboard.jsx';
+
 
 import './App.css';
 import { Button, Container, Alert } from 'react-bootstrap';
@@ -16,6 +16,10 @@ import ForgotPassword from './components/ForgotPassword.jsx';
 import ResetPassword from './components/ResetPassword.jsx';
 import MyBlogPage from './pages/MyBlogPage.jsx';
 import EditBlogWrapper from './components/EditBlogWrapper.jsx';
+import ViewAttendance from './pages/ViewAttendancePage.jsx';
+import MeetingList from './pages/MeetingList.jsx';
+import MarkAttendance from './pages/MarkAttendance.jsx';
+import AdminBlogPage from './pages/AdminBlogPage.jsx';
 function App() {
   const [role, setRole] = useState(null);
     useEffect(() => {
@@ -42,10 +46,13 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/attendance" element={<AdminDashboard />} />
+          <Route path="/mark-attendance" element={<MarkAttendance />} />
+          <Route path="/meeting-history" element={<MeetingList/>} />
+          <Route path="/view-attendance" element={<ViewAttendance/>} />
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/blogs" element={<BlogListingPage />} />
+          <Route path="/admin-blogs" element={<AdminBlogPage />} />
           <Route path="/blog/:id" element={<SinglePostPage />} />
            <Route path="/blogs/:id/edit" element={<EditBlogWrapper />} />
           <Route path="/myblog" element={<MyBlogPage />} />
@@ -59,6 +66,8 @@ function App() {
         />
         <Route path="/signup" element={<Regform />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+      
+      
       
         </Routes>
       </Router>

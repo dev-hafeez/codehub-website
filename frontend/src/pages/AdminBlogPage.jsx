@@ -5,9 +5,8 @@ import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import useAuthStore from '../store/authStore' // import store
 
-const BlogListingPage = () => {
-  const { user_id, role } = useAuthStore(); 
-  const blogListing=true;
+const AdminBlogPage = () => {
+  const { user_id, role } = useAuthStore(); // get current user
 
   return (
     <>
@@ -18,15 +17,10 @@ const BlogListingPage = () => {
       </div>
       <BlogBanner/>
       {/* ✅ Pass user info down */}
-      <BlogGrid
-  userRole={role}
-  filterByUser={false}    // show all blogs
-  blogListing={true}
-/>
-
+      <BlogGrid userId={user_id} userRole={role} />
       <Footer/>
     </>
   )
 }
 
-export default BlogListingPage
+export default AdminBlogPage

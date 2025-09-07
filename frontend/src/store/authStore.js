@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import axios from 'axios'
 
 const useAuthStore = create((set, get) => ({
-  user_id: null,
+  user_id: localStorage.getItem('user_id') || null,
   token: localStorage.getItem('token') || null,
   role: localStorage.getItem('role') || null,
   resetToken: null, // for forgot password flow
@@ -18,6 +18,7 @@ const useAuthStore = create((set, get) => ({
         username, 
         password 
       })
+      
 
       const token = res.data?.token || res.data?.data?.token
       const role = res.data?.role || res.data?.data?.role
@@ -25,6 +26,7 @@ const useAuthStore = create((set, get) => ({
 
       localStorage.setItem('token', token)
       localStorage.setItem('role', role)
+      localStorage.setItem('user_id', user_id)
 
       set({ user_id, token, role, loading: false })
       return true
