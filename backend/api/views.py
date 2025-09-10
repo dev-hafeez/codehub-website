@@ -4,8 +4,9 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly
-from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer
+from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin
+from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
+    MeetingAttendanceSerializer, StudentListSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -13,15 +14,25 @@ from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
-from .models import Blog, BlogImage
+from .models import Blog, BlogImage, Meeting, MeetingAttendance, Student
 from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
-from django.http import QueryDict
-from rest_framework import permissions
-from rest_framework.exceptions import PermissionDenied
-
 from .utils import get_tokens_for_user, send_otp
 
 User = get_user_model()
+
+class StudentsListView(generics.ListAPIView):
+    serializer_class = StudentListSerializer
+    permission_classes = [IsLeadOrAdmin]
+
+    def get_queryset(self):
+        if self.request.user.role == 'LEAD':
+            club = self.request.user.student.club
+            return Student.objects.filter(club=club)
+        return Student.objects.all()
+
+class StudentRUView(generics.RetrieveUpdateAPIView):
+    serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticated]
 
 @extend_schema(
     request=StudentSerializer,
@@ -669,6 +680,64 @@ class BlogDeleteView(APIView):
             "data": None
         }, status=status.HTTP_200_OK)
 
-class MeetingCreateView(generics.CreateAPIView):
+class MeetingCreateView(APIView):
     serializer_class = MeetingSerializer
+    permission_classes = [IsLeadOrAdmin]
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        try:
+            attendance_data = data.pop('attendance')
+        except KeyError:
+            return Response({
+                'status': 'error',
+                'message': {
+                    'attendance': 'This field is required.'
+                },
+                'data': None
+            }, status.HTTP_400_BAD_REQUEST)
+        meeting_serializer = self.serializer_class(data=data)
+        if meeting_serializer.is_valid():
+            meeting = meeting_serializer.save()
+            for att in attendance_data:
+                att['meeting'] = meeting.id
+            attendance_serializer = MeetingAttendanceSerializer(many=True, data=attendance_data)
+            if attendance_serializer.is_valid():
+                attendance_serializer.save()
+                return Response({
+                    'status': 'success',
+                    'message': 'Data created',
+                    'data': None
+                }, status.HTTP_201_CREATED)
+        return Response({
+            'status': 'error',
+            'message': meeting_serializer.errors,
+            'data': None
+        }, status.HTTP_400_BAD_REQUEST)
+
+class MeetingListView(generics.ListAPIView):
+    queryset = Meeting.objects.all()
+    serializer_class = MeetingSerializer
+    permission_classes = [IsLeadOrAdmin]
+
+class MeetingRUDView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Meeting.objects.all()
+    serializer_class = MeetingSerializer
+    permission_classes = [IsLeadOrAdmin]
+
+class MeetingAttendanceListView(generics.ListAPIView):
+    serializer_class = MeetingAttendanceSerializer
+    permission_classes = [IsLeadOrAdmin]
+    lookup_url_kwarg = 'pk'
+
+    def get_queryset(self):
+        if self.request.user.role == 'LEAD':
+            club = self.request.user.student.club
+            return MeetingAttendance.objects.filter(user__student__club=club)
+        return MeetingAttendance.objects.all()
+
+class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MeetingAttendance.objects.all()
+    serializer_class = MeetingAttendanceSerializer
     permission_classes = [IsLead]
+    lookup_url_kwarg = 'att_pk'
