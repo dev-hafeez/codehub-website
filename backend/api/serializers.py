@@ -247,15 +247,9 @@ class MeetingAttendanceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MeetingSerializer(serializers.ModelSerializer):
-    attendance = MeetingAttendanceSerializer(many=True, required=True)
+    start_time = serializers.TimeField(format='%I:%M %p')
+    end_time = serializers.TimeField(format='%I:%M %p')
 
     class Meta:
         model = Meeting
         fields = '__all__'
-
-    def create(self, validated_data):
-        attendance_data = validated_data.pop('attendance')
-        meeting = Meeting.objects.cerate(**validated_data)
-        for entry in attendance_data:
-            MeetingAttendance.objects.create(meeting=meeting, **entry)
-        return meeting
