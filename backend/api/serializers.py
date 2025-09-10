@@ -35,6 +35,20 @@ class StudentSerializer(serializers.ModelSerializer):
         student = Student.objects.create(user=user, **validated_data)
         return student
 
+# NOTE: This serializer is for the students list view
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'username']
+
+# NOTE: This serializer is for the students list view
+class StudentListSerializer(serializers.ModelSerializer):
+    user = UserListSerializer()
+
+    class Meta:
+        model = Student
+        fields = '__all__'
+
 class LoginSerializer(serializers.Serializer):
     """
     Handles user authentication by validating usernames and password.
