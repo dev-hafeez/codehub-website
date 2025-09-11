@@ -103,10 +103,8 @@ DATABASES = {
         'NAME': 'codehub_db',
         'USER': 'backend',
         'PASSWORD': 'backend-test-pass',
-        'HOST': '0.tcp.ap.ngrok.io',
-        'PORT': '11338', # This will change if the host machine shuts down.
-                         # Currently, there is no easy way to automatically change this
-                         # without spending money.
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 
