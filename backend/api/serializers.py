@@ -1,12 +1,10 @@
 from typing import Optional
-
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
-# from drf_spectacular.utils import extend_schema_serializer
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,6 +34,20 @@ class StudentSerializer(serializers.ModelSerializer):
         user = User.objects.create(**user_data)
         student = Student.objects.create(user=user, **validated_data)
         return student
+
+# NOTE: This serializer is for the students list view
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'username']
+
+# NOTE: This serializer is for the students list view
+class StudentListSerializer(serializers.ModelSerializer):
+    user = UserListSerializer()
+
+    class Meta:
+        model = Student
+        fields = '__all__'
 
 class LoginSerializer(serializers.Serializer):
     """
@@ -227,3 +239,17 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
                 BlogImage.objects.create(blog=instance, image=img)
 
         return instance
+
+class MeetingAttendanceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MeetingAttendance
+        fields = '__all__'
+
+class MeetingSerializer(serializers.ModelSerializer):
+    start_time = serializers.TimeField(format='%I:%M %p')
+    end_time = serializers.TimeField(format='%I:%M %p')
+
+    class Meta:
+        model = Meeting
+        fields = '__all__'

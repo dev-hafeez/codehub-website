@@ -97,14 +97,18 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Use environment variables to set the database host and port
+DB_HOST = os.getenv('DB_HOST', '127.0.0.1')  # Default to localhost
+DB_PORT = os.getenv('DB_PORT', '3306')  # Default to MySQL port
+
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'codehub_db',
         'USER': 'backend',
         'PASSWORD': 'backend-test-pass',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
     }
 }
 
@@ -159,5 +163,3 @@ EMAIL_FILE_PATH = "api/tmp/api_emails"
 # Media files configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
