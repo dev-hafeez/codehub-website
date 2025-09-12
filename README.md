@@ -22,18 +22,14 @@ $ pip install -r backend/requirements.txt
 
 3. Test if the database server is running:
 > [!NOTE]
-> The database server runs on a laptop. `0.tcp.ap.ngrok.io` relays all requests to the Docker container running on the laptop.
-> If there are any issues in connecting the database, it is probably because the database port (this will happen if the tunnel created
->  by `ngrok` has been stopped) has been changed or the machine has shut down. Or because the connection limit has been reached
-> (free stuff comes with limits).
+> The previous database setup has been taken down. Everyone will have to set up a local database.
 ```bash
 $ python backend/manage.py dbshell
 ```
 This should directly open the database and allow you to interact with it.
 
 > [!WARNING]
-> A superuser has all permissions by default, so caution is advised. Since the database is on a remote server,
-> any mishap could have permanent effects.
+> A superuser has all permissions by default, so caution is advised.
 
 4. Create a superuser (only for leads):
 ```bash
