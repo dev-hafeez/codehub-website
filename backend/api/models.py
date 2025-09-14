@@ -1,14 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import os 
-import uuid
-from django.conf import settings
-
+from datetime import date, datetime
 
 class UserRole(models.TextChoices):
     STUDENT = "STUDENT", "student"
     LEAD = "LEAD", "lead"
     ADMIN = "ADMIN", "admin"
+
+class AttendanceStatus(models.TextChoices):
+    PRESENT = 'PRESENT', 'present'
+    ABSENT = 'ABSENT', 'absent'
+    LEAVE = 'LEAVE', 'leave'
 
 class User(AbstractUser):
     """
@@ -50,23 +52,16 @@ class BlogImage(models.Model):
     def __str__(self):
         return f'Image for blog {self.blog.id}'
 
-# class Event(models.Model):
-#     """
-#     Model representing an event created by an admin.
-#     """   
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     name = models.CharField(max_length=200)
-#     date = models.DateTimeField()
-#     is_ongoing = models.BooleanField(default=False)
-#     created_by = models.ForeignKey(Admin, on_delete=models.SET_NULL, null=True, blank=True)
-#
-#
-# class Attendance(models.Model):
-#     """
-#     Model representing attendance of a student at an event.
-#     """
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     status = models.BooleanField(default=False)
-#     marked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='marked_attendances')
+
+class Meeting(models.Model):
+    date = models.DateField(default=date.today)
+    start_time = models.TimeField(default=datetime.now().time().strftime('%I:%M %p')) # 12-hour format
+    end_time = models.TimeField()
+    venue = models.CharField(max_length=50)
+    agenda = models.TextField(null=True, blank=True)
+    highlights = models.TextField(null=True, blank=True)
+
+class MeetingAttendance(models.Model):
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='attendance')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attending_student')
+    status = models.CharField(max_length=10, choices=AttendanceStatus.choices)

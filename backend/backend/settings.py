@@ -99,16 +99,18 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Use environment variables to set the database host and port
+DB_HOST = os.getenv('DB_HOST', '127.0.0.1')  # Default to localhost
+DB_PORT = os.getenv('DB_PORT', '3306')  # Default to MySQL port
+
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'codehub_db',
         'USER': 'backend',
         'PASSWORD': 'backend-test-pass',
-        'HOST': '0.tcp.ap.ngrok.io',
-        'PORT': '11338', # This will change if the host machine shuts down.
-                         # Currently, there is no easy way to automatically change this
-                         # without spending money.
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
     }
 }
 
