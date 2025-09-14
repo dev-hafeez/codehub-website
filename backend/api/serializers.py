@@ -6,6 +6,10 @@ from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
+# Allowed types & default max size (5 MB)
+ALLOWED_IMAGE_TYPES = ("image/jpeg", "image/png", "image/webp")
+MAX_IMAGE_SIZE = getattr(settings, "MAX_BLOG_IMAGE_SIZE", 5 * 1024 * 1024)  # bytes
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -91,9 +95,7 @@ class OTPSerializer(serializers.Serializer):
 class PasswordChangeSerializer(serializers.Serializer):
     token = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
-# Allowed types & default max size (5 MB)
-ALLOWED_IMAGE_TYPES = ("image/jpeg", "image/png", "image/webp")
-MAX_IMAGE_SIZE = getattr(settings, "MAX_BLOG_IMAGE_SIZE", 5 * 1024 * 1024)  # bytes
+
 
 
 class BlogImageSerializer(serializers.ModelSerializer):
