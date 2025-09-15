@@ -77,6 +77,7 @@ class StudentRUView(generics.RetrieveUpdateAPIView):
 class SignupView(APIView):
     serializer_class = StudentSerializer
     permission_classes = [IsLead]
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
