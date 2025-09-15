@@ -31,6 +31,7 @@ class StudentsListView(generics.ListAPIView):
         return Student.objects.all()
 
 class StudentRUView(generics.RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
     serializer_class = StudentSerializer
     permission_classes = [IsAuthenticated]
 
