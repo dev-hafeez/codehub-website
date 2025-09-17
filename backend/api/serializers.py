@@ -6,6 +6,10 @@ from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
+# Allowed types & default max size (5 MB)
+ALLOWED_IMAGE_TYPES = ("image/jpeg", "image/png", "image/webp")
+MAX_IMAGE_SIZE = getattr(settings, "MAX_BLOG_IMAGE_SIZE", 5 * 1024 * 1024)  # bytes
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,7 +51,6 @@ class UserListSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'email', 'role', 'username']
 
 
-# NOTE: This serializer is for the students list view
 class StudentListSerializer(serializers.ModelSerializer):
     user = UserListSerializer()
 
@@ -57,18 +60,6 @@ class StudentListSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    """
-    Handles user authentication by validating usernames and password.
-    Fields:
-        username: Required string.
-        password: Required string (write-only).
-    Validates:
-        Credentials using Django's `authenticate` function.
-        Ensures user is active.
-    Returns:
-        Authenticated `user` object in `validated_data` on success.
-        Raises `ValidationError` on failure.
-    """
     username = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True, required=True)
 
@@ -102,24 +93,7 @@ class PasswordChangeSerializer(serializers.Serializer):
     password = serializers.CharField(required=True)
 
 
-# Allowed types & default max size (5 MB)
-ALLOWED_IMAGE_TYPES = ("image/jpeg", "image/png", "image/webp")
-MAX_IMAGE_SIZE = getattr(settings, "MAX_BLOG_IMAGE_SIZE", 5 * 1024 * 1024)  # bytes
-
-
 class BlogImageSerializer(serializers.ModelSerializer):
-    """
-    Serializer for blog images.
-
-    Fields:
-        id : Primary key of the image record.
-        relative_path : Path stored in DB.
-        image_url : Absolute URL of the image file.
-
-    Behavior:
-         Uses `get_image_url` to build the absolute URL using the request context.
-         Returns None if the image file is missing or request context is not available.
-    """
     relative_path = serializers.SerializerMethodField()
     image_url = serializers.SerializerMethodField()
 
@@ -128,7 +102,7 @@ class BlogImageSerializer(serializers.ModelSerializer):
         fields = ("id", "relative_path", "image_url")
 
     def get_relative_path(self, obj) -> str:
-        return obj.image.name  # stored path in DB
+        return obj.image.name
 
     def get_image_url(self, obj) -> Optional[str]:
         request = self.context.get('request')
@@ -138,18 +112,6 @@ class BlogImageSerializer(serializers.ModelSerializer):
 
 
 class BlogSerializer(serializers.ModelSerializer):
-    """
-    Serializer for blog posts.
-
-    Fields:
-        id : Primary key of the blog post.
-        title : Title of the blog post.
-        content : Main text content of the post.
-        created_by : Dict with ID and username of the creator.
-        createdBy : Human-readable string of the creator (for backward compatibility).
-        createdAt, updatedAt : Timestamps.
-        images : Related blog images (serialized with BlogImageSerializer).
-    """
     images = BlogImageSerializer(many=True, read_only=True)
     created_by = serializers.SerializerMethodField()
     createdBy = serializers.StringRelatedField()
@@ -164,16 +126,6 @@ class BlogSerializer(serializers.ModelSerializer):
 
 
 class BlogUploadSerializer(serializers.Serializer):
-    """
-    Serializer for uploading new blog posts with images.
-
-    Validates:
-        - Image file size (max 5MB by default or settings override)
-        - Image file type (JPEG, PNG, WEBP)
-
-    Behavior:
-        Creates a Blog instance and related BlogImage records.
-    """
     title = serializers.CharField(max_length=255)
     content = serializers.CharField()
     images = serializers.ListField(
@@ -183,10 +135,8 @@ class BlogUploadSerializer(serializers.Serializer):
 
     def validate_images(self, images):
         for img in images:
-            # size check
             if img.size > MAX_IMAGE_SIZE:
                 raise serializers.ValidationError(f"{img.name} exceeds the max size of {MAX_IMAGE_SIZE} bytes.")
-            # content_type check
             content_type = getattr(img, "content_type", None)
             if content_type not in ALLOWED_IMAGE_TYPES:
                 raise serializers.ValidationError(f"{img.name} has invalid content type ({content_type}).")
@@ -196,14 +146,12 @@ class BlogUploadSerializer(serializers.Serializer):
         request = self.context.get("request")
         user = request.user
 
-        # Create the blog
         blog = Blog.objects.create(
             title=validated_data["title"],
             content=validated_data["content"],
             createdBy=user
         )
 
-        # Create related BlogImage objects
         for img in validated_data["images"]:
             BlogImage.objects.create(blog=blog, image=img)
 
@@ -211,10 +159,6 @@ class BlogUploadSerializer(serializers.Serializer):
 
 
 class BlogUpdateSerializer(serializers.ModelSerializer):
-    """
-    Serializer for updating blog posts.
-    Allows updating title, content, and optionally replacing images.
-    """
     images = serializers.ListField(
         child=serializers.ImageField(),
         required=False
@@ -234,16 +178,13 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
         new_images = validated_data.pop("images", None)
         images_to_delete = validated_data.pop("images_to_delete", [])
 
-        # Update fields
         instance.title = validated_data.get("title", instance.title)
         instance.content = validated_data.get("content", instance.content)
         instance.save()
 
-        # Handle image deletions
         if images_to_delete:
             BlogImage.objects.filter(blog=instance, id__in=images_to_delete).delete()
 
-        # Handle new image uploads (append)
         if new_images:
             for img in new_images:
                 BlogImage.objects.create(blog=instance, image=img)
