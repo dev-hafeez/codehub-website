@@ -59,6 +59,7 @@ SIMPLE_JWT = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'ACM Society Management API',
     'DESCRIPTION': 'A REST API that provides endpoints to manage users, attendance, blogs, articles, etc.',
+    'COMPONENT_SPLIT_REQUEST': True,
 }
 
 AUTHENTICATION_BACKENDS = ['backend.auth_backends.MultiFieldAuthBackend']
