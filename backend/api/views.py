@@ -78,7 +78,6 @@ class StudentRUView(generics.RetrieveUpdateAPIView):
 class SignupView(APIView):
     serializer_class = StudentSerializer
     permission_classes = [IsLead]
-    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -96,7 +95,7 @@ class SignupView(APIView):
                     "email": user.email,
                     "role": user.role,
                     "club": student.club,
-                    "roll_number": student.roll_no,
+                    "roll_number": student.roll_no
                 }
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
