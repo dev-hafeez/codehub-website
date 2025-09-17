@@ -95,7 +95,7 @@ class SignupView(APIView):
                     "email": user.email,
                     "role": user.role,
                     "club": student.club,
-                    "roll_number": student.roll_no,
+                    "roll_number": student.roll_no
                 }
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
