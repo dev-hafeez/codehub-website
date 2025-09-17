@@ -17,8 +17,19 @@ from rest_framework import generics
 from .models import Blog, BlogImage, Meeting, MeetingAttendance, Student
 from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
 from .utils import get_tokens_for_user, send_otp
+from rest_framework.decorators import api_view, schema
 
 User = get_user_model()
+
+@api_view(['GET', 'POST'])
+@schema(None)
+def api_home(request):
+    if request.method == 'POST':
+        return Response({
+            'message': 'Server is online. API functional.',
+            'data': request.data
+        })
+    return Response({"message": "Server is online. API functional."})
 
 class StudentsListView(generics.ListAPIView):
     serializer_class = StudentListSerializer
@@ -31,6 +42,7 @@ class StudentsListView(generics.ListAPIView):
         return Student.objects.all()
 
 class StudentRUView(generics.RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
     serializer_class = StudentSerializer
     permission_classes = [IsAuthenticated]
 
@@ -94,7 +106,7 @@ class SignupView(APIView):
                     "email": user.email,
                     "role": user.role,
                     "club": student.club,
-                    "roll_number": student.roll_no,
+                    "roll_number": student.roll_no
                 }
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
