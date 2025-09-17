@@ -15,7 +15,9 @@
     width: 100px;
     height: 70px;
 }
-
+.dashboard{
+    min-height: 60vh;
+}
 .dashboard-action-btn{
     background-color: #0C4182;
   color: white;

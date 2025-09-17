@@ -690,7 +690,8 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .permissions import IsLead,IsAdmin
+
+from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
@@ -699,16 +700,87 @@ from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
-from .models import Blog, BlogImage
-from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer, InlineImageSerializer
+from .models import Blog, BlogImage, Meeting, MeetingAttendance,Student
+from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
+    MeetingAttendanceSerializer, StudentListSerializer,InlineImageSerializer
 from django.http import QueryDict
 from rest_framework import permissions
 from rest_framework.exceptions import PermissionDenied
+from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
 from .utils import finalize_inline_images
-
+from datetime import date, datetime
 from .utils import get_tokens_for_user, send_otp
 
 User = get_user_model()
+
+@extend_schema(
+    request=StudentSerializer,
+    responses={
+        201: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "success"},
+                    "message": {"type": "string", "example": "User registered successfully"},
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "token": {"type": "string"},
+                            "user_id": {"type": "integer"},
+                            "username": {"type": "string"},
+                            "email": {"type": "string"},
+                            "role": {"type": "string"},
+                            "club": {"type": "string"},
+                            "roll_number": {"type": "string"},
+                        }
+                    }
+                }
+            },
+            description="User created successfully"
+        ),
+        400: OpenApiResponse(
+            response={
+                "type": "object",
+                "properties": {
+                    "status": {"type": "string", "example": "error"},
+                    "message": {"type": "object", "example": {"email": ["Email already exists"]}},
+                    "data": {"type": "null"}
+                }
+            },
+            description="Validation error"
+        ),
+        403: OpenApiResponse(description="Forbidden - user does not have Lead permissions"),
+    },
+    description='Handles student registration using a nested serializer.\nOnly users with the \'Lead\' role are allowed to access this endpoint.'
+)
+class InlineImageUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = InlineImageSerializer(data=request.data)
+        if serializer.is_valid():
+            image = serializer.save()
+            image_url = request.build_absolute_uri(image.image.url)
+            return Response({"url": image_url}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StudentsListView(generics.ListAPIView):
+    serializer_class = StudentListSerializer
+    permission_classes = [IsLeadOrAdmin]
+
+    def get_queryset(self):
+        if self.request.user.role == 'LEAD':
+            club = self.request.user.student.club
+            return Student.objects.filter(club=club)
+        return Student.objects.all()
+
+class StudentRUView(generics.RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticated]
 
 @extend_schema(
     request=StudentSerializer,
@@ -1361,3 +1433,144 @@ class BlogDeleteView(APIView):
             "data": None
         }, status=status.HTTP_200_OK)
     
+
+
+# class MeetingCreateView(APIView):
+#     serializer_class = MeetingSerializer
+#     permission_classes = [IsLeadOrAdmin]
+
+#     def post(self, request, *args, **kwargs):
+#         data = request.data
+#         print(data)
+#         try:
+#             attendance_data = data.pop('attendance')
+            
+#         except KeyError:
+#             return Response({
+#                 'status': 'error',
+#                 'message': {
+#                     'attendance': 'This field is required.'
+#                 },
+#                 'data': None
+#             }, status.HTTP_400_BAD_REQUEST)
+#         meeting_serializer = self.serializer_class(data=data)
+#         if meeting_serializer.is_valid():
+#             meeting = meeting_serializer.save()
+#             for att in attendance_data:
+#                 att['meeting'] = meeting.id
+#             attendance_serializer = MeetingAttendanceSerializer(many=True, data=attendance_data)
+#             if attendance_serializer.is_valid():
+#                 attendance_serializer.save()
+#                 return Response({
+#                     'status': 'success',
+#                     'message': 'Data created',
+#                     'data': None
+#                 }, status.HTTP_201_CREATED)
+#         return Response({
+#             'status': 'error',
+#             'message': meeting_serializer.errors,
+#             'data': None
+#         }, status.HTTP_400_BAD_REQUEST)
+
+class MeetingCreateView(APIView):
+    serializer_class = MeetingSerializer
+    permission_classes = [IsLeadOrAdmin]
+
+    def parse_time(self, time_str):
+        """
+        Parse 12-hour format (e.g., '09:30 AM') into a 24-hour time string ('09:30:00').
+        """
+        try:
+            return datetime.strptime(time_str, "%I:%M %p").time()
+        except ValueError:
+            return None
+
+    def post(self, request, *args, **kwargs):
+        data = request.data.copy()
+
+        # Handle attendance requirement
+        try:
+            attendance_data = data.pop("attendance")
+        except KeyError:
+            return Response({
+                "status": "error",
+                "message": {"attendance": "This field is required."},
+                "data": None
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Convert start_time & end_time if given in 12-hour format
+        if "start_time" in data and isinstance(data["start_time"], str):
+            parsed = self.parse_time(data["start_time"])
+            if parsed:
+                data["start_time"] = parsed
+        if "end_time" in data and isinstance(data["end_time"], str):
+            parsed = self.parse_time(data["end_time"])
+            if parsed:
+                data["end_time"] = parsed
+
+        # Serialize meeting
+        meeting_serializer = self.serializer_class(data=data)
+        if meeting_serializer.is_valid():
+            meeting = meeting_serializer.save()
+
+            # Inject meeting ID into each attendance record
+            for att in attendance_data:
+                att["meeting"] = meeting.id
+
+            # Serialize attendance
+            attendance_serializer = MeetingAttendanceSerializer(
+                many=True, data=attendance_data
+            )
+            if attendance_serializer.is_valid():
+                attendance_serializer.save()
+                return Response({
+                    "status": "success",
+                    "message": "Data created",
+                    "data": {
+                        "meeting": meeting_serializer.data,
+                        "attendance": attendance_serializer.data
+                    }
+                }, status=status.HTTP_201_CREATED)
+
+            # If attendance invalid → delete created meeting to keep DB clean
+            meeting.delete()
+            return Response({
+                "status": "error",
+                "message": attendance_serializer.errors,
+                "data": None
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # If meeting invalid
+        return Response({
+            "status": "error",
+            "message": meeting_serializer.errors,
+            "data": None
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class MeetingListView(generics.ListAPIView):
+    queryset = Meeting.objects.all()
+    serializer_class = MeetingSerializer
+    permission_classes = [IsLeadOrAdmin]
+
+class MeetingRUDView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Meeting.objects.all()
+    serializer_class = MeetingSerializer
+    permission_classes = [IsLeadOrAdmin]
+
+class MeetingAttendanceListView(generics.ListAPIView):
+    serializer_class = MeetingAttendanceSerializer
+    permission_classes = [IsLeadOrAdmin]
+    lookup_url_kwarg = 'pk'
+
+    def get_queryset(self):
+        if self.request.user.role == 'LEAD':
+            club = self.request.user.student.club
+            return MeetingAttendance.objects.filter(user__student__club=club)
+        return MeetingAttendance.objects.all()
+
+class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MeetingAttendance.objects.all()
+    serializer_class = MeetingAttendanceSerializer
+    permission_classes = [IsLead]
+    lookup_url_kwarg = 'att_pk'

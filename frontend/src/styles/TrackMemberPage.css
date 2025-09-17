@@ -1,0 +1,162 @@
+/* src/styles/TrackMembersPage.css */
+
+/* Main container for the page content */
+.track-members-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  background-color: #f8f9fa; /* Light background for the whole page area */
+}
+
+/* Page Title */
+.track-members-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* The white card that holds the table */
+.members-table-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden; /* Ensures the border-radius is respected by the table */
+  padding: 1.5rem;
+}
+
+/* The table itself */
+.members-table {
+  width: 100%;
+  border-collapse: collapse; /* Removes space between cell borders */
+  font-family: 'Inter', sans-serif; /* A nice, clean font */
+}
+
+/* Table header cells (Username, Roll No., etc.) */
+.members-table th {
+  padding: 1rem;
+  text-align: left;
+  background-color: #f1f3f5;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+/* Table body cells */
+.members-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef; /* Light line between rows */
+  color: #495057;
+  vertical-align: middle;
+  font-size: 0.95rem;
+}
+
+/* Zebra-striping for better readability */
+.members-table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+/* Hover effect for rows */
+.members-table tbody tr:hover {
+  background-color: #e9ecef;
+  cursor: pointer;
+}
+
+/* Remove bottom border from the last row */
+.members-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Styling for the role badges */
+.role-badge {
+  display: inline-block;
+  padding: 0.3em 0.8em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 20px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.role-student {
+  background-color: #e7f5ff;
+  color: #1c7ed6;
+}
+
+.role-lead {
+  background-color: #d3f9d8;
+  color: #2f9e44;
+}
+
+.role-other {
+  background-color: #f1f3f5;
+  color: #495057;
+}
+
+/* For loading/error messages */
+.status-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.error-message {
+  color: #d9534f;
+}
+
+/* src/styles/TrackMembersPage.css */
+
+/* ... (all your existing styles) ... */
+
+/* Style for the 'Actions' header cell */
+.actions-header {
+  text-align: center;
+}
+
+/* Style for the cell containing the action buttons */
+.actions-cell {
+  text-align: center;
+  white-space: nowrap; /* Prevents buttons from wrapping */
+}
+
+/* Base style for action buttons */
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin: 0 0.3rem;
+  font-size: 1.1rem; /* Icon size */
+  border-radius: 50%; /* Makes the hover effect circular */
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* View button specific color */
+.btn-view {
+  color: #1c7ed6; /* Blue */
+}
+
+.btn-view:hover {
+  background-color: #e7f5ff;
+}
+
+/* Edit button specific color */
+.btn-edit {
+  color: #f59f00; /* Amber/Orange */
+}
+
+.btn-edit:hover {
+  background-color: #fff9db;
+}

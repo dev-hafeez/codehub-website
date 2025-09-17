@@ -6,9 +6,7 @@ import BlogListingPage from './pages/BlogListingPage.jsx';
 import SinglePostPage from './pages/SinglePostPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
-
-
-import './App.css';
+import ViewAttendancePage from './pages/ViewAttendancePage.jsx';
 import { Button, Container, Alert } from 'react-bootstrap';
 import { sampleBlog } from "./SampleData.js";
 import Regform from './components/Regform.jsx';
@@ -16,10 +14,12 @@ import ForgotPassword from './components/ForgotPassword.jsx';
 import ResetPassword from './components/ResetPassword.jsx';
 import MyBlogPage from './pages/MyBlogPage.jsx';
 import EditBlogWrapper from './components/EditBlogWrapper.jsx';
-import ViewAttendance from './pages/ViewAttendancePage.jsx';
 import MeetingList from './pages/MeetingList.jsx';
 import MarkAttendance from './pages/MarkAttendance.jsx';
 import AdminBlogPage from './pages/AdminBlogPage.jsx';
+import EditAttendancePage from './pages/EditAttendancePage.jsx';
+import MemberManagementPage from './pages/MemberManagementPage.jsx';
+import TrackMembersPage from './pages/TrackMembersPage.jsx';
 function App() {
   const [role, setRole] = useState(null);
     useEffect(() => {
@@ -48,7 +48,11 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/mark-attendance" element={<MarkAttendance />} />
           <Route path="/meeting-history" element={<MeetingList/>} />
-          <Route path="/view-attendance" element={<ViewAttendance/>} />
+          <Route path="/meetings/:id/" element={<ViewAttendancePage />} />
+          <Route path="/meetings/:id/edit" element={<EditAttendancePage/>} />
+
+          <Route path="/members" element={<TrackMembersPage/>} />
+
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/blogs" element={<BlogListingPage />} />

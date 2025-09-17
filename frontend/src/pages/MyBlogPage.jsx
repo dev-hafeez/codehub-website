@@ -3,7 +3,7 @@ import NavbarComponent from "../components/NavbarComponent.jsx";
 import Footer from "../components/Footer.jsx";
 import BlogGrid from "../components/BlogGrid.jsx";
 import useAuthStore from "../store/authStore.js";
-import BlogOwner from "../components/blogowner.jsx"
+
 
 const MyBlogPage = () => {
   const { user_id, role } = useAuthStore(); 
@@ -12,7 +12,7 @@ const MyBlogPage = () => {
     <div>
       <NavbarComponent />
       <div className="container mt-4">
-        <BlogOwner/>
+       
         <h2>My Blogs</h2>
         
         {/* Pass both userId and role to BlogGrid */}

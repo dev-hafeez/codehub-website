@@ -1,34 +1,23 @@
+// src/store/useArticleStore.js
 import { create } from "zustand";
-import axios from "axios";
-
-const token = localStorage.getItem("token");
+import axiosInstance from "../axios"; // 
 
 export const useArticleStore = create((set) => ({
   loading: false,
   error: null,
 
-  // Upload inline image for Quill
-  uploadInlineImage: async (file) => {
-    const formData = new FormData();
-    formData.append("image", file);
+  uploadInlineImage :async (file) => {
+  const formData = new FormData();
+  formData.append("image", file); 
 
-    try {
-      const res = await axios.post(
-        "http://localhost:8000/api/blogs/upload-inline-image/",
-        formData,
-        { headers: { Authorization: `Token ${token}` } }
-      );
-      return res.data.url; // return uploaded image URL
-    } catch (err) {
-      console.error("Inline image upload failed:", err);
-      throw err;
-    }
-  },
+  const response = await axiosInstance.post("/blogs/upload-inline-image/", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 
-  // Create or update blog
+  return response.data.url; // or whatever the server returns
+},
+
   saveBlog: async ({ mode, blogData, title, content, coverImage }) => {
-    if (!token) throw new Error("Not authenticated");
-
     if (!title || !content) throw new Error("Title and content are required");
 
     const formData = new FormData();
@@ -40,20 +29,14 @@ export const useArticleStore = create((set) => ({
 
     const url =
       mode === "edit"
-        ? `http://localhost:8000/api/blogs/${blogData.id}/edit/`
-        : "http://localhost:8000/api/blogs/upload/";
+        ? `/blogs/${blogData.id}/edit/`
+        : "/blogs/upload/";
 
     const method = mode === "edit" ? "put" : "post";
 
     try {
       set({ loading: true, error: null });
-      const res = await axios({
-        method,
-        url,
-        data: formData,
-        headers: { Authorization: `Token ${token}` },
-      })
-      
+      const res = await axiosInstance({ method, url, data: formData });
       return res.data;
     } catch (err) {
       set({

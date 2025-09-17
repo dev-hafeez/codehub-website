@@ -3,12 +3,18 @@ from django.contrib.auth.models import AbstractUser
 import os 
 import uuid
 from django.conf import settings
+from datetime import date, datetime
 
 
 class UserRole(models.TextChoices):
     STUDENT = "STUDENT", "student"
     LEAD = "LEAD", "lead"
     ADMIN = "ADMIN", "admin"
+
+class AttendanceStatus(models.TextChoices):
+    PRESENT = 'PRESENT', 'present'
+    ABSENT = 'ABSENT', 'absent'
+    LEAVE = 'LEAVE', 'leave'
 
 class User(AbstractUser):
     """
@@ -65,3 +71,28 @@ class InlineImage(models.Model):
 
     def __str__(self):
         return self.image.url
+
+
+# class Meeting(models.Model):
+#     date = models.DateField(default=date.today)
+#     start_time = models.TimeField(default=datetime.now().time().strftime('%I:%M %p')) # 12-hour format
+#     end_time = models.TimeField()
+#     venue = models.CharField(max_length=50)
+#     agenda = models.TextField(null=True, blank=True)
+#     highlights = models.TextField(null=True, blank=True)
+def default_start_time():
+    return datetime.now().time()
+
+class Meeting(models.Model):
+    date = models.DateField(default=date.today)
+    start_time = models.TimeField(default=default_start_time)
+    end_time = models.TimeField()
+    venue = models.CharField(max_length=50)
+    agenda = models.TextField(null=True, blank=True)
+    highlights = models.TextField(null=True, blank=True)
+
+class MeetingAttendance(models.Model):
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='attendance')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attending_student')
+    status = models.CharField(max_length=10, choices=AttendanceStatus.choices)
+

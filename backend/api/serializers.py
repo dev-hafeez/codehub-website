@@ -242,7 +242,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, blog_image_upload_path, InlineImage
+from .models import User, Student, Blog, BlogImage, blog_image_upload_path, InlineImage,Meeting, MeetingAttendance
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 from .utils import finalize_inline_images
@@ -252,6 +252,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'username', 'password', 'role']
+
+class InlineImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InlineImage
+        fields = ['id', 'image', 'uploaded_at']
+        
 
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -276,6 +282,41 @@ class StudentSerializer(serializers.ModelSerializer):
         user = User.objects.create(**user_data)
         student = Student.objects.create(user=user, **validated_data)
         return student
+    def update(self, instance, validated_data):
+        # Extract nested user data
+        user_data = validated_data.pop("user", None)
+
+        # Update Student fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Update User fields if provided
+        if user_data:
+            user = instance.user
+            for attr, value in user_data.items():
+                if attr == "password":  # Handle password properly
+                    user.set_password(value)
+                else:
+                    setattr(user, attr, value)
+            user.save()
+
+        return instance
+
+# NOTE: This serializer is for the students list view
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'username']
+
+# NOTE: This serializer is for the students list view
+class StudentListSerializer(serializers.ModelSerializer):
+    user = UserListSerializer()
+
+    class Meta:
+        model = Student
+        fields = '__all__'
+
 
 class LoginSerializer(serializers.Serializer):
     """
@@ -477,3 +518,18 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
                 BlogImage.objects.create(blog=instance, image=img)
 
         return instance
+
+
+
+class MeetingAttendanceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MeetingAttendance
+        fields = '__all__'
+
+class MeetingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Meeting
+        fields = '__all__'
+

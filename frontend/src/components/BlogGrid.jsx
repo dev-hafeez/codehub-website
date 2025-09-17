@@ -19,6 +19,7 @@ const BlogGrid = ({ userId = null, userRole, filterByUser = false, blogListing =
       try {
         setLoading(true);
         const res = await axios.get("http://localhost:8000/api/blogs/");
+       
 
         let mappedBlogs = res.data.map((blog) => ({
           id: blog.id,
@@ -37,7 +38,7 @@ const BlogGrid = ({ userId = null, userRole, filterByUser = false, blogListing =
 
         // Filter only if filterByUser=true
         if (filterByUser && userId) {
-          mappedBlogs = mappedBlogs.filter((b) => String(b.authorId) === String(userId));
+          mappedBlogs = mappedBlogs.filter((b) => b.authorId === user_id);
         }
 
         setBlogs(mappedBlogs);
