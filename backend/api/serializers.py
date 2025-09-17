@@ -23,6 +23,7 @@ class StudentSerializer(serializers.ModelSerializer):
         ],
         allow_blank=False
     )
+    title = serializers.CharField(required=True)
 
     class Meta:
         model = Student
