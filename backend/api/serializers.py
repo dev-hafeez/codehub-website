@@ -6,21 +6,24 @@ from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'username', 'password', 'role']
 
+
 class StudentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
-    roll_no = serializers.RegexField(regex='^(?:FA|SP)[0-9]{2}-B(?:CS|AI|SE)-[0-9]{3}$', max_length=20, allow_blank=False)
+    roll_no = serializers.RegexField(regex='^(?:FA|SP)[0-9]{2}-B(?:CS|AI|SE)-[0-9]{3}$', max_length=20,
+                                     allow_blank=False)
     club = serializers.ChoiceField(choices=[
         'codehub',
         'graphics_and_media',
         'social_media_and_marketing',
         'registration_and_decor',
         'events_and_logistics'
-        ],
+    ],
         allow_blank=False
     )
     title = serializers.CharField(required=True)
@@ -36,11 +39,13 @@ class StudentSerializer(serializers.ModelSerializer):
         student = Student.objects.create(user=user, **validated_data)
         return student
 
+
 # NOTE: This serializer is for the students list view
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'email', 'role', 'username']
+
 
 # NOTE: This serializer is for the students list view
 class StudentListSerializer(serializers.ModelSerializer):
@@ -49,6 +54,7 @@ class StudentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
+
 
 class LoginSerializer(serializers.Serializer):
     """
@@ -65,6 +71,7 @@ class LoginSerializer(serializers.Serializer):
     """
     username = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True, required=True)
+
     def validate(self, data):
         username = data.get('username')
         password = data.get('password')
@@ -86,12 +93,15 @@ class OTPSerializer(serializers.Serializer):
 
     def validate_email(self, value):
         if not User.objects.filter(email=value).exists():
-                raise ValidationError({"email": "User with this email does not exist."})
+            raise ValidationError({"email": "User with this email does not exist."})
         return value
+
 
 class PasswordChangeSerializer(serializers.Serializer):
     token = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
+
+
 # Allowed types & default max size (5 MB)
 ALLOWED_IMAGE_TYPES = ("image/jpeg", "image/png", "image/webp")
 MAX_IMAGE_SIZE = getattr(settings, "MAX_BLOG_IMAGE_SIZE", 5 * 1024 * 1024)  # bytes
@@ -124,7 +134,7 @@ class BlogImageSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if obj.image and request:
             return request.build_absolute_uri(obj.image.url)
-        return None        
+        return None
 
 
 class BlogSerializer(serializers.ModelSerializer):
@@ -200,7 +210,6 @@ class BlogUploadSerializer(serializers.Serializer):
         return blog
 
 
-
 class BlogUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer for updating blog posts.
@@ -241,11 +250,12 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
 
         return instance
 
-class MeetingAttendanceSerializer(serializers.ModelSerializer):
 
+class MeetingAttendanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = MeetingAttendance
         fields = '__all__'
+
 
 class MeetingSerializer(serializers.ModelSerializer):
     start_time = serializers.TimeField(format='%I:%M %p')
