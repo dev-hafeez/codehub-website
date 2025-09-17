@@ -1,9 +1,10 @@
 from django.urls import path
 from .views import SignupView, OTPView, LoginView, PasswordChangeView, LogoutView, BlogUploadView, BlogListAPIView, \
     BlogEditView, BlogDeleteView, MeetingRUDView, MeetingCreateView, MeetingListView, MeetingAttendanceListView, \
-    MeetingAttendanceRUDView, StudentsListView, StudentRUView
+    MeetingAttendanceRUDView, StudentsListView, StudentRUView, api_home
 
 urlpatterns = [
+    path('', api_home, name='home'),
     path('auth/signup/', SignupView.as_view(), name='signup'),
     path('auth/login/', LoginView.as_view(), name='login'),
     path('auth/logout', LogoutView.as_view(), name='logout'),
