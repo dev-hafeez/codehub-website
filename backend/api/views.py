@@ -17,6 +17,19 @@ from rest_framework import generics
 from .models import Blog, BlogImage, Meeting, MeetingAttendance, Student
 from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
 from .utils import get_tokens_for_user, send_otp
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib import colors
+from io import BytesIO
+from datetime import datetime
+from rest_framework.authentication import TokenAuthentication
+
+
 
 User = get_user_model()
 
@@ -742,3 +755,135 @@ class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MeetingAttendanceSerializer
     permission_classes = [IsLead]
     lookup_url_kwarg = 'att_pk'
+
+
+class MeetingPDFView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated, IsLeadOrAdmin]
+    
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            meeting = Meeting.objects.get(pk=pk)
+            
+            # Filter attendance based on user role
+            if request.user.role == 'LEAD':
+                # Check if the user has a student profile
+                if hasattr(request.user, 'student'):
+                    club = request.user.student.club
+                    attendance = MeetingAttendance.objects.filter(
+                        meeting=meeting,
+                        user__student__club=club
+                    ).select_related('user')
+                else:
+                    attendance = MeetingAttendance.objects.none()
+            else:
+                attendance = MeetingAttendance.objects.filter(
+                    meeting=meeting
+                ).select_related('user')
+                
+        except Meeting.DoesNotExist:
+            return Response({
+                "status": "error",
+                "message": "Meeting not found",
+                "data": None
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        buffer = BytesIO()
+        
+        doc = SimpleDocTemplate(buffer, pagesize=letter,
+                                rightMargin=72, leftMargin=72,
+                                topMargin=72, bottomMargin=18)
+        
+        elements = []
+        
+        styles = getSampleStyleSheet()
+        title_style = styles['Heading1']
+        heading_style = styles['Heading2']
+        normal_style = styles['BodyText']
+        
+
+        elements.append(Paragraph(f"Meeting Report - {meeting.date}", title_style))
+        elements.append(Spacer(1, 0.25*inch))
+        
+        elements.append(Paragraph("Meeting Details", heading_style))
+        elements.append(Spacer(1, 0.1*inch))
+        
+        meeting_data = [
+            ["Date:", str(meeting.date)],
+            ["Time:", f"{meeting.start_time} - {meeting.end_time}"],
+            ["Venue:", meeting.venue],
+            ["Agenda:", meeting.agenda or "Not specified"],
+            ["Highlights:", meeting.highlights or "Not specified"]
+        ]
+        
+        meeting_table = Table(meeting_data, colWidths=[1.5*inch, 4*inch])
+        meeting_table.setStyle(TableStyle([
+            ('FONT', (0, 0), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+        elements.append(meeting_table)
+        elements.append(Spacer(1, 0.25*inch))
+        
+        elements.append(Paragraph("Attendance", heading_style))
+        elements.append(Spacer(1, 0.1*inch))
+        
+        attendance_data = [["Name", "Roll No", "Status"]]
+        for record in attendance:
+            try:
+                student = record.user.student
+                roll_no = student.roll_no
+            except:
+                roll_no = "N/A"
+            
+            attendance_data.append([
+                f"{record.user.first_name} {record.user.last_name}",
+                roll_no,
+                record.status
+            ])
+        
+
+        if len(attendance_data) > 1: 
+            attendance_table = Table(attendance_data, colWidths=[2.5*inch, 1.5*inch, 1*inch])
+            attendance_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 12),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                ('FONTSIZE', (0, 1), (-1, -1), 10),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ]))
+            elements.append(attendance_table)
+        else:
+            elements.append(Paragraph("No attendance records found.", normal_style))
+        
+        
+        elements.append(Spacer(1, 0.25*inch))
+        present_count = attendance.filter(status='PRESENT').count()
+        absent_count = attendance.filter(status='ABSENT').count()
+        leave_count = attendance.filter(status='LEAVE').count()
+        
+        summary_text = f"Summary: Present: {present_count}, Absent: {absent_count}, Leave: {leave_count}, Total: {attendance.count()}"
+        elements.append(Paragraph(summary_text, normal_style))
+        
+        elements.append(Spacer(1, 0.5*inch))
+        generated_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        elements.append(Paragraph(f"Generated on: {generated_date}", ParagraphStyle(
+            name='Footer',
+            fontName='Helvetica-Oblique',
+            fontSize=8,
+            textColor=colors.grey
+        )))
+        
+        doc.build(elements)
+        
+        buffer.seek(0)
+        response = HttpResponse(buffer, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="meeting_report_{meeting.date}.pdf"'
+        
+        return response

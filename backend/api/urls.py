@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import SignupView, OTPView, LoginView, PasswordChangeView, LogoutView, BlogUploadView, BlogListAPIView, \
     BlogEditView, BlogDeleteView, MeetingRUDView, MeetingCreateView, MeetingListView, MeetingAttendanceListView, \
-    MeetingAttendanceRUDView, StudentsListView, StudentRUView
+    MeetingAttendanceRUDView, StudentsListView, StudentRUView, MeetingPDFView
 
 urlpatterns = [
     path('auth/signup/', SignupView.as_view(), name='signup'),
@@ -18,6 +18,7 @@ urlpatterns = [
     path('meetings/<int:pk>/', MeetingRUDView.as_view(), name='meeting-RUD'),  # Accepted requests (for instance): GET , PUT, PATCH, DELETE
     path('meetings/<int:pk>/attendance/', MeetingAttendanceListView.as_view(), name='attendance-list'),
     path('meetings/<int:pk>/attendance/<int:att_pk>', MeetingAttendanceRUDView.as_view(), name='attendance-RUD'),  # Accepted requests (for instance): GET , PUT, PATCH, DELETE
+    path("meetings/<int:pk>/pdf/", MeetingPDFView.as_view(), name="meeting-pdf"),
     path('students/', StudentsListView.as_view(), name='students-list'),
     path('students/<int:pk>', StudentRUView.as_view(), name='student-RU'),
 ]
