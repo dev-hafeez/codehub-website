@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'drf_spectacular',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -59,11 +60,13 @@ SIMPLE_JWT = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'ACM Society Management API',
     'DESCRIPTION': 'A REST API that provides endpoints to manage users, attendance, blogs, articles, etc.',
+    'COMPONENT_SPLIT_REQUEST': True,
 }
 
 AUTHENTICATION_BACKENDS = ['backend.auth_backends.MultiFieldAuthBackend']
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -163,3 +166,8 @@ EMAIL_FILE_PATH = "api/tmp/api_emails"
 # Media files configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://localhost:5173",
+]

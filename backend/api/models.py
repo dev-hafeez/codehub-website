@@ -31,7 +31,10 @@ class Student(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
     roll_no = models.CharField(max_length=20, default="")
-    club = models.CharField(max_length=100)
+    club = models.CharField(max_length=50)
+    title = models.CharField(max_length=30, default='')
+    profile_pic = models.ImageField(upload_to='profile_pics/', default='profile_pics/default.jpg')
+    profile_desc = models.TextField(max_length=200, default='')
 
 
 def blog_image_upload_path(instance, filename):

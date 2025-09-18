@@ -28,10 +28,19 @@ from reportlab.lib import colors
 from io import BytesIO
 from datetime import datetime
 from rest_framework.authentication import TokenAuthentication
-
-
+from rest_framework.decorators import api_view, schema
 
 User = get_user_model()
+
+@api_view(['GET', 'POST'])
+@schema(None)
+def api_home(request):
+    if request.method == 'POST':
+        return Response({
+            'message': 'Server is online. API functional.',
+            'data': request.data
+        })
+    return Response({"message": "Server is online. API functional."})
 
 class StudentsListView(generics.ListAPIView):
     serializer_class = StudentListSerializer
@@ -108,7 +117,7 @@ class SignupView(APIView):
                     "email": user.email,
                     "role": user.role,
                     "club": student.club,
-                    "roll_number": student.roll_no,
+                    "roll_number": student.roll_no
                 }
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
