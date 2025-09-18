@@ -20,6 +20,8 @@ import AdminBlogPage from './pages/AdminBlogPage.jsx';
 import EditAttendancePage from './pages/EditAttendancePage.jsx';
 import MemberManagementPage from './pages/MemberManagementPage.jsx';
 import TrackMembersPage from './pages/TrackMembersPage.jsx';
+import TeamPage from './pages/TeamPage.jsx';
+import MissionPage from './pages/MissionPage.jsx';
 function App() {
   const [role, setRole] = useState(null);
     useEffect(() => {
@@ -52,6 +54,9 @@ function App() {
           <Route path="/meetings/:id/edit" element={<EditAttendancePage/>} />
 
           <Route path="/members" element={<TrackMembersPage/>} />
+
+          <Route path="/mission" element={<MissionPage/>} />
+          <Route path="/teams" element={<TeamPage/>} />
 
 
           <Route path="/login" element={<LoginPage />} />

@@ -1,0 +1,74 @@
+/* TeamsCard.css */
+
+.teams-card {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 16px;
+  width: 250px;
+  margin: 10px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.teams-card-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.teams-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.teams-card-role {
+  font-size: 0.875rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.teams-card-description {
+  font-size: 0.875rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.teams-card-socials {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.social-icon {
+  text-decoration: none;
+  font-size: 1.25rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.social-icon:hover {
+  transform: translateY(-2px);
+}
+
+/* Specific icon colors */
+.social-icon.facebook {
+  color: #007bff;
+}
+
+.social-icon.twitter {
+  color: #1da1f2;
+}
+
+.social-icon.github {
+  color: #333;
+}
+
+.social-icon.link {
+  color: #007bff;
+}
