@@ -757,7 +757,9 @@ class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = 'att_pk'
 
 
+
 class MeetingPDFView(APIView):
+
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, IsLeadOrAdmin]
     
@@ -765,9 +767,7 @@ class MeetingPDFView(APIView):
         try:
             meeting = Meeting.objects.get(pk=pk)
             
-            # Filter attendance based on user role
             if request.user.role == 'LEAD':
-                # Check if the user has a student profile
                 if hasattr(request.user, 'student'):
                     club = request.user.student.club
                     attendance = MeetingAttendance.objects.filter(
@@ -792,25 +792,49 @@ class MeetingPDFView(APIView):
         
         doc = SimpleDocTemplate(buffer, pagesize=letter,
                                 rightMargin=72, leftMargin=72,
-                                topMargin=72, bottomMargin=18)
+                                topMargin=100, bottomMargin=18)  
         
         elements = []
         
         styles = getSampleStyleSheet()
-        title_style = styles['Heading1']
-        heading_style = styles['Heading2']
+        
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=16,
+            spaceAfter=30,
+            alignment=1,  
+            textColor=colors.HexColor('#2c3e50')
+        )
+        
+        heading_style = ParagraphStyle(
+            'CustomHeading',
+            parent=styles['Heading2'],
+            fontSize=12,
+            spaceAfter=12,
+            textColor=colors.HexColor('#34495e')
+        )
+        
         normal_style = styles['BodyText']
         
-
-        elements.append(Paragraph(f"Meeting Report - {meeting.date}", title_style))
-        elements.append(Spacer(1, 0.25*inch))
+        def convert_to_12h(time_obj):
+            if time_obj:
+                return time_obj.strftime('%I:%M %p')
+            return "N/A"
+        
+        start_time_12h = convert_to_12h(meeting.start_time)
+        end_time_12h = convert_to_12h(meeting.end_time)
+        
+        elements.append(Paragraph("Minutes of ACM Meeting", title_style))
+        elements.append(Spacer(1, 0.1*inch))
+        
         
         elements.append(Paragraph("Meeting Details", heading_style))
         elements.append(Spacer(1, 0.1*inch))
         
         meeting_data = [
             ["Date:", str(meeting.date)],
-            ["Time:", f"{meeting.start_time} - {meeting.end_time}"],
+            ["Time:", f"{start_time_12h} - {end_time_12h}"],
             ["Venue:", meeting.venue],
             ["Agenda:", meeting.agenda or "Not specified"],
             ["Highlights:", meeting.highlights or "Not specified"]
@@ -821,14 +845,19 @@ class MeetingPDFView(APIView):
             ('FONT', (0, 0), (-1, -1), 'Helvetica'),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#bdc3c7')),
+            ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#ecf0f1')),
+            ('TEXTCOLOR', (0, 0), (0, -1), colors.HexColor('#2c3e50')),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
         ]))
         elements.append(meeting_table)
         elements.append(Spacer(1, 0.25*inch))
         
-        elements.append(Paragraph("Attendance", heading_style))
+        # Attendance Details
+        elements.append(Paragraph("Attendance Record", heading_style))
         elements.append(Spacer(1, 0.1*inch))
         
+        # Prepare attendance data
         attendance_data = [["Name", "Roll No", "Status"]]
         for record in attendance:
             try:
@@ -837,53 +866,107 @@ class MeetingPDFView(APIView):
             except:
                 roll_no = "N/A"
             
+            # Color coding for status
+            status = record.status
             attendance_data.append([
                 f"{record.user.first_name} {record.user.last_name}",
                 roll_no,
-                record.status
+                status
             ])
         
-
-        if len(attendance_data) > 1: 
+        # Create attendance table
+        if len(attendance_data) > 1:  # If we have data beyond headers
             attendance_table = Table(attendance_data, colWidths=[2.5*inch, 1.5*inch, 1*inch])
             attendance_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2c3e50')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
                 ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, 0), 12),
+                ('FONTSIZE', (0, 0), (-1, 0), 11),
                 ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f8f9fa')),
                 ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
                 ('FONTSIZE', (0, 1), (-1, -1), 10),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+                ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#dee2e6')),
+                ('TEXTCOLOR', (2, 1), (2, -1), colors.HexColor('#28a745')),  # Green for present
             ]))
             elements.append(attendance_table)
         else:
             elements.append(Paragraph("No attendance records found.", normal_style))
         
-        
+        # Summary
         elements.append(Spacer(1, 0.25*inch))
         present_count = attendance.filter(status='PRESENT').count()
         absent_count = attendance.filter(status='ABSENT').count()
         leave_count = attendance.filter(status='LEAVE').count()
         
-        summary_text = f"Summary: Present: {present_count}, Absent: {absent_count}, Leave: {leave_count}, Total: {attendance.count()}"
+        summary_text = f"<b>Summary:</b> Present: {present_count}, Absent: {absent_count}, Leave: {leave_count}, Total: {attendance.count()}"
         elements.append(Paragraph(summary_text, normal_style))
         
+        # Footer with generation date
         elements.append(Spacer(1, 0.5*inch))
         generated_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        elements.append(Paragraph(f"Generated on: {generated_date}", ParagraphStyle(
+        footer_style = ParagraphStyle(
             name='Footer',
             fontName='Helvetica-Oblique',
             fontSize=8,
-            textColor=colors.grey
-        )))
+            textColor=colors.HexColor('#7f8c8d'),
+            alignment=1  # Centered
+        )
+        elements.append(Paragraph(f"Generated on: {generated_date}", footer_style))
         
-        doc.build(elements)
+        # Build PDF with custom header
+        def add_header(canvas, doc):
+            canvas.saveState()
+            # Add ACM header background
+            canvas.setFillColor(colors.HexColor("#ffffff"))
+            canvas.rect(0, doc.pagesize[1] - 0.8*inch, doc.pagesize[0], 0.8*inch, fill=1, stroke=0)
+            
+            # Add ACM text
+            canvas.setFillColor(colors.black)
+            canvas.setFont('Times-Bold', 16)
+            canvas.drawString(2.5*inch, doc.pagesize[1] - 0.5*inch, "ASSOCIATION FOR COMPUTING MACHINERY")
+            
+            
+            canvas.setFont('Helvetica', 10)
+            canvas.drawString(2.7*inch, doc.pagesize[1] - 0.7*inch, "Comsats University Islamabad, Wah Chapter")
+            
+            #logo
+            import os
+            from django.conf import settings
+
+            
+            logo_path = os.path.join(settings.BASE_DIR, 'assets', 'acm_logo.png')
+
+            
+            print(f"Logo path: {logo_path}")
+            print(f"Logo exists: {os.path.exists(logo_path)}")
+
+            if os.path.exists(logo_path):
+                try:
+                    canvas.drawImage(logo_path, 1.5*inch, doc.pagesize[1] - 1*inch, 
+                                    width=1*inch, height=1*inch, preserveAspectRatio=True)
+                    print("ACM logo added successfully")
+                except Exception as e:
+                    print(f"Error adding logo: {e}")
+            else:
+                print("ACM logo not found - using text header only")
+
+            canvas.restoreState()
+
+            #the line thing
+            canvas.setStrokeColor(colors.HexColor("#000000")) 
+            canvas.setLineWidth(2)
+            canvas.line(
+                0.5 * inch,
+                doc.pagesize[1] - 1.0 * inch,  
+                doc.pagesize[0] - 0.5 * inch, 
+                doc.pagesize[1] - 1.0 * inch 
+            )
+        doc.build(elements, onFirstPage=add_header, onLaterPages=add_header)
         
         buffer.seek(0)
         response = HttpResponse(buffer, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="meeting_report_{meeting.date}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="acm_meeting_minutes_{meeting.date}.pdf"'
         
         return response
