@@ -2,7 +2,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
@@ -204,4 +204,12 @@ class MeetingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Meeting
+        fields = '__all__'
+
+class EventSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(required=True)
+    content = serializers.CharField(required=True)
+
+    class Meta:
+        model = Event
         fields = '__all__'
