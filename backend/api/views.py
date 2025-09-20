@@ -995,7 +995,7 @@ class MeetingPDFView(APIView):
             canvas.restoreState()
         
     
-        doc.build(elements, onFirstPage=add_header, onLaterPages=add_header)
+        doc.build(elements, onFirstPage=add_header)
         
         buffer.seek(0)
         response = HttpResponse(buffer, content_type='application/pdf')
