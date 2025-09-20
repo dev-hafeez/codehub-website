@@ -68,3 +68,13 @@ class MeetingAttendance(models.Model):
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='attendance')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attending_student')
     status = models.CharField(max_length=10, choices=AttendanceStatus.choices)
+
+class Event(models.Model):
+    @staticmethod
+    def event_image_upload_path(instance, filename):
+        return f'events/{instance.id}/{filename}'
+
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to=event_image_upload_path)
+    content = models.TextField()
+    date = models.DateField(default=date.today())
