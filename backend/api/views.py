@@ -765,7 +765,6 @@ class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsLead]
     lookup_url_kwarg = 'att_pk'
 
-import os
 
 class MeetingPDFView(APIView):
     
