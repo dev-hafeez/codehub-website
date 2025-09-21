@@ -851,19 +851,18 @@ class MeetingPDFView(APIView):
         elements.append(Spacer(1, 0.1*inch))
         
         
-        date_style = ParagraphStyle(
-            'DateStyle',
-            parent=styles['Heading3'],
-            fontSize=12,
-            spaceAfter=20,
+        club_name = request.user.student.club.replace('_', ' ').title()
+        club_style = ParagraphStyle(
+            'ClubStyle',
+            parent=styles['Heading2'],
+            fontSize=14,
+            spaceAfter=10,
             alignment=1,
-            textColor=colors.HexColor('#7f8c8d')
+            textColor=colors.HexColor('#2c3e50'),
+            fontName='Helvetica-Bold'
         )
-        elements.append(Paragraph(f"Meeting Date: {meeting.date}", date_style))
-        elements.append(Spacer(1, 0.25*inch))
-        
-        
-        elements.append(Paragraph("Meeting Details", heading_style))
+
+        elements.append(Paragraph(f"{club_name} Meeting Minutes", club_style))
         elements.append(Spacer(1, 0.1*inch))
         
         meeting_data = [
