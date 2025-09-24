@@ -30,7 +30,8 @@ class StudentSerializer(serializers.ModelSerializer):
     ],
         allow_blank=False
     )
-    title = serializers.CharField(required=True)
+    title = serializers.CharField(required=False)
+    content = serializers.CharField(required=False)
 
     class Meta:
         model = Student
