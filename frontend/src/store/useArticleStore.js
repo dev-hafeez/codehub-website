@@ -17,6 +17,7 @@ export const useArticleStore = create((set) => ({
   return response.data.url; 
 },
 
+
   saveBlog: async ({ mode, blogData, title, content, coverImage }) => {
     if (!title || !content) throw new Error("Title and content are required");
 
@@ -36,7 +37,9 @@ export const useArticleStore = create((set) => ({
 
     try {
       set({ loading: true, error: null });
+
       const res = await axiosInstance({ method, url, data: formData, headers: { "Content-Type": "multipart/form-data" }, });
+
       return res.data;
     } catch (err) {
       set({

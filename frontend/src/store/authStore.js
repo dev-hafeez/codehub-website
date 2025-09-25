@@ -3,7 +3,9 @@ import { create } from "zustand";
 import axiosInstance from "../axios"; //  use axios.js
 
 const useAuthStore = create((set, get) => ({
+
   user_id: localStorage.getItem("user_id")||null,
+
   token: localStorage.getItem("token") || null,
   role: localStorage.getItem("role") || null,
   resetToken: null,
@@ -24,7 +26,9 @@ const useAuthStore = create((set, get) => ({
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
+
       localStorage.setItem("user_id", user_id);
+
 
       set({ user_id, token, role, loading: false });
       return true;
@@ -137,4 +141,6 @@ const useAuthStore = create((set, get) => ({
   },
 }));
 
+
 export default useAuthStore;
+
