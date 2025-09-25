@@ -55,10 +55,12 @@ class BlogImage(models.Model):
     def __str__(self):
         return f'Image for blog {self.blog.id}'
 
+def current_time():
+    return datetime.now().time()
 
 class Meeting(models.Model):
     date = models.DateField(default=date.today)
-    start_time = models.TimeField(default=datetime.now().time) # 12-hour format
+    start_time = models.TimeField(default=current_time) # 12-hour format
     end_time = models.TimeField()
     venue = models.CharField(max_length=50)
     agenda = models.TextField(null=True, blank=True)
