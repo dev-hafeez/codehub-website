@@ -43,6 +43,10 @@ class StudentSerializer(serializers.ModelSerializer):
         student = Student.objects.create(user=user, **validated_data)
         return student
 
+    # TODO: Override this to handle nested field
+    def update(self, instance, validated_data):
+        pass
+
 
 # NOTE: This serializer is for the students list view
 class UserListSerializer(serializers.ModelSerializer):
