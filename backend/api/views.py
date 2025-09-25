@@ -759,6 +759,20 @@ class EventListCreateView(generics.ListCreateAPIView):
     serializer_class = EventSerializer
     permission_classes = [IsLead]
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        image_list = request.FILES.getlist('images')
+        images = []
+        for image in image_list:
+            images.append({
+                'image': image,
+            })
+        data.setlist('images', images)
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = serializer.data
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class EventRUDView(generics.RetrieveUpdateDestroyAPIView):
