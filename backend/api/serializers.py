@@ -2,7 +2,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
@@ -206,10 +206,25 @@ class MeetingSerializer(serializers.ModelSerializer):
         model = Meeting
         fields = '__all__'
 
+class EventImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventImage
+        fields = ['id', 'image']
+
 class EventSerializer(serializers.ModelSerializer):
     title = serializers.CharField(required=True)
     content = serializers.CharField(required=True)
+    images = EventImageSerializer(required=False, many=True)
 
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = ['id', 'title', 'content', 'images', 'date']
+
+    def create(self, validated_data):
+        images_data = validated_data.pop("images", None)
+        event = Event.objects.create(**validated_data)
+        if images_data:
+            for image_data in images_data:
+                EventImage.objects.create(event=event, **image_data)
+        return event
+
