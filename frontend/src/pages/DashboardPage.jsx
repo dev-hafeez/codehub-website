@@ -5,11 +5,11 @@ import Dashboard from '../components/Dashboard'
 
 const DashboardPage = () => {
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="">
       <Navbar />
       
-      <div className="flex-grow-1">
-        <Dashboard /> {/* Change userRole as needed */}
+      <div >
+        <Dashboard  /> 
       </div>
 
       <Footer />

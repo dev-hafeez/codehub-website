@@ -13,9 +13,6 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,12 +37,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "corsheaders",
     "api",
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'drf_spectacular',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -63,14 +60,15 @@ SIMPLE_JWT = {
 SPECTACULAR_SETTINGS = {
     'TITLE': 'ACM Society Management API',
     'DESCRIPTION': 'A REST API that provides endpoints to manage users, attendance, blogs, articles, etc.',
+    'COMPONENT_SPLIT_REQUEST': True,
 }
 
 AUTHENTICATION_BACKENDS = ['backend.auth_backends.MultiFieldAuthBackend']
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -102,6 +100,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Use environment variables to set the database host and port
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -109,6 +108,7 @@ DATABASES = {
 
     }
 }
+
 
 
 # Password validation
@@ -158,15 +158,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider's SMTP server
 EMAIL_FILE_PATH = "api/tmp/api_emails"
 
-AUTH_USER_MODEL = 'api.User'
-
-
-
+# Media files configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
     "http://localhost:5173",
 ]
-

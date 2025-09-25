@@ -11,12 +11,14 @@ const Login = () => {
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
+
   e.preventDefault()
   const success = await login(username, password)
   if (success) {
     navigate('/dashboard')
   } else {
     alert("Invalid credentials. Please try again.")
+
   }
 }
 
@@ -57,9 +59,7 @@ const Login = () => {
           </button>
         </form>
 
-        {/* show error as string only */}
-        {error && <p style={{ color: 'red' }}>{String(error)}</p>}
-
+      
         <div className="icon-container">
           <PersonFill size={30} />
         </div>

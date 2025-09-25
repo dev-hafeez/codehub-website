@@ -2,15 +2,14 @@ import React from 'react';
 import Login from '../components/Login.jsx';
 
 import Footer from '../components/Footer.jsx';
-import Navbar from '../components/Navbar.jsx';
-import { Link } from "react-router-dom";
-import NavLinks from "../components/NavLinks.jsx";
+import NavbarComponent from '../components/NavbarComponent.jsx';
+
 
 
 const LoginPage = () => {
     return (
         <div className="p-0 m-0">
-            <Navbar />
+            <NavbarComponent />
 
             {/* Login Component */}
             <Login />

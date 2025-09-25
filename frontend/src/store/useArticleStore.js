@@ -6,18 +6,17 @@ export const useArticleStore = create((set) => ({
   loading: false,
   error: null,
 
-  uploadInlineImage: async (file) => {
-    const formData = new FormData();
-    formData.append("image", file);
+  uploadInlineImage :async (file) => {
+  const formData = new FormData();
+  formData.append("image", file); 
 
-    try {
-      const res = await axiosInstance.post("/blogs/upload-inline-image/", formData);
-      return res.data.url;
-    } catch (err) {
-      console.error("Inline image upload failed:", err);
-      throw err;
-    }
-  },
+  const response = await axiosInstance.post("/blogs/upload-inline-image/", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return response.data.url; 
+},
+
 
   saveBlog: async ({ mode, blogData, title, content, coverImage }) => {
     if (!title || !content) throw new Error("Title and content are required");
@@ -38,7 +37,9 @@ export const useArticleStore = create((set) => ({
 
     try {
       set({ loading: true, error: null });
-      const res = await axiosInstance({ method, url, data: formData });
+
+      const res = await axiosInstance({ method, url, data: formData, headers: { "Content-Type": "multipart/form-data" }, });
+
       return res.data;
     } catch (err) {
       set({

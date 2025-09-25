@@ -6,9 +6,7 @@ import BlogListingPage from './pages/BlogListingPage.jsx';
 import SinglePostPage from './pages/SinglePostPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
-import AdminDashboard from './pages/AdminDashboard.jsx';
-
-import './App.css';
+import ViewAttendancePage from './pages/ViewAttendancePage.jsx';
 import { Button, Container, Alert } from 'react-bootstrap';
 import { sampleBlog } from "./SampleData.js";
 import Regform from './components/Regform.jsx';
@@ -16,6 +14,16 @@ import ForgotPassword from './components/ForgotPassword.jsx';
 import ResetPassword from './components/ResetPassword.jsx';
 import MyBlogPage from './pages/MyBlogPage.jsx';
 import EditBlogWrapper from './components/EditBlogWrapper.jsx';
+import MeetingList from './pages/MeetingList.jsx';
+import MarkAttendance from './pages/MarkAttendance.jsx';
+import AdminBlogPage from './pages/AdminBlogPage.jsx';
+import EditAttendancePage from './pages/EditAttendancePage.jsx';
+import MemberManagementPage from './pages/MemberManagementPage.jsx';
+import TrackMembersPage from './pages/TrackMembersPage.jsx';
+import TeamPage from './pages/TeamPage.jsx';
+import MissionPage from './pages/MissionPage.jsx';
+import TeamSection from './components/TeamSection.jsx';
+import ContactPage from './pages/ContactPage.jsx';
 function App() {
   const [role, setRole] = useState(null);
     useEffect(() => {
@@ -42,10 +50,22 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/attendance" element={<AdminDashboard />} />
+          <Route path="/mark-attendance" element={<MarkAttendance />} />
+          <Route path="/meeting-history" element={<MeetingList/>} />
+          <Route path="/meetings/:id/" element={<ViewAttendancePage />} />
+          <Route path="/meetings/:id/edit" element={<EditAttendancePage/>} />
+
+          <Route path="/members" element={<TrackMembersPage/>} />
+
+          <Route path="/contact" element={<ContactPage/>} />
+          <Route path="/mission" element={<MissionPage/>} />
+          <Route path="/teams" element={<TeamSection/>} />
+          <Route path="/team/:title" element={<TeamPage />} />
+
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/blogs" element={<BlogListingPage />} />
+          <Route path="/admin-blogs" element={<AdminBlogPage />} />
           <Route path="/blog/:id" element={<SinglePostPage />} />
            <Route path="/blogs/:id/edit" element={<EditBlogWrapper />} />
           <Route path="/myblog" element={<MyBlogPage />} />
@@ -59,6 +79,8 @@ function App() {
         />
         <Route path="/signup" element={<Regform />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+      
+      
       
         </Routes>
       </Router>

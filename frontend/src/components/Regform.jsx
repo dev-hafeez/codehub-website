@@ -1,4 +1,4 @@
-/* Regform.jsx */
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import REGlogo from "../assets/Reglogo.png";
@@ -16,10 +16,12 @@ function Regform() {
       email: "",
       username: "",
       password: "",
-      role: "STUDENT",
+      role: "STUDENT", // default role
+      title: ""
     },
     roll_no: "",
-    club: "",
+    club: ""
+
   });
 
   const { signup, loading, error } = useAuthStore();
@@ -35,30 +37,43 @@ function Regform() {
         user: {
           ...prev.user,
           first_name: firstName || "",
-          last_name: lastParts.join(" ") || "",
-        },
+
+          last_name: lastParts.join(" ") || ""
+        }
+
       }));
     } else if (id === "reg") {
       setFormData((prev) => ({ ...prev, roll_no: value }));
     } else if (id === "email") {
       setFormData((prev) => ({
         ...prev,
-        user: { ...prev.user, email: value },
+
+        user: { ...prev.user, email: value }
+
       }));
     } else if (id === "username") {
       setFormData((prev) => ({
         ...prev,
-        user: { ...prev.user, username: value },
+
+        user: { ...prev.user, username: value }
+
       }));
     } else if (id === "pass") {
       setFormData((prev) => ({
         ...prev,
-        user: { ...prev.user, password: value },
+
+        user: { ...prev.user, password: value }
       }));
     } else if (id === "club") {
       setFormData((prev) => ({ ...prev, club: value.trim() }));
+    } else if (id === "role") {
+      setFormData((prev) => ({
+        ...prev,
+        user: { ...prev.user, role: value }
+      }));
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const regPattern = /^(FA|SP)\d{2}-[A-Z]{3}-\d{3}$/;
@@ -68,18 +83,18 @@ function Regform() {
       return;
     }
 
-
     const validClubs = [
-      "Codehub",
-      "Graphics & Media",
-      "Social Media & Marketing",
-      "Decor & Registrations",
-      "Events & Logistics"
+      "codehub",
+      "graphics_and_media",
+      "social_media_and_marketing",
+      "registration_and_decor",
+      "events_and_logistics"
+
     ];
 
     if (!validClubs.includes(formData.club)) {
       alert("Invalid Club. Please select a valid club.");
-      return; 
+      return;
     }
 
 
@@ -87,9 +102,9 @@ function Regform() {
     if (result.success) {
       alert("User registered successfully!");
       navigate("/dashboard");
-    }
 
-    else if (!result.success) {
+    } else if (!result.success) {
+
       if (result.message && result.message.toLowerCase().includes("email")) {
         alert("This email is already registered. Please use another one.");
       } else {
@@ -170,7 +185,7 @@ function Regform() {
                 />
               </div>
             </div>
-            {/*Password and club */}
+
             <div className="form-row d-flex justify-content-between flex-wrap">
               <div className="form-group w-45">
                 <label htmlFor="pass">Password</label>
@@ -183,11 +198,41 @@ function Regform() {
               </div>
               <div className="form-group w-45">
                 <label htmlFor="club">Club</label>
+                <select
+                  id="club"
+                  className="form-control"
+                  value={formData.club}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">-- Select a Club --</option>
+                  <option value="codehub">CodeHub</option>
+                  <option value="graphics_and_media">Graphics & Media</option>
+                  <option value="social_media_and_marketing">
+                    Social Media & Marketing
+                  </option>
+                  <option value="registration_and_decor">
+                    Registration & Decor
+                  </option>
+                  <option value="events_and_logistics">
+                    Events & Logistics
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            {/* Role */}
+            <div className="form-row d-flex justify-content-between flex-wrap">
+              <div className="form-group w-45">
+                <label htmlFor="role">Role</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="club"
+                  id="role"
+                  value={formData.user.role}
                   onChange={handleChange}
+                  placeholder="STUDENT"
+                  required
                 />
               </div>
             </div>
@@ -199,6 +244,7 @@ function Regform() {
                   : "Something went wrong. Please try again."}
               </p>
             )}
+
 
             <div className="button-row text-center mt-4">
               <button type="button" className="btn btn-dark mx-2">

@@ -12,23 +12,22 @@ const Dashboard = () => {
       case "ADMIN":
         return (
           <>
-            <Link to="/article" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Post Article</Link>
-            <Link to="/attendance" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Attendance</Link>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Edit Article</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Create Event</button>
-            <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Check Student Details</button>
-            <Link to="/signup" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Signup New Members</Link>
-            <Link to="/myblog" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">My Articles</Link>
+            <Link to="/members" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Member Management</Link>
+            <Link to="/blogs" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Handle Blogs</Link>
+            
           </>
         );
       case "LEAD":
         return (
           <>
-            <Link to="/article" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Post Article</Link>
+            <Link to="/mark-attendance" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Mark Attendance</Link>
+            <Link to="/meeting-history" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">View Attendance</Link>
             <button className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Create Event</button>
-            <Link to="/attendance" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Attendance</Link>
-            <Link to="/myblog" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">My Articles</Link>
             <Link to="/signup" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Signup New Members</Link>
+            <Link to="/myblog" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">My Articles</Link>
+            <Link to="/article" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Post Article</Link>
+            <Link to="/blogs" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">All Articles</Link>
+             <Link to="/members" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Members</Link>
           </>
         );
       case "STUDENT":
@@ -57,7 +56,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard">
             {/* <div className="acm-branding-container d-flex mt-4 mx-4">
         <img src={ACMlogo} alt="ACM Logo" className="acm-logo col-md-1" />
         <p className="acm-branding">Association for Computing Machinery</p>
