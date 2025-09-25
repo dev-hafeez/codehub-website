@@ -26,7 +26,7 @@ const BlogCard = ({
 
   
 
-  const canEdit = String(currentUserId) === String(authorId);
+  const canEdit = role!="ADMIN" && (String(currentUserId) === String(authorId));
   console.log(canEdit)
   const canDelete = role === "ADMIN";
 

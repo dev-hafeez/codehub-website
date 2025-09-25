@@ -22,6 +22,8 @@ import MemberManagementPage from './pages/MemberManagementPage.jsx';
 import TrackMembersPage from './pages/TrackMembersPage.jsx';
 import TeamPage from './pages/TeamPage.jsx';
 import MissionPage from './pages/MissionPage.jsx';
+import TeamSection from './components/TeamSection.jsx';
+import ContactPage from './pages/ContactPage.jsx';
 function App() {
   const [role, setRole] = useState(null);
     useEffect(() => {
@@ -55,8 +57,10 @@ function App() {
 
           <Route path="/members" element={<TrackMembersPage/>} />
 
+          <Route path="/contact" element={<ContactPage/>} />
           <Route path="/mission" element={<MissionPage/>} />
-          <Route path="/teams" element={<TeamPage/>} />
+          <Route path="/teams" element={<TeamSection/>} />
+          <Route path="/team/:title" element={<TeamPage />} />
 
 
           <Route path="/login" element={<LoginPage />} />

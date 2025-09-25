@@ -13,7 +13,7 @@ const Dashboard = () => {
         return (
           <>
             <Link to="/members" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Member Management</Link>
-            <Link to="/" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Handle Blogs</Link>
+            <Link to="/blogs" className="btn btn-primary dashboard-action-btn p-2 px-md-5 px-3 m-4 m-2">Handle Blogs</Link>
             
           </>
         );

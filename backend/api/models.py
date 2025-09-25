@@ -1,10 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import os 
-import uuid
-from django.conf import settings
 from datetime import date, datetime
-
 
 class UserRole(models.TextChoices):
     STUDENT = "STUDENT", "student"
@@ -35,7 +31,10 @@ class Student(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
     roll_no = models.CharField(max_length=20, default="")
-    club = models.CharField(max_length=100)
+    club = models.CharField(max_length=50)
+    title = models.CharField(max_length=30, null=True, blank=True)
+    profile_pic = models.ImageField(upload_to='profile_pics/', default='profile_pics/default.jpg')
+    profile_desc = models.TextField(max_length=200, null=True, blank=True)
 
 
 def blog_image_upload_path(instance, filename):
@@ -55,37 +54,13 @@ class BlogImage(models.Model):
 
     def __str__(self):
         return f'Image for blog {self.blog.id}'
-    
-def temp_inline_upload_path(instance, filename):
-    """
-    Store inline images in temp_inline/ with a unique filename
-    to prevent collisions.
-    """
-    ext = os.path.splitext(filename)[1]  # keep extension (.jpg, .png, etc.)
-    unique_name = f"{uuid.uuid4().hex}{ext}"
-    return f"temp_inline/{unique_name}"
 
-class InlineImage(models.Model):
-    image = models.ImageField(upload_to=temp_inline_upload_path)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.image.url
-
-
-# class Meeting(models.Model):
-#     date = models.DateField(default=date.today)
-#     start_time = models.TimeField(default=datetime.now().time().strftime('%I:%M %p')) # 12-hour format
-#     end_time = models.TimeField()
-#     venue = models.CharField(max_length=50)
-#     agenda = models.TextField(null=True, blank=True)
-#     highlights = models.TextField(null=True, blank=True)
-def default_start_time():
+def current_time():
     return datetime.now().time()
 
 class Meeting(models.Model):
     date = models.DateField(default=date.today)
-    start_time = models.TimeField(default=default_start_time)
+    start_time = models.TimeField(default=current_time) # 12-hour format
     end_time = models.TimeField()
     venue = models.CharField(max_length=50)
     agenda = models.TextField(null=True, blank=True)
@@ -95,4 +70,3 @@ class MeetingAttendance(models.Model):
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='attendance')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attending_student')
     status = models.CharField(max_length=10, choices=AttendanceStatus.choices)
-

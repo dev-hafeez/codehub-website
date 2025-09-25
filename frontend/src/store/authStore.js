@@ -24,6 +24,7 @@ const useAuthStore = create((set, get) => ({
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
+      localStorage.setItem("user_id", user_id);
 
       set({ user_id, token, role, loading: false });
       return true;

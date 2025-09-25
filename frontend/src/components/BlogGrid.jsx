@@ -19,7 +19,7 @@ const BlogGrid = ({ userId = null, userRole, filterByUser = false, blogListing =
       try {
         setLoading(true);
         const res = await axios.get("http://localhost:8000/api/blogs/");
-       
+       console.log(res.data)
 
         let mappedBlogs = res.data.map((blog) => ({
           id: blog.id,
@@ -35,11 +35,12 @@ const BlogGrid = ({ userId = null, userRole, filterByUser = false, blogListing =
           image: blog.images?.length > 0 ? blog.images[0].image_url : null,
           authorImg: null,
         }));
-
+console.log(user_id)
         // Filter only if filterByUser=true
-        if (filterByUser && userId) {
-          mappedBlogs = mappedBlogs.filter((b) => b.authorId === user_id);
+        if (filterByUser ) {
+          mappedBlogs = mappedBlogs.filter((b) =>String(b.authorId)  === user_id);
         }
+        console.log(mappedBlogs)
 
         setBlogs(mappedBlogs);
       } catch (err) {
@@ -51,7 +52,7 @@ const BlogGrid = ({ userId = null, userRole, filterByUser = false, blogListing =
     };
 
     fetchBlogs();
-  }, [userId, filterByUser]);
+  }, [ filterByUser]);
 
   // Delete blog from local state
   const handleDeleteBlog = (deletedId) => {

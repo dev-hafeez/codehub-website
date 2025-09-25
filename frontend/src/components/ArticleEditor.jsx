@@ -372,6 +372,7 @@ import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import "../styles/ArticleEditor.css";
 import { useArticleStore } from "../store/useArticleStore";
+import { useNavigate } from "react-router-dom";
 
 function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
   const [title, setTitle] = useState("");
@@ -381,6 +382,8 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
 
   const { uploadInlineImage, saveBlog, loading, error } = useArticleStore();
   const quillRef = useRef(null);
+
+const navigate = useNavigate();
 
   // Pre-fill form if editing
   useEffect(() => {
@@ -420,8 +423,15 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
         const editor = quillRef.current.getEditor();
         const range = editor.getSelection();
         editor.insertEmbed(range.index, "image", imageUrl);
-      } catch {
+      } catch (err){
         alert("❌ Image upload failed. Please try again.");
+        set({
+    error:
+      err.response?.data?.message ||
+      err.response?.data ||
+      "Failed to save blog",
+  });
+  throw err;  
       }
     };
   };
@@ -454,7 +464,7 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Validation with simple alerts
+
     if (!title.trim()) {
       alert("⚠️ Title is required!");
       return;
@@ -485,6 +495,7 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
         setCoverImage(null);
         setCoverPreview(null);
       }
+      navigate("/dashboard");
 
       if (onSuccess) onSuccess();
     } catch (err) {

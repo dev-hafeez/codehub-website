@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import ArticleEditor from "./ArticleEditor";
+import Navbar from "./Navbar";
 
 function EditBlogWrapper() {
   const { id } = useParams();
@@ -29,7 +30,12 @@ function EditBlogWrapper() {
   if (loading) return <p>Loading...</p>;
   if (!blog) return <p>Blog not found</p>;
 console.log(blog)
-  return <ArticleEditor mode="edit" blogData={blog} />;
+  return (
+    <>
+    <Navbar/>
+    <ArticleEditor mode="edit" blogData={blog} />
+    </>
+  );
 }
 
 export default EditBlogWrapper;

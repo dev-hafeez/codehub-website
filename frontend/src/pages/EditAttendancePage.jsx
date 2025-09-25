@@ -54,7 +54,7 @@ const EditAttendancePage = () => {
   const handleUpdateMeeting = async (e) => {
     e.preventDefault();
     try {
-      await axiosInstance.put(`/meetings/${id}/`, meeting);
+      await axiosInstance.patch(`/meetings/${id}/`, meeting);
       alert("Meeting updated!");
       setEditingMeeting(false);
     } catch (err) {

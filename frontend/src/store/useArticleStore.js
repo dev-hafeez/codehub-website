@@ -14,7 +14,7 @@ export const useArticleStore = create((set) => ({
     headers: { "Content-Type": "multipart/form-data" },
   });
 
-  return response.data.url; // or whatever the server returns
+  return response.data.url; 
 },
 
   saveBlog: async ({ mode, blogData, title, content, coverImage }) => {
@@ -36,7 +36,7 @@ export const useArticleStore = create((set) => ({
 
     try {
       set({ loading: true, error: null });
-      const res = await axiosInstance({ method, url, data: formData });
+      const res = await axiosInstance({ method, url, data: formData, headers: { "Content-Type": "multipart/form-data" }, });
       return res.data;
     } catch (err) {
       set({

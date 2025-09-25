@@ -6,22 +6,19 @@ import useAuthStore from "../store/authStore.js";
 
 
 const MyBlogPage = () => {
-  const { user_id, role } = useAuthStore(); 
+  const { user_id, role } = useAuthStore();
 
   return (
     <div>
       <NavbarComponent />
       <div className="container mt-4">
-       
         <h2>My Blogs</h2>
-        
-        {/* Pass both userId and role to BlogGrid */}
         <BlogGrid
-  userId={user_id}
-  userRole={role}
-  filterByUser={true}    // only current user's blogs
-  blogListing={false}
-/>
+          userId={user_id}
+          userRole={role}
+          filterByUser={true}
+          blogListing={false}
+        />
       </div>
       <Footer />
     </div>

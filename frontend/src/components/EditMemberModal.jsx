@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../axios";
 import "../style2/Modal.css";
 
-// ✅ Shared inline input style
 const inputStyle = {
   width: "100%",
   padding: "8px",
@@ -28,7 +27,6 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
   const [error, setError] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  // ✅ Populate form when modal opens
   useEffect(() => {
     if (member) {
       setFormData({
@@ -39,7 +37,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
           last_name: member.user.last_name || "",
           email: member.user.email || "",
           username: member.user.username || "",
-          password: "", // leave empty, backend may not require unless updating
+          password: "", 
           role: member.user.role || "STUDENT",
         },
       });
@@ -48,7 +46,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
 
   if (!isOpen || !member) return null;
 
-  // ✅ Handle both top-level & nested user fields
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -71,8 +69,8 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
     setError(null);
 
     try {
-      await axiosInstance.put(`/students/${member.id}`, formData);
-      onSave(); // refresh parent data
+      await axiosInstance.patch(`/students/${member.id}`, formData);
+      onSave(); 
       onClose();
     } catch (err) {
       console.error("Update failed:", err.response?.data || err.message);
@@ -96,7 +94,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
           <div className="modal-body">
             {error && <p className="error-message">{error}</p>}
 
-            {/* Roll No */}
+         
             <div className="form-group">
               <label htmlFor="roll_no">Roll No.</label>
               <input
@@ -110,7 +108,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
-            {/* Club */}
+      
             <div className="form-group">
               <label htmlFor="club">Club</label>
               <input
@@ -124,7 +122,6 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
-            {/* First Name */}
             <div className="form-group">
               <label htmlFor="first_name">First Name</label>
               <input
@@ -137,7 +134,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
-            {/* Last Name */}
+
             <div className="form-group">
               <label htmlFor="last_name">Last Name</label>
               <input
@@ -150,7 +147,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
-            {/* Email */}
+ 
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input
@@ -163,7 +160,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
-            {/* Username */}
+
             <div className="form-group">
               <label htmlFor="username">Username</label>
               <input

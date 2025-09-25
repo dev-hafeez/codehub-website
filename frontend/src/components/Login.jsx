@@ -16,6 +16,9 @@ const Login = () => {
     if (success) {
       navigate('/dashboard')
     }
+    else{
+      alert("LogIn failed, Invalid Credentials")
+    }
   }
 
   return (
@@ -54,9 +57,7 @@ const Login = () => {
           </button>
         </form>
 
-        {/* show error as string only */}
-        {error && <p style={{ color: 'red' }}>{String(error)}</p>}
-
+      
         <div className="icon-container">
           <PersonFill size={30} />
         </div>
