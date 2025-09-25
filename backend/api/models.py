@@ -41,6 +41,9 @@ def blog_image_upload_path(instance, filename):
     # Store images under: media/blog_images/<blog_uuid>/<filename>
     return f'blog_images/{instance.blog.id}/{filename}'
 
+def event_image_upload_path(instance, filename):
+    return f'events/{instance.id}/{filename}'
+
 class Blog(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
