@@ -228,3 +228,9 @@ class EventSerializer(serializers.ModelSerializer):
                 EventImage.objects.create(event=event, **image_data)
         return event
 
+    def to_internal_value(self, data):
+        internal_values = super().to_internal_value(data)
+        images = data.getlist('images')
+        if images:
+            internal_values['images'] = images
+        return internal_values
