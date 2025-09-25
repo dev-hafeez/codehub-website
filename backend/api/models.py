@@ -33,14 +33,17 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student')
     roll_no = models.CharField(max_length=20, default="")
     club = models.CharField(max_length=50)
-    title = models.CharField(max_length=30, default='')
+    title = models.CharField(max_length=30, null=True, blank=True)
     profile_pic = models.ImageField(upload_to='profile_pics/', default='profile_pics/default.jpg')
-    profile_desc = models.TextField(max_length=200, default='')
+    profile_desc = models.TextField(max_length=200, null=True, blank=True)
 
 
 def blog_image_upload_path(instance, filename):
     # Store images under: media/blog_images/<blog_uuid>/<filename>
     return f'blog_images/{instance.blog.id}/{filename}'
+
+def event_image_upload_path(instance, filename):
+    return f'events/{instance.id}/{filename}'
 
 class Blog(models.Model):
     title = models.CharField(max_length=255)
@@ -56,10 +59,12 @@ class BlogImage(models.Model):
     def __str__(self):
         return f'Image for blog {self.blog.id}'
 
+def current_time():
+    return datetime.now().time()
 
 class Meeting(models.Model):
     date = models.DateField(default=date.today)
-    start_time = models.TimeField(default=datetime.now().time().strftime('%I:%M %p')) # 12-hour format
+    start_time = models.TimeField(default=current_time) # 12-hour format
     end_time = models.TimeField()
     venue = models.CharField(max_length=50)
     agenda = models.TextField(null=True, blank=True)
