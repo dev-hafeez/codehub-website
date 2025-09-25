@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from datetime import date, datetime
+from django.conf import settings
 
 class UserRole(models.TextChoices):
     STUDENT = "STUDENT", "student"
@@ -69,12 +70,14 @@ class MeetingAttendance(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attending_student')
     status = models.CharField(max_length=10, choices=AttendanceStatus.choices)
 
-class Event(models.Model):
-    @staticmethod
-    def event_image_upload_path(instance, filename):
-        return f'events/{instance.id}/{filename}'
+def event_image_upload_path(instance, filename):
+    return f'events/{instance.event.id}/{filename}'
 
+class Event(models.Model):
     title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to=event_image_upload_path)
     content = models.TextField()
-    date = models.DateField(default=date.today())
+    date = models.DateField(default=date.today)
+
+class EventImage(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to=event_image_upload_path, default=f'{settings.MEDIA_ROOT}/events/default.png', blank=True, null=True)
