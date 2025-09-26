@@ -11,18 +11,16 @@ import ThemeToggle from "./ThemeToggle";
 import { BsSearch } from "react-icons/bs";
 import "../styles/Navbar.css";
 import useAuthStore from "../store/authStore";
+import ProfileOptions from "./ProfileOptions"; 
+import { PersonCircle } from "react-bootstrap-icons"; 
 
 const Navbar = () => {
   const navigate = useNavigate()
   
   const [searchQuery, setSearchQuery] = useState("");
-  const { token, logout } = useAuthStore();
+  const { token} = useAuthStore();
 
-  const handleLogout = () => {
-    logout();
-    window.location.href = "/login";
-  };
-
+  const [showOptions, setShowOptions] = useState(false);
   // Conditional rendering for auth buttons
   const renderAuthButtons = () => {
     if (!token) {
@@ -35,25 +33,21 @@ const Navbar = () => {
     }
 
     // For any logged-in role → Only Logout
-    return (
-      <>
-       <Button 
-    type="button" 
-    className="login-link px-4 py-2 ms-lg-3 fw-semibold"
-    style={{ backgroundColor: "#ffffff", cursor: "pointer" }}
-    onClick={() => navigate('/forgot-password')}
-  >
-    Reset password
-  </Button>
-
+   return (
+    <>
+      {/* Profile Icon Button */}
       <Button
-        onClick={handleLogout}
-        className="login-link px-4 py-2 ms-lg-3 fw-semibold"
-                style={{ backgroundColor: "#ffffff", cursor: "pointer" }}
-        
+        variant="light"
+        className="login-link px-3 py-2 ms-lg-3 fw-semibold"
+        style={{ backgroundColor: "#ffffff", cursor: "pointer" }}
+        onClick={() => setShowOptions(!showOptions)}
       >
-        Logout
+        <PersonCircle size={24} color="#0c4182" />
       </Button>
+
+      {showOptions && (
+        <ProfileOptions  navigate={navigate} />
+      )}
       </>
     );
   };
