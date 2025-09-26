@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
-    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer
+    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -14,7 +14,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
-from .models import Blog, BlogImage, Meeting, MeetingAttendance, Student, Event
+from .models import Blog, BlogImage, Meeting, MeetingAttendance, Student, Event, EventImage
 from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
 from .utils import get_tokens_for_user, send_otp
 from reportlab.lib.pagesizes import A4
@@ -790,6 +790,12 @@ class EventRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.prefetch_related('images')
     serializer_class = EventSerializer
     permission_classes = [IsLead]
+
+class EventImageRUDView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = EventImage.objects.all()
+    serializer_class = EventImageEditSerializer
+    permission_classes = [IsLead]
+    lookup_url_kwarg = 'img_pk'
 
 class MeetingPDFView(APIView):
     
