@@ -23,12 +23,12 @@
   justify-content: center;
   align-items: center;
   padding: 20px 0;
-  border-bottom: 5px solid #0c4182;
+  border-bottom: 1px solid #0c4182;
 }
 .option-btn {
   flex: 1;
   border: none;
-  /* border-bottom: 1px solid #0c4182; */
+  border-bottom: 1px solid #0c4182;
   background: white;
   font-size: 18px;
   font-weight: 500;
