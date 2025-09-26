@@ -2,11 +2,11 @@
 
 .profile-options-box {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 32%;
+  left: 88%;
   transform: translate(-50%, -50%);
-  width: 30%;
-  height: 50%;
+  width: 20%;
+  height: 40%;
   background: #fff;
   border: 1px solid #0c4182;
   border-radius: 16px; /* rounded corners */
@@ -18,11 +18,17 @@
   overflow: hidden; /* keep borders clean */
   padding: 8px 0;
 }
-
+.profile-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 5px solid #0c4182;
+}
 .option-btn {
   flex: 1;
   border: none;
-  border-bottom: 1px solid #0c4182;
+  /* border-bottom: 1px solid #0c4182; */
   background: white;
   font-size: 18px;
   font-weight: 500;
@@ -44,6 +50,9 @@
 
 @media (max-width: 960px) {
   .profile-options-box {
+     position: fixed;
+    top: 60%;
+    left: 50%;
     width: 70%;
     height: 50%;
   }
@@ -51,7 +60,10 @@
 
 @media (max-width: 600px) {
   .profile-options-box {
-    width: 90%;
-    height: 55%;
+     position: fixed;
+     top: 60%;
+    left: 50%;
+    width: 80%;
+    height: 40%;
   }
 }
