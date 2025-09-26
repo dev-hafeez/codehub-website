@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./../styles/ProfileOptions.css";
 import useAuthStore from "../store/authStore";
-
+import { PersonCircle } from "react-bootstrap-icons"; 
 
 const ProfileOptions = () => {
   const navigate = useNavigate();
@@ -14,6 +14,9 @@ const ProfileOptions = () => {
   
   return (
     <div className="profile-options-box">
+      <div className="profile-icon">
+        <PersonCircle size={74} color="#0c4182" />
+      </div>
       <button
         className="option-btn"
         onClick={() => navigate("/edit-profile")}
