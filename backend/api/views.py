@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
-    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer
+    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer,AdminListSerializer,AdminSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -1031,3 +1031,72 @@ class MeetingPDFView(APIView):
         response['Content-Disposition'] = f'attachment; filename="acm_meeting_minutes_{meeting.date}.pdf"'
         
         return response
+
+
+@extend_schema(
+    summary="List and Create Admin Users",
+    description="Lists all Admin users, or creates a new Admin. Only accessible by Admins."
+)
+class AdminListCreateView(generics.ListCreateAPIView):
+    serializer_class = AdminListSerializer 
+    permission_classes = [IsAdmin] 
+
+    def get_queryset(self):
+        return User.objects.filter(role='ADMIN')
+    
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return AdminSerializer
+        return AdminListSerializer 
+
+    @extend_schema(
+        request=AdminSerializer,
+        responses={
+            201: OpenApiResponse(description="Admin user created successfully"),
+            400: OpenApiResponse(description="Validation error"),
+            403: OpenApiResponse(description="Forbidden - user does not have Admin permissions"),
+        },
+        description='Creates a new Admin user.'
+    )
+    def post(self, request, *args, **kwargs):
+        # The generic ListCreateAPIView handles the post using get_serializer_class (AdminSerializer)
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == status.HTTP_201_CREATED:
+            # Reformat successful response for consistency
+            return Response({
+                "status": "success",
+                "message": f"Admin user {response.data.get('username')} registered successfully",
+                "data": response.data
+            }, status=status.HTTP_201_CREATED)
+        return response # Fallback for non-201 responses
+
+
+@extend_schema(
+    summary="Retrieve, Update, or Delete an Admin",
+    description="Manages a single Admin user by their ID. Restricted to Admins."
+)
+class AdminRUDView(generics.RetrieveUpdateDestroyAPIView):
+    """ Retrieve, Update, or Delete an Admin user. """
+    serializer_class = AdminSerializer
+    permission_classes = [IsAdmin] 
+    
+    def get_queryset(self):
+        return User.objects.filter(role='ADMIN')
+    
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK:
+            return Response({
+                "status": "success",
+                "message": "Admin user updated successfully",
+                "data": response.data
+            }, status=status.HTTP_200_OK)
+        return response
+    
+    def destroy(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({
+            "status": "success",
+            "message": "Admin user deleted successfully",
+            "data": None
+        }, status=status.HTTP_200_OK)

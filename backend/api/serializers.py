@@ -58,7 +58,24 @@ class StudentSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+    
 
+class AdminSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role']
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+
+        user = User.objects.create(
+            role='ADMIN',
+            **validated_data
+        )
+        user.set_password(password)
+        user.save()
+        return user
 
 # NOTE: This serializer is for the students list view
 class UserListSerializer(serializers.ModelSerializer):
@@ -73,6 +90,13 @@ class StudentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
+
+class AdminListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role']
+
+
 
 
 class LoginSerializer(serializers.Serializer):
