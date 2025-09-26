@@ -99,7 +99,7 @@ class StudentRUView(generics.RetrieveUpdateAPIView):
 )
 class SignupView(APIView):
     serializer_class = StudentSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -610,7 +610,7 @@ class BlogListAPIView(generics.ListAPIView):
     ],
 )
 class BlogEditView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsAdmin]
     parser_classes = [MultiPartParser, FormParser]
 
     def put(self, request, pk, *args, **kwargs):
@@ -762,13 +762,13 @@ class MeetingAttendanceListView(generics.ListAPIView):
 class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MeetingAttendance.objects.all()
     serializer_class = MeetingAttendanceSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
     lookup_url_kwarg = 'att_pk'
 
 class EventListCreateView(generics.ListCreateAPIView):
     queryset = Event.objects.prefetch_related('images')
     serializer_class = EventSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -789,12 +789,12 @@ class EventListCreateView(generics.ListCreateAPIView):
 class EventRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.prefetch_related('images')
     serializer_class = EventSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
 
 class EventImageRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = EventImage.objects.all()
     serializer_class = EventImageEditSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
     lookup_url_kwarg = 'img_pk'
 
 class MeetingPDFView(APIView):
