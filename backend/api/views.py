@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
-    MeetingAttendanceSerializer, StudentListSerializer
+    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -14,7 +14,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
-from .models import Blog, BlogImage, Meeting, MeetingAttendance, Student
+from .models import Blog, BlogImage, Meeting, MeetingAttendance, Student, Event
 from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
 from .utils import get_tokens_for_user, send_otp
 from reportlab.lib.pagesizes import A4
@@ -765,6 +765,31 @@ class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsLead]
     lookup_url_kwarg = 'att_pk'
 
+class EventListCreateView(generics.ListCreateAPIView):
+    queryset = Event.objects.prefetch_related('images')
+    serializer_class = EventSerializer
+    permission_classes = [IsLead]
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        image_list = request.FILES.getlist('images')
+        images = []
+        for image in image_list:
+            images.append({
+                'image': image,
+            })
+        data.setlist('images', images)
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = serializer.data
+        return Response(data, status=status.HTTP_201_CREATED)
+
+
+class EventRUDView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Event.objects.prefetch_related('images')
+    serializer_class = EventSerializer
+    permission_classes = [IsLead]
 
 class MeetingPDFView(APIView):
     
