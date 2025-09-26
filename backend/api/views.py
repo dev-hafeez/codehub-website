@@ -99,7 +99,7 @@ class StudentRUView(generics.RetrieveUpdateAPIView):
 )
 class SignupView(APIView):
     serializer_class = StudentSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLead,IsAdmin]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -440,7 +440,7 @@ class BlogUploadView(APIView):
         - Creates a Blog instance and related BlogImage instances atomically.
         - Returns serialized blog data including absolute image URLs on success.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsAdmin]
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request, *args, **kwargs):
@@ -610,7 +610,7 @@ class BlogListAPIView(generics.ListAPIView):
     ],
 )
 class BlogEditView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsAdmin]
     parser_classes = [MultiPartParser, FormParser]
 
     def put(self, request, pk, *args, **kwargs):
@@ -762,7 +762,7 @@ class MeetingAttendanceListView(generics.ListAPIView):
 class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MeetingAttendance.objects.all()
     serializer_class = MeetingAttendanceSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
     lookup_url_kwarg = 'att_pk'
 
 import os
