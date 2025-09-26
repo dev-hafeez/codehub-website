@@ -800,7 +800,7 @@ class EventImageRUDView(generics.RetrieveUpdateDestroyAPIView):
 class MeetingPDFView(APIView):
     
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, IsLeadOrAdmin]
+    permission_classes = [IsAuthenticated, IsLead]
     
     def get(self, request, pk, *args, **kwargs):
         try:
