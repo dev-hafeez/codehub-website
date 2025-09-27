@@ -2,7 +2,7 @@ from django.urls import path
 from .views import SignupView, OTPView, LoginView, PasswordChangeView, LogoutView, BlogUploadView, BlogListAPIView, \
     BlogEditView, BlogDeleteView, MeetingRUDView, MeetingCreateView, MeetingListView, MeetingAttendanceListView, \
     MeetingAttendanceRUDView, StudentsListView, StudentRUView, MeetingPDFView, api_home, EventListCreateView, \
-    EventRUDView, EventImageRUDView,AdminListCreateView,AdminRUDView
+    EventRUDView, EventImageRUDView, AdminRUDView
 
 # NOTE: 'RUD' means the endpoint will accept these request types (single instance):
 #  GET , PUT, PATCH, DELETE
@@ -21,9 +21,9 @@ urlpatterns = [
     path('students/', StudentsListView.as_view(), name='students-list'),
     path('students/<int:pk>', StudentRUView.as_view(), name='student-RU'),
     
-    #admins
-    path('admins/', AdminListCreateView.as_view(), name='admin_List_Create'),
-    path('admins/<int:pk>',AdminRUDView.as_view(),name='admin-RU'),
+    # Admins
+    path('admin/<int:pk>', AdminRUDView.as_view(), name='admin-RUD'),
+    
     # Blogs
     path('blogs/', BlogListAPIView.as_view(), name='blog-list'),
     path('blogs/upload/', BlogUploadView.as_view(), name='blog-upload'),
