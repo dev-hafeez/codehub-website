@@ -27,18 +27,20 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
   const [error, setError] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Load initial member data into form
   useEffect(() => {
     if (member) {
       setFormData({
         roll_no: member.roll_no || "",
         club: member.club || "",
         user: {
-          first_name: member.user.first_name || "",
-          last_name: member.user.last_name || "",
-          email: member.user.email || "",
-          username: member.user.username || "",
-          password: "", 
-          role: member.user.role || "STUDENT",
+          id: member.user?.id || "", // ✅ include ID for Django to know which user to update
+          first_name: member.user?.first_name || "",
+          last_name: member.user?.last_name || "",
+          email: member.user?.email || "",
+          username: member.user?.username || "",
+          password: "", // keep blank unless changed
+          role: member.user?.role || "STUDENT",
         },
       });
     }
@@ -46,7 +48,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
 
   if (!isOpen || !member) return null;
 
- 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -63,18 +65,73 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
     }
   };
 
+  // Submit changes
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
     setError(null);
 
     try {
-      await axiosInstance.patch(`/students/${member.id}`, formData);
-      onSave(); 
+      const dataToSend = {};
+
+      // --- Compare top-level fields (roll_no, club) ---
+      if (formData.roll_no !== member.roll_no) {
+        dataToSend.roll_no = formData.roll_no;
+      }
+      if (formData.club !== member.club) {
+        dataToSend.club = formData.club;
+      }
+
+      // --- Compare nested user fields ---
+      const updatedUserFields = {};
+      const userFields = [
+        "first_name",
+        "last_name",
+        "email",
+        "username",
+        "password",
+        "role",
+      ];
+
+      userFields.forEach((field) => {
+        if (field === "password") {
+          // Only send password if user actually typed something
+          if (formData.user.password.trim()) {
+            updatedUserFields.password = formData.user.password;
+          }
+        } else if (formData.user[field] !== member.user[field]) {
+          updatedUserFields[field] = formData.user[field];
+        }
+      });
+
+      // Only include "user" object if it has changes
+      if (Object.keys(updatedUserFields).length > 0) {
+        updatedUserFields.id = member.user.id; // ✅ include user ID
+        dataToSend.user = updatedUserFields;
+      }
+
+      console.log("PATCH Payload being sent:", dataToSend);
+
+      if (Object.keys(dataToSend).length === 0) {
+        alert("No changes detected!");
+        setIsSaving(false);
+        return;
+      }
+
+      // ✅ Make PATCH request (no trailing slash!)
+      await axiosInstance.patch(`/students/${member.id}`, dataToSend);
+
+      onSave();
       onClose();
     } catch (err) {
       console.error("Update failed:", err.response?.data || err.message);
-      setError(err.response?.data?.detail || "Failed to update member.");
+
+      // Handle duplicate email or nested errors
+      if (err.response?.data?.user?.email) {
+        setError(err.response.data.user.email[0]);
+      } else {
+        setError(err.response?.data?.detail || "Failed to update member.");
+      }
     } finally {
       setIsSaving(false);
     }
@@ -94,7 +151,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
           <div className="modal-body">
             {error && <p className="error-message">{error}</p>}
 
-         
+            {/* Roll No */}
             <div className="form-group">
               <label htmlFor="roll_no">Roll No.</label>
               <input
@@ -108,7 +165,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
-      
+            {/* Club */}
             <div className="form-group">
               <label htmlFor="club">Club</label>
               <input
@@ -122,6 +179,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
+            {/* First Name */}
             <div className="form-group">
               <label htmlFor="first_name">First Name</label>
               <input
@@ -134,7 +192,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
-
+            {/* Last Name */}
             <div className="form-group">
               <label htmlFor="last_name">Last Name</label>
               <input
@@ -147,7 +205,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
- 
+            {/* Email */}
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input
@@ -160,7 +218,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
               />
             </div>
 
-
+            {/* Username */}
             <div className="form-group">
               <label htmlFor="username">Username</label>
               <input

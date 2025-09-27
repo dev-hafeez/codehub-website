@@ -100,7 +100,6 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# Use environment variables to set the database host and port
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.sqlite3',
