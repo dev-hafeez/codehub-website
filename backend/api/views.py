@@ -1033,42 +1033,7 @@ class MeetingPDFView(APIView):
         return response
 
 
-@extend_schema(
-    summary="List and Create Admin Users",
-    description="Lists all Admin users, or creates a new Admin. Only accessible by Admins."
-)
-class AdminListCreateView(generics.ListCreateAPIView):
-    serializer_class = AdminListSerializer 
-    permission_classes = [IsAdmin] 
 
-    def get_queryset(self):
-        return User.objects.filter(role='ADMIN')
-    
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return AdminSerializer
-        return AdminListSerializer 
-
-    @extend_schema(
-        request=AdminSerializer,
-        responses={
-            201: OpenApiResponse(description="Admin user created successfully"),
-            400: OpenApiResponse(description="Validation error"),
-            403: OpenApiResponse(description="Forbidden - user does not have Admin permissions"),
-        },
-        description='Creates a new Admin user.'
-    )
-    def post(self, request, *args, **kwargs):
-        # The generic ListCreateAPIView handles the post using get_serializer_class (AdminSerializer)
-        response = super().post(request, *args, **kwargs)
-        if response.status_code == status.HTTP_201_CREATED:
-            # Reformat successful response for consistency
-            return Response({
-                "status": "success",
-                "message": f"Admin user {response.data.get('username')} registered successfully",
-                "data": response.data
-            }, status=status.HTTP_201_CREATED)
-        return response # Fallback for non-201 responses
 
 
 @extend_schema(
