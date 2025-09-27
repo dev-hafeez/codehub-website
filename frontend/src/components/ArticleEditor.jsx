@@ -1,5 +1,4 @@
 
-
 import React, { useState, useRef, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
@@ -18,7 +17,6 @@ function ArticleEditor({ mode = "create", blogData = null, onSuccess }) {
 
 const navigate = useNavigate();
 
-  // Pre-fill form if editing
   useEffect(() => {
     if (mode === "edit" && blogData) {
       setTitle(blogData.title || "");
@@ -69,7 +67,7 @@ const navigate = useNavigate();
 
     };
   };
-
+  }
   const modules = {
     toolbar: {
       container: [
