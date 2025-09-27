@@ -66,16 +66,6 @@ class AdminSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role']
 
-    def create(self, validated_data):
-        password = validated_data.pop('password')
-
-        user = User.objects.create(
-            role='ADMIN',
-            **validated_data
-        )
-        user.set_password(password)
-        user.save()
-        return user
 
 # NOTE: This serializer is for the students list view
 class UserListSerializer(serializers.ModelSerializer):
