@@ -181,5 +181,5 @@ const navigate = useNavigate();
     </form>
   );
 }
-
+}
 export default ArticleEditor;
