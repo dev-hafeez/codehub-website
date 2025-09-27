@@ -880,21 +880,23 @@ class MeetingPDFView(APIView):
         elements.append(Paragraph("Minutes of ACM Meeting", title_style))
         elements.append(Spacer(1, 0.1*inch))
         
-        
-        club_name = request.user.student.club.replace('_', ' ').title()
-        club_style = ParagraphStyle(
-            'ClubStyle',
-            parent=styles['Heading2'],
-            fontSize=14,
-            spaceAfter=10,
-            alignment=1,
-            textColor=colors.HexColor('#2c3e50'),
-            fontName='Helvetica-Bold'
-        )
 
-        elements.append(Paragraph(f"{club_name} Meeting Minutes", club_style))
-        elements.append(Spacer(1, 0.1*inch))
-        
+        if request.user.role != 'ADMIN':
+            club_name = request.user.student.club.replace('_', ' ').title()
+            club_style = ParagraphStyle(
+                'ClubStyle',
+                parent=styles['Heading2'],
+                fontSize=14,
+                spaceAfter=10,
+                alignment=1,
+                textColor=colors.HexColor('#2c3e50'),
+                fontName='Helvetica-Bold'
+            )
+            elements.append(Paragraph(f"{club_name} Meeting Minutes", club_style))
+            elements.append(Spacer(1, 0.1*inch))
+
+
+
         meeting_data = [
             ["Date:", str(meeting.date)],
             ["Time:", f"{start_time_12h} - {end_time_12h}"],
@@ -1031,8 +1033,6 @@ class MeetingPDFView(APIView):
         response['Content-Disposition'] = f'attachment; filename="acm_meeting_minutes_{meeting.date}.pdf"'
         
         return response
-
-
 
 
 
