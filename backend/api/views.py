@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
-    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer
+    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -99,7 +99,7 @@ class StudentRUView(generics.RetrieveUpdateAPIView):
 )
 class SignupView(APIView):
     serializer_class = StudentSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -610,7 +610,7 @@ class BlogListAPIView(generics.ListAPIView):
     ],
 )
 class BlogEditView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsAdmin]
     parser_classes = [MultiPartParser, FormParser]
 
     def put(self, request, pk, *args, **kwargs):
@@ -762,13 +762,13 @@ class MeetingAttendanceListView(generics.ListAPIView):
 class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MeetingAttendance.objects.all()
     serializer_class = MeetingAttendanceSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
     lookup_url_kwarg = 'att_pk'
 
 class EventListCreateView(generics.ListCreateAPIView):
     queryset = Event.objects.prefetch_related('images')
     serializer_class = EventSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -789,18 +789,18 @@ class EventListCreateView(generics.ListCreateAPIView):
 class EventRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.prefetch_related('images')
     serializer_class = EventSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
 
 class EventImageRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = EventImage.objects.all()
     serializer_class = EventImageEditSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
     lookup_url_kwarg = 'img_pk'
 
 class MeetingPDFView(APIView):
     
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, IsLeadOrAdmin]
+    permission_classes = [IsAuthenticated, IsLead]
     
     def get(self, request, pk, *args, **kwargs):
         try:
@@ -1031,3 +1031,37 @@ class MeetingPDFView(APIView):
         response['Content-Disposition'] = f'attachment; filename="acm_meeting_minutes_{meeting.date}.pdf"'
         
         return response
+
+
+
+
+
+@extend_schema(
+    summary="Retrieve, Update, or Delete an Admin",
+    description="Manages a single Admin user by their ID. Restricted to Admins."
+)
+class AdminRUDView(generics.RetrieveUpdateDestroyAPIView):
+    """ Retrieve, Update, or Delete an Admin user. """
+    serializer_class = AdminSerializer
+    permission_classes = [IsAdmin] 
+    
+    def get_queryset(self):
+        return User.objects.filter(role='ADMIN')
+    
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK:
+            return Response({
+                "status": "success",
+                "message": "Admin user updated successfully",
+                "data": response.data
+            }, status=status.HTTP_200_OK)
+        return response
+    
+    def destroy(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({
+            "status": "success",
+            "message": "Admin user deleted successfully",
+            "data": None
+        }, status=status.HTTP_200_OK)

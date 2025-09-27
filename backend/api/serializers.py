@@ -58,6 +58,13 @@ class StudentSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+    
+
+class AdminSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role']
 
 
 # NOTE: This serializer is for the students list view
