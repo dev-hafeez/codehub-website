@@ -91,13 +91,6 @@ class StudentListSerializer(serializers.ModelSerializer):
         model = Student
         fields = '__all__'
 
-class AdminListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role']
-
-
-
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
