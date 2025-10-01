@@ -261,7 +261,7 @@ class EventSerializer(serializers.ModelSerializer):
         # The images should only be added to the existing event when using this serializer
         if image_data:
             for image in image_data:
-                EventImage.objects.create(event=instance, **image)
+                EventImage.objects.create(event=instance, image=image)
 
         instance.save()
         return instance
