@@ -797,6 +797,9 @@ class EventImageRUDView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsLeadOrAdmin]
     lookup_url_kwarg = 'img_pk'
 
+    def get_queryset(self):
+        return EventImage.objects.filter(event_id=self.kwargs['pk'])
+
 class MeetingPDFView(APIView):
     
     authentication_classes = [TokenAuthentication]
