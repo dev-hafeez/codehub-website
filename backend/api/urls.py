@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import SignupView, OTPView, LoginView, PasswordChangeView, LogoutView, BlogUploadView, BlogListAPIView, \
     BlogEditView, BlogDeleteView, MeetingRUDView, MeetingCreateView, MeetingListView, MeetingAttendanceListView, \
-    MeetingAttendanceRUDView, StudentsListView, StudentRUView, MeetingPDFView, api_home, EventListCreateView, \
-    EventRUDView, EventImageRUDView, AdminRUDView
+    MeetingAttendanceRUDView, StudentsListView, StudentRUView, MeetingPDFView, api_home, \
+    EventRUDView, EventImageRUDView, AdminRUDView, EventListCreateView
 
 # NOTE: 'RUD' means the endpoint will accept these request types (single instance):
 #  GET , PUT, PATCH, DELETE
