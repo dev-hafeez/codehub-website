@@ -26,3 +26,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 class IsLeadOrAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and (request.user.role == 'LEAD' or 'ADMIN')
+
+def is_staff(role: str):
+    return role == 'LEAD' or 'ADMIN'
