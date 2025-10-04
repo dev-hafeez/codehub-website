@@ -53,7 +53,10 @@ class StudentSerializer(serializers.ModelSerializer):
 
         if user_data:
             for attr, value in user_data.items():
-                setattr(instance.user, attr, value)
+                if attr == 'password':
+                    instance.user.set_password(value)
+                else:
+                    setattr(instance.user, attr, value)
             instance.user.save()
 
         instance.save()
