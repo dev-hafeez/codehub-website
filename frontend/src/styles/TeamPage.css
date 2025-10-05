@@ -4,7 +4,7 @@
   align-items: center;
   padding: 80px 20px;
   background: #f7f9fc;
-  min-height: calc(100vh - 80px); /* minus navbar height */
+  min-height: calc(100vh - 80px); 
 }
 
 .team-detail-card {

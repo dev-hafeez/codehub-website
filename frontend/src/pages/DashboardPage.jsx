@@ -1,7 +1,7 @@
 import React from 'react'
-import Footer from '../components/Footer'
+
 import Navbar from '../components/Navbar'
-import Dashboard from '../components/Dashboard'
+import Dashboard from '../components/dashboard/Dashboard'
 
 const DashboardPage = () => {
   return (
@@ -12,7 +12,7 @@ const DashboardPage = () => {
         <Dashboard  /> 
       </div>
 
-      <Footer />
+     
     </div>
   )
 }

@@ -1,4 +1,4 @@
-/* Fonts */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rosario:wght@600;700&display=swap');
 
@@ -97,19 +97,19 @@ body {
 }
 
 .btn-edit {
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A font similar to the one in the image */
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
   font-size: 18px;
-  font-weight: 600; /* Semi-bold */
-  color: #1a1a1a; /* Dark gray for the text */
+  font-weight: 600; 
+  color: #1a1a1a; 
   padding: 7px 20px;
-  background-color: #ffffff; /* White background */
-  border-radius: 50px; /* Highly rounded corners */
+  background-color: #ffffff; 
+  border-radius: 50px;
 
   border: 2px solid transparent;
   background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15); /* Soft, subtle shadow */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .btn-edit:hover {
@@ -120,19 +120,19 @@ body {
 
     margin-left:4px;
   color: #dc2626;
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A font similar to the one in the image */
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
   font-size: 18px;
-  font-weight: 600; /* Semi-bold */
+  font-weight: 600; 
   color: #1a1a1a;
   padding: 7px 20px;
-  background-color: #ffffff; /* White background */
-  border-radius: 50px; /* Highly rounded corners */
+  background-color: #ffffff; 
+  border-radius: 50px; 
 
   border: 2px solid transparent;
   background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15); /* Soft, subtle shadow */
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15); 
 }
 
 .btn-delete:hover {
@@ -174,19 +174,6 @@ body {
 .modal-close-btn:hover {
   color: #1f2937;
 }
-
-/* .modal-form input, .modal-form select {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  outline: none;
-  width: 100%;
-}
-
-.modal-form input:focus, .modal-form select:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(59,130,246,0.25);
-} */
 
 .btn-group {
   display: flex;

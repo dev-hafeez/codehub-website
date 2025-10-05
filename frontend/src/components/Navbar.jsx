@@ -21,7 +21,7 @@ const Navbar = () => {
   const { token} = useAuthStore();
 
   const [showOptions, setShowOptions] = useState(false);
-  // Conditional rendering for auth buttons
+
   const renderAuthButtons = () => {
     if (!token) {
       return (
@@ -32,10 +32,9 @@ const Navbar = () => {
       );
     }
 
-    // For any logged-in role → Only Logout
    return (
     <>
-      {/* Profile Icon Button */}
+      
       <Button
         variant="light"
         className="login-link px-3 py-2 ms-lg-3 fw-semibold"
@@ -53,7 +52,7 @@ const Navbar = () => {
   };
 
   return (
-    <BootstrapNavbar expand="lg" className="custom-navbar shadow-sm">
+    <BootstrapNavbar expand="lg" className="custom-navbar1 shadow-sm">
       <Container fluid className="px-4">
         {/* Desktop Logo  */}
         <BootstrapNavbar.Brand

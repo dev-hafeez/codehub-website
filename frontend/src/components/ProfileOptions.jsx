@@ -26,7 +26,7 @@ const ProfileOptions = () => {
 
       <button
         className="option-btn"
-        onClick={() => navigate("/reset-password")}
+        onClick={() => navigate("/otp")}
       >
         Reset Password
       </button>

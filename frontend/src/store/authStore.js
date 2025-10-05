@@ -1,4 +1,4 @@
-// src/store/authStore.js
+
 import { create } from "zustand";
 import axiosInstance from "../axios"; //  use axios.js
 

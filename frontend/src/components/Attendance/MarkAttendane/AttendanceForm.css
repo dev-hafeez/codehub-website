@@ -1,0 +1,83 @@
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.btn-design {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 6px 18px;
+  border-radius: 50px;
+  border: 2px solid transparent;
+  background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  cursor: pointer;
+}
+
+.btn-design:hover { box-shadow: 4px 4px 10px rgba(0,0,0,0.15); }
+
+.calendar-popup {
+  position: absolute;
+  top: 100%;
+  z-index: 1000;
+  margin-top: 5px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.meeting-input {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  width: 180px;
+}
+
+.meeting-input:focus {
+  outline: none;
+  border-color: #2D66AD;
+  box-shadow: 0 0 0 2px rgba(45,102,173,0.2);
+}
+
+.notes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.highlight-section, .agenda-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.highlight-section h5, .agenda-section h5 {
+  margin-bottom: 12px;
+  color: #333;
+  font-weight: bold;
+}
+
+.highlight-input {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 80px;
+  resize: none;
+}
+
+.highlight-input:focus {
+  border-color: #2D66AD;
+  box-shadow: 0 0 0 2px rgba(45,102,173,0.2);
+}

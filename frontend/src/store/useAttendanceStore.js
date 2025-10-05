@@ -1,4 +1,4 @@
-// store/useAttendanceStore.js
+
 import { create } from "zustand";
 import axiosInstance from "../axios";
 
@@ -7,8 +7,6 @@ const useAttendanceStore = create((set) => ({
   students: [],
   loading: false,
   error: null,
-
-  // ✅ Fetch meetings
   fetchMeetings: async () => {
     set({ loading: true, error: null });
     try {
@@ -22,7 +20,6 @@ const useAttendanceStore = create((set) => ({
     }
   },
 
-  // ✅ Create a new meeting
   createMeeting: async (meetingData) => {
     set({ loading: true, error: null });
     try {
@@ -41,7 +38,6 @@ const useAttendanceStore = create((set) => ({
     }
   },
 
-  // ✅ Update a meeting
   updateMeeting: async (id, meetingData) => {
     set({ loading: true, error: null });
     try {
@@ -62,7 +58,6 @@ const useAttendanceStore = create((set) => ({
     }
   },
 
-  // ✅ Delete a meeting
   deleteMeeting: async (id) => {
     set({ loading: true, error: null });
     try {
@@ -80,7 +75,6 @@ const useAttendanceStore = create((set) => ({
     }
   },
 
-  // ✅ Fetch students
   fetchStudents: async () => {
     set({ loading: true, error: null });
     try {

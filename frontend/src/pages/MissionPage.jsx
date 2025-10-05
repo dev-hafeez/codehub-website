@@ -1,14 +1,14 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
-import MissionSection from '../components/MissionSection'
-import Footer from '../components/Footer'
+import MissionSection from '../components/LandingPage/Mission/MissionSection'
+
 
 const MissionPage = () => {
   return (
     <>
     <Navbar/>
     <MissionSection/>
-    <Footer/>
+  
     </>
   )
 }

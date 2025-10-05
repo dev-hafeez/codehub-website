@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"; 
 import Navbar from "../components/Navbar";
 import "../styles/ContactPage.css";
 
@@ -11,32 +11,26 @@ const ContactPage = () => {
           <div className="contact-info">
             <h1 className="contact-title">Get in Touch</h1>
             <p className="contact-subtitle">
-              Have questions or want to work with us? We'd love to hear from you!
+              Reach out to us directly through the following channels:
             </p>
 
             <div className="contact-details">
-              <p><strong>Email:</strong> hello@yourteam.com</p>
-              <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-              <p><strong>Location:</strong> 123 Innovation Street, Tech City</p>
+              <p><strong>ACM Official Email:</strong> acmcuiwah@gmail.com</p>
+              <p><strong>President Email:</strong> kanwartaha0@gmai.com</p>
+              <p><strong>Faculty Head Email:</strong>mtalha@ciitwah.edu.pk</p>
+               <p>
+                <strong>LinkedIn:</strong> 
+                <a href="https://www.linkedin.com/company/acmcuiwah/" target="_blank" rel="noopener noreferrer">
+                  ACM
+                </a>
+              </p>
+              <p>
+                <strong>Instagram:</strong> 
+                <a href="https://www.instagram.com/acmcuiwah?igsh=bjhjczlmNWZ5c3E3" target="_blank" rel="noopener noreferrer">
+                  ACM
+                </a>
+              </p>
             </div>
-          </div>
-
-          <div className="contact-form">
-            <form>
-              <div className="form-group">
-                <label>Name</label>
-                <input type="text" placeholder="Your name" required />
-              </div>
-              <div className="form-group">
-                <label>Email</label>
-                <input type="email" placeholder="Your email" required />
-              </div>
-              <div className="form-group">
-                <label>Message</label>
-                <textarea rows="5" placeholder="Your message" required></textarea>
-              </div>
-              <button type="submit" className="submit-button">Send Message</button>
-            </form>
           </div>
         </div>
       </div>

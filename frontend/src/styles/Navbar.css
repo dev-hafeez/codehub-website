@@ -1,7 +1,4 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
-
-
 
 .navbar-animate {
   opacity: 0;
@@ -11,8 +8,8 @@
   z-index: 10;
 }
 .navbar {
-  position: relative; /* or fixed if you want it stuck to top */
-  z-index: 10; /* Higher than login-card */
+  position: relative; 
+  z-index: 10; 
 }
 
 @keyframes fadeInNavbar {
@@ -24,29 +21,42 @@
 .nav-link {
   font-family: 'Roboto', sans-serif !important;
   position: relative;
-  color: #000; /* Default text color */
-}
-/* Navbar Styling */
-.nav,
-.custom-navbar {
-  background-color: #2d66ad;
-  font-family: "Poppins", sans-serif;
-  padding: 10px 0;
+  color: #000;
 }
 
-/* Logo */
+.custom-navbar1 {
+  background-color: #0C4182;
+  font-family: "Poppins", sans-serif;
+  padding: 18px;
+}
+
 .navbar-logo {
   height: 40px;
 }
 
-/* Links */
 .nav-links .nav-link {
   color: #fff !important;
   margin: 0 12px;
   font-weight: 500;
+  position: relative;
+  text-decoration: none;
 }
 
-/* Search Icon */
+.nav-links .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-links .nav-link:hover::after {
+  width: 100%;
+}
+
 .search-icon {
   position: absolute;
   right: 16px;
@@ -57,7 +67,6 @@
   pointer-events: none;
 }
 
-/* Login Button */
 .login-btn {
   background-color: #ffffff !important;
   color: #1E4F91 !important;
@@ -66,7 +75,6 @@
   font-size: 14px;
 }
 
-/* Toggle Switch */
 .toggle-switch {
   width: 50px;
   height: 26px;
@@ -79,20 +87,18 @@
   align-items: center;
   padding: 2px;
 }
+
 .dropdown .dropdown-menu.custom-dropdown-menu {
   min-width: 250px;
   min-height: 150px;
-  /* You can also use !important if necessary */
 }
 
 .login-link {
-   /* Default black */
-   font-family: 'Roboto', sans-serif !important;
+  font-family: 'Roboto', sans-serif !important;
   color: #2d66ad !important;
   border-radius: 25px;
   transition: all 0.3s ease;
 }
-
 
 .toggle-circle {
   width: 22px;
@@ -105,10 +111,8 @@
   justify-content: center;
   transition: transform 0.3s ease;
   font-size: 14px;
-
 }
 
-/* Slide to right on dark mode */
 .toggle-switch.dark .toggle-circle {
   transform: translateX(24px);
 }
@@ -119,15 +123,13 @@
   font-size: 1.25rem;
   font-weight: 600;
   white-space: nowrap;
-  /* overflow: hidden; */
   text-overflow: ellipsis;
   max-width: 150px;
 }
-/* Dark Mode Styling */
+
 body.dark-mode {
   background-color: #131A2A;
   color: #ffffff;
-
 }
 
 body.dark-mode .custom-navbar {
@@ -162,7 +164,6 @@ body.dark-mode .toggle-circle {
   color: #1E4F91;
 }
 
-/* Mobile Search */
 @media (max-width: 991px) {
   .search-container-mobile {
     flex: 1;

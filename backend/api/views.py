@@ -4,7 +4,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin
+from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin,is_staff
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
     MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
@@ -15,7 +15,7 @@ from django.db import transaction
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
 from .models import Blog, BlogImage, Meeting, MeetingAttendance, Student, Event, EventImage
-from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
+from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer,InlineImageSerializer
 from .utils import get_tokens_for_user, send_otp
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -519,6 +519,55 @@ class BlogUploadView(APIView):
         403: OpenApiResponse(description="Permission denied."),
     }
 )
+class InlineImageUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = InlineImageSerializer(data=request.data)
+        if serializer.is_valid():
+            image = serializer.save()
+            image_url = request.build_absolute_uri(image.image.url)
+            return Response({"url": image_url}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@extend_schema(
+    summary="List blog posts",
+    description=(
+        "Retrieve a list of blog posts.\n\n"
+        "- **limit** (optional, int): Restrict the number of blog posts returned.\n"
+        "- **student_id** (optional, int): Filter blog posts by the ID of the student who created them.\n\n"
+        "Returns all blog posts by default, ordered by creation date (newest first). "
+        "If `student_id` is provided, only posts from that student are included. "
+        "If `limit` is provided, restricts the number of results."
+    ),
+    parameters=[
+        OpenApiParameter(
+            name="limit",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            required=False,
+            description="Restrict the number of blog posts returned."
+        ),
+        OpenApiParameter(
+            name="student_id",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            required=False,
+            description="Filter blog posts by the ID of the student who created them."
+        ),
+    ],
+    responses={
+        200: OpenApiResponse(
+            response=BlogSerializer(many=True),
+            description="List of blog posts retrieved successfully."
+        ),
+        400: OpenApiResponse(description="Bad request. Invalid query parameter."),
+        403: OpenApiResponse(description="Permission denied."),
+    }
+)
 class BlogListAPIView(generics.ListAPIView):
     serializer_class = BlogSerializer
 
@@ -768,9 +817,11 @@ class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
 class EventListCreateView(generics.ListCreateAPIView):
     queryset = Event.objects.prefetch_related('images')
     serializer_class = EventSerializer
-    permission_classes = [IsLead]
+    permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
+        if not is_staff(request.user.role):
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
         data = request.data
         image_list = request.FILES.getlist('images')
         images = []
@@ -789,13 +840,32 @@ class EventListCreateView(generics.ListCreateAPIView):
 class EventRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.prefetch_related('images')
     serializer_class = EventSerializer
-    permission_classes = [IsLead]
+    permission_classes = [AllowAny]
+
+    def update(self, request, *args, **kwargs):
+        if not is_staff(request.user.role):
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+        return super().update(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        if not is_staff(request.user.role):
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+        return super().partial_update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        if not is_staff(request.user.role):
+            return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+        return super().destroy(request, *args, **kwargs)
 
 class EventImageRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = EventImage.objects.all()
     serializer_class = EventImageEditSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
     lookup_url_kwarg = 'img_pk'
+
+    def get_queryset(self):
+        return EventImage.objects.filter(event_id=self.kwargs['pk'])
+
 
 class MeetingPDFView(APIView):
     

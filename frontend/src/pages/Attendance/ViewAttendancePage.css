@@ -1,0 +1,204 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Ropa+Sans&family=Rosario:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+/* ===== Global Styles ===== */
+body {
+  background-color: #f4f6f9;
+  font-family: "Inter", sans-serif;
+  color: #1e1e1e;
+  margin: 0;
+}
+
+/* ===== Dashboard Container ===== */
+.dashboard-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.main-content {
+  padding: 50px 20px 20px 20px;
+}
+
+.dashboard-title {
+  font-weight: 700;
+  font-size: 33px;
+  margin-bottom: 20px;
+  color: #120808;
+  text-align: center;
+}
+
+/* ===== Buttons ===== */
+.btn-design {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding: 7px 20px;
+  background-color: #ffffff;
+  border-radius: 50px;
+  border: 2px solid transparent;
+  background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.btn-design:hover {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Meeting Details ===== */
+.meeting-details-box {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 25px 30px;
+  margin: 2rem auto;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}
+
+.meeting-details-box h5 {
+  color: #2D66AD;
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.meeting-details-box p {
+  margin: 0;
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.5;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.meeting-details-box p strong {
+  color: #555;
+  font-weight: 600;
+  min-width: 100px;
+  margin-right: 10px;
+}
+
+/* ===== Attendance Charts & Stats ===== */
+.chart-box, .stats-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  text-align: center;
+  width: 280px;
+  min-height: 220px;
+}
+
+.stats-box {
+  text-align: left;
+}
+
+.stats-box p {
+  font-size: 1.1rem;
+}
+
+.stat-number {
+  font-weight: bold;
+  float: right;
+  color: #2D66AD;
+}
+
+.legend-item {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.legend-item.present { background-color: #2d66ad; }
+.legend-item.absent { background-color: #9ba0a4; }
+.legend-item.leave { background-color: #5ba3ea; }
+
+/* ===== Attendance Section ===== */
+.attendance-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.attendance-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #eee;
+  font-weight: bold;
+  color: #2D66AD;
+}
+
+.col-name-header { flex: 3; text-align: left; padding-left: 20px; }
+.col-reg-header { flex: 2; text-align: left; }
+.col-status-header { flex: 1.5; display: flex; justify-content: center; }
+
+.attendance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.student-attendance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dotted #eee;
+}
+
+.student-attendance-row:last-child { border-bottom: none; }
+
+.student-name { flex: 3; text-align: left; padding-left: 20px; font-size: 15px; color: #444; }
+.student-reg { flex: 2; text-align: left; font-size: 15px; color: #666; }
+.student-status .status-text.present { color: #2d66ad; font-weight: bold; }
+.student-status .status-text.absent { color: #9ba0a4; font-weight: bold; }
+.student-status .status-text.leave { color: #5ba3ea; font-weight: bold; }
+
+/* ===== Media Queries ===== */
+@media (max-width: 992px) {
+  .chart-box, .stats-box { width: 45%; }
+  .attendance-section { max-width: 100%; padding: 15px; }
+}
+
+@media (max-width: 768px) {
+  .main-content { padding: 20px 10px; }
+  .dashboard-title { font-size: 24px; }
+  .btn-design { width: 100%; margin-bottom: 10px; }
+  .chart-box, .stats-box { width: 100%; margin: 0 auto; }
+  .attendance-header-row, .student-attendance-row { min-width: 600px; }
+}
+
+@media (max-width: 480px) {
+  .dashboard-title { font-size: 20px; }
+  .btn-design { font-size: 16px; padding: 6px 14px; }
+  .student-name, .student-reg { font-size: 14px; }
+}
+
+@media (max-width: 400px) {
+  .student-name { flex: 2; font-size: 13px; padding-left: 10px; }
+  .student-reg { flex: 1.5; font-size: 13px; }
+  .col-status-header { flex: 1; }
+}

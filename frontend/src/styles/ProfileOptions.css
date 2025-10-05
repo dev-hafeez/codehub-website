@@ -9,13 +9,13 @@
   height: 40%;
   background: #fff;
   border: 1px solid #0c4182;
-  border-radius: 16px; /* rounded corners */
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.15); /* softer shadow */
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15); 
   font-family: "Work Sans", sans-serif;
-  overflow: hidden; /* keep borders clean */
+  overflow: hidden; 
   padding: 8px 0;
 }
 .profile-icon {
@@ -45,7 +45,7 @@
 .option-btn:hover {
   background: #0c4182;
   color: white;
-  transform: scale(1.02); /* small hover effect */
+  transform: scale(1.02); 
 }
 
 @media (max-width: 960px) {

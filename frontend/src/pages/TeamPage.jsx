@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import "../styles/TeamPage.css";
-import Footer from "../components/Footer";
+
 
 const TeamPage = () => {
   const { title } = useParams();
@@ -29,7 +29,7 @@ const TeamPage = () => {
           </div>
         </div>
       </div>
-      <Footer/>
+   
     </div>
   );
 };

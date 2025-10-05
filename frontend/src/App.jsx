@@ -1,90 +1,124 @@
-import { useState ,useEffect} from 'react';
-import { BrowserRouter as Router, Routes, Route ,Navigate} from 'react-router-dom';
-import LandingPage from './pages/LandingPage.jsx';
-import LoginPage from './pages/LoginPage.jsx';
-import BlogListingPage from './pages/BlogListingPage.jsx';
-import SinglePostPage from './pages/SinglePostPage.jsx';
-import ArticlePage from './pages/ArticlePage.jsx';
-import DashboardPage from './pages/DashboardPage.jsx';
-import ViewAttendancePage from './pages/ViewAttendancePage.jsx';
-import { Button, Container, Alert } from 'react-bootstrap';
-import { sampleBlog } from "./SampleData.js";
-import Regform from './components/Regform.jsx';
-import ForgotPassword from './components/ForgotPassword.jsx';
-import ResetPassword from './components/ResetPassword.jsx';
-import MyBlogPage from './pages/MyBlogPage.jsx';
-import EditBlogWrapper from './components/EditBlogWrapper.jsx';
-import MeetingList from './pages/MeetingList.jsx';
-import MarkAttendance from './pages/MarkAttendance.jsx';
-import AdminBlogPage from './pages/AdminBlogPage.jsx';
-import EditAttendancePage from './pages/EditAttendancePage.jsx';
-import MemberManagementPage from './pages/MemberManagementPage.jsx';
-import TrackMembersPage from './pages/TrackMembersPage.jsx';
-import TeamPage from './pages/TeamPage.jsx';
-import MissionPage from './pages/MissionPage.jsx';
-import TeamSection from './components/TeamSection.jsx';
-import ContactPage from './pages/ContactPage.jsx';
+import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Global styles
+import "./styles/layout.css";
+
+// Pages
+import LandingPage from "./pages/Landing/LandingPage.jsx";
+import DashboardPage from "./pages/DashboardPage.jsx";
+
+// Blog
+import AdminBlogPage from "./pages/BlogPages/AdminBlogPage.jsx";
+import BlogListingPage from "./pages/BlogPages/BlogListingPage.jsx";
+import SinglePostPage from "./pages/BlogPages/SinglePostPage.jsx";
+import ArticlePage from "./pages/BlogPages/ArticlePage.jsx";
+import MyBlogPage from "./pages/BlogPages/MyBlogPage.jsx";
+
+
+
+// Auth
+import RegPage from "./pages/Auth/RegPage.jsx";
+import LoginPage from "./pages/Auth/LoginPage.jsx";
+import ReqOTP from "./components/Auth/ReqOTP.jsx";
+import ResetPassword from "./components/Auth/ResetPassword.jsx";
+
+// Blogs Edit
+import EditBlogWrapper from "./components/Blogs/EditBlogWrapper.jsx";
+
+// Attendance
+import MeetingList from "./pages/Attendance/MeetingList.jsx";
+import MarkAttendance from "./pages/Attendance/MarkAttendance.jsx";
+import ViewAttendancePage from "./pages/Attendance/ViewAttendancePage.jsx";
+import EditAttendancePage from "./pages/Attendance/EditAttendancePage.jsx";
+
+// Members & Team
+import TrackMembersPage from "./pages/Members/TrackMembersPage.jsx";
+import TeamPage from "./pages/TeamPage.jsx";
+import MissionPage from "./pages/MissionPage.jsx";
+import TeamSection from "./components/teams/TeamSection.jsx";
+import ContactPage from "./pages/ContactPage.jsx";
+
+// Profile
+import ViewProfilePage from "./pages/Profile/ViewProfilePage.jsx";
+import ProfilePage from "./pages/Profile/ProfilePage.jsx";
+
+// Events
+import EventsListPage from "./pages/Events/EventsListPage.jsx";
+import EventCreatePage from "./pages/Events/EventsCreatePage.jsx";
+import EventDetailPage from "./pages/Events/EventDetailPage.jsx";
+
+// Layout
+import Footer from "./components/Footer/Footer.jsx";
+import AchievementPage from "./pages/AchievementPage.jsx";
+
 function App() {
   const [role, setRole] = useState(null);
-    useEffect(() => {
-    const storedRole = localStorage.getItem('role');
+
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
     if (storedRole) {
       setRole(storedRole);
     }
-  }, []); // The empty dependency array ensures this runs only once on mount.
+  }, []);
 
-  // We also need a way to update the user role when the login component succeeds.
   const handleLogin = (role) => {
     setRole(role);
-    // You could also redirect here, but your Login component already handles that.
   };
 
-  // We'll create a simple function to handle logout
   const handleLogout = () => {
     localStorage.clear();
-    setUserRole(null);
-    // history.push('/login'); // Assuming you have a history object
+    setRole(null);
   };
+
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/mark-attendance" element={<MarkAttendance />} />
-          <Route path="/meeting-history" element={<MeetingList/>} />
-          <Route path="/meetings/:id/" element={<ViewAttendancePage />} />
-          <Route path="/meetings/:id/edit" element={<EditAttendancePage/>} />
+    <Router>
+      <Routes>
+        {/* Landing */}
+        <Route path="/" element={<><LandingPage /></>} />
 
-          <Route path="/members" element={<TrackMembersPage/>} />
+        {/* Attendance */}
+        <Route path="/mark-attendance" element={<><MarkAttendance /></>} />
+        <Route path="/meeting-history" element={<><MeetingList /></>} />
+        <Route path="/meetings/:id/" element={<><ViewAttendancePage /></>} />
+        <Route path="/meetings/:id/edit" element={<><EditAttendancePage /></>} />
 
-          <Route path="/contact" element={<ContactPage/>} />
-          <Route path="/mission" element={<MissionPage/>} />
-          <Route path="/teams" element={<TeamSection/>} />
-          <Route path="/team/:title" element={<TeamPage />} />
+        {/* Members & Teams */}
+        <Route path="/members" element={<><TrackMembersPage /></>} />
+        <Route path="/contact" element={<><ContactPage /><Footer /></>} />
+        <Route path="/mission" element={<><MissionPage /><Footer /></>} />
+        <Route path="/teams" element={<><TeamSection /><Footer /></>} />
+        <Route path="/team/:title" element={<><TeamPage /><Footer /></>} />
 
+        {/* Auth */}
+        <Route path="/login" element={<><LoginPage /><Footer /></>} />
+        <Route path="/otp" element={<><ReqOTP /><Footer /></>} />
+        <Route path="/signup" element={<><RegPage /><Footer /></>} />
+        <Route path="/reset-password" element={<><ResetPassword /><Footer /></>} />
 
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/blogs" element={<BlogListingPage />} />
-          <Route path="/admin-blogs" element={<AdminBlogPage />} />
-          <Route path="/blog/:id" element={<SinglePostPage />} />
-           <Route path="/blogs/:id/edit" element={<EditBlogWrapper />} />
-          <Route path="/myblog" element={<MyBlogPage />} />
+        {/* Blogs */}
+        <Route path="/blogs" element={<><BlogListingPage /><Footer /></>} />
+        <Route path="/admin-blogs" element={<><AdminBlogPage /><Footer /></>} />
+        <Route path="/blog/:id" element={<><SinglePostPage /><Footer /></>} />
+        <Route path="/blogs/:id/edit" element={<><EditBlogWrapper /><Footer /></>} />
+        <Route path="/myblog" element={<><MyBlogPage /><Footer /></>} />
+        <Route path="/article" element={<><ArticlePage /><Footer /></>} />
 
-          <Route path="/article" element={<ArticlePage />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* Profile */}
+        <Route path="/edit-profile" element={<><ProfilePage /><Footer /></>} />
+        <Route path="/view-profile" element={<><ViewProfilePage /><Footer /></>} />
 
-          <Route 
-          path="/dashboard" 
-          element={<DashboardPage/>} 
-        />
-        <Route path="/signup" element={<Regform />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-      
-      
-      
-        </Routes>
-      </Router>
-    </>
+        {/* Events */}
+        <Route path="/events" element={<><EventsListPage /><Footer /></>} />
+        <Route path="/events/create" element={<><EventCreatePage /><Footer /></>} />
+         <Route path="/events/:id" element={<><EventDetailPage /><Footer /></>} />
+
+        {/* Dashboard */}
+        <Route path="/dashboard" element={<><DashboardPage /><Footer /></>} />
+
+        <Route path="/achievement" element={<><AchievementPage /><Footer /></>} />
+      </Routes>
+    </Router>
   );
 }
 

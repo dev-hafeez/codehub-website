@@ -1,89 +1,63 @@
 .contact-page {
-  padding: 80px 20px;
-  background: #f7f9fc;
-  min-height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 60px 20px;
+  background: #f9f9f9;
+  min-height: 80vh;
 }
 
 .contact-container {
-  display: flex;
-  gap: 50px;
-  max-width: 1100px;
-  width: 100%;
   background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  padding: 40px;
-}
-
-.contact-info {
-  flex: 1;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
 }
 
 .contact-title {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #0a2540;
+  font-size: 2rem;
+  font-weight: 700;
   margin-bottom: 10px;
+  color: #0c4182;
+ 
+
 }
+@keyframes glow {
+  0%, 100% {
+    text-shadow: -4px 0 4px #0c4182dc;
+  }
+  50% {
+    text-shadow: -4px 0 12px #0c4182;
+  }
+}
+
 
 .contact-subtitle {
   font-size: 1rem;
   color: #555;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .contact-details p {
-  font-size: 1rem;
-  margin: 8px 0;
-  color: #444;
-}
-
-.contact-form {
-  flex: 1;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-size: 1.1rem;
+  margin: 15px 0;
   color: #333;
 }
 
-.form-group input,
-.form-group textarea {
-  padding: 12px 14px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 1rem;
-  outline: none;
-  transition: border 0.2s ease;
+.contact-details strong {
+  color: #111;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #0a2540;
+.contact-details a {
+  color: #0077b5; 
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
 
-.submit-button {
-  background: #0a2540;
-  color: #fff;
-  border: none;
-  padding: 14px 20px;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.submit-button:hover {
-  background: #1d3c70;
+.contact-details a:hover {
+  color: #e1306c; 
 }
