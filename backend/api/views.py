@@ -4,9 +4,9 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin,is_staff
+from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin, is_staff
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
-    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer
+    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -15,7 +15,7 @@ from django.db import transaction
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
 from .models import Blog, BlogImage, Meeting, MeetingAttendance, Student, Event, EventImage
-from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer,InlineImageSerializer
+from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
 from .utils import get_tokens_for_user, send_otp
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -99,7 +99,7 @@ class StudentRUView(generics.RetrieveUpdateAPIView):
 )
 class SignupView(APIView):
     serializer_class = StudentSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -519,55 +519,6 @@ class BlogUploadView(APIView):
         403: OpenApiResponse(description="Permission denied."),
     }
 )
-class InlineImageUploadView(APIView):
-    permission_classes = [IsAuthenticated]
-    parser_classes = [MultiPartParser, FormParser]
-
-    def post(self, request, *args, **kwargs):
-        serializer = InlineImageSerializer(data=request.data)
-        if serializer.is_valid():
-            image = serializer.save()
-            image_url = request.build_absolute_uri(image.image.url)
-            return Response({"url": image_url}, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@extend_schema(
-    summary="List blog posts",
-    description=(
-        "Retrieve a list of blog posts.\n\n"
-        "- **limit** (optional, int): Restrict the number of blog posts returned.\n"
-        "- **student_id** (optional, int): Filter blog posts by the ID of the student who created them.\n\n"
-        "Returns all blog posts by default, ordered by creation date (newest first). "
-        "If `student_id` is provided, only posts from that student are included. "
-        "If `limit` is provided, restricts the number of results."
-    ),
-    parameters=[
-        OpenApiParameter(
-            name="limit",
-            type=OpenApiTypes.INT,
-            location=OpenApiParameter.QUERY,
-            required=False,
-            description="Restrict the number of blog posts returned."
-        ),
-        OpenApiParameter(
-            name="student_id",
-            type=OpenApiTypes.INT,
-            location=OpenApiParameter.QUERY,
-            required=False,
-            description="Filter blog posts by the ID of the student who created them."
-        ),
-    ],
-    responses={
-        200: OpenApiResponse(
-            response=BlogSerializer(many=True),
-            description="List of blog posts retrieved successfully."
-        ),
-        400: OpenApiResponse(description="Bad request. Invalid query parameter."),
-        403: OpenApiResponse(description="Permission denied."),
-    }
-)
 class BlogListAPIView(generics.ListAPIView):
     serializer_class = BlogSerializer
 
@@ -659,7 +610,7 @@ class BlogListAPIView(generics.ListAPIView):
     ],
 )
 class BlogEditView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsAdmin]
     parser_classes = [MultiPartParser, FormParser]
 
     def put(self, request, pk, *args, **kwargs):
@@ -811,7 +762,7 @@ class MeetingAttendanceListView(generics.ListAPIView):
 class MeetingAttendanceRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = MeetingAttendance.objects.all()
     serializer_class = MeetingAttendanceSerializer
-    permission_classes = [IsLead]
+    permission_classes = [IsLeadOrAdmin]
     lookup_url_kwarg = 'att_pk'
 
 class EventListCreateView(generics.ListCreateAPIView):
@@ -857,6 +808,7 @@ class EventRUDView(generics.RetrieveUpdateDestroyAPIView):
             return Response(data=None, status=status.HTTP_403_FORBIDDEN)
         return super().destroy(request, *args, **kwargs)
 
+
 class EventImageRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset = EventImage.objects.all()
     serializer_class = EventImageEditSerializer
@@ -866,11 +818,10 @@ class EventImageRUDView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return EventImage.objects.filter(event_id=self.kwargs['pk'])
 
-
 class MeetingPDFView(APIView):
     
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated, IsLeadOrAdmin]
+    permission_classes = [IsLeadOrAdmin]
     
     def get(self, request, pk, *args, **kwargs):
         try:
@@ -950,21 +901,23 @@ class MeetingPDFView(APIView):
         elements.append(Paragraph("Minutes of ACM Meeting", title_style))
         elements.append(Spacer(1, 0.1*inch))
         
-        
-        club_name = request.user.student.club.replace('_', ' ').title()
-        club_style = ParagraphStyle(
-            'ClubStyle',
-            parent=styles['Heading2'],
-            fontSize=14,
-            spaceAfter=10,
-            alignment=1,
-            textColor=colors.HexColor('#2c3e50'),
-            fontName='Helvetica-Bold'
-        )
 
-        elements.append(Paragraph(f"{club_name} Meeting Minutes", club_style))
-        elements.append(Spacer(1, 0.1*inch))
-        
+        if request.user.role != 'ADMIN':
+            club_name = request.user.student.club.replace('_', ' ').title()
+            club_style = ParagraphStyle(
+                'ClubStyle',
+                parent=styles['Heading2'],
+                fontSize=14,
+                spaceAfter=10,
+                alignment=1,
+                textColor=colors.HexColor('#2c3e50'),
+                fontName='Helvetica-Bold'
+            )
+            elements.append(Paragraph(f"{club_name} Meeting Minutes", club_style))
+            elements.append(Spacer(1, 0.1*inch))
+
+
+
         meeting_data = [
             ["Date:", str(meeting.date)],
             ["Time:", f"{start_time_12h} - {end_time_12h}"],
@@ -1101,3 +1054,35 @@ class MeetingPDFView(APIView):
         response['Content-Disposition'] = f'attachment; filename="acm_meeting_minutes_{meeting.date}.pdf"'
         
         return response
+
+
+
+@extend_schema(
+    summary="Retrieve, Update, or Delete an Admin",
+    description="Manages a single Admin user by their ID. Restricted to Admins."
+)
+class AdminRUDView(generics.RetrieveUpdateDestroyAPIView):
+    """ Retrieve, Update, or Delete an Admin user. """
+    serializer_class = AdminSerializer
+    permission_classes = [IsAdmin] 
+    
+    def get_queryset(self):
+        return User.objects.filter(role='ADMIN')
+    
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK:
+            return Response({
+                "status": "success",
+                "message": "Admin user updated successfully",
+                "data": response.data
+            }, status=status.HTTP_200_OK)
+        return response
+    
+    def destroy(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({
+            "status": "success",
+            "message": "Admin user deleted successfully",
+            "data": None
+        }, status=status.HTTP_200_OK)

@@ -2,7 +2,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage,InlineImage
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
@@ -44,6 +44,7 @@ class StudentSerializer(serializers.ModelSerializer):
         student = Student.objects.create(user=user, **validated_data)
         return student
 
+    # TODO: Override this to handle nested field
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
 
@@ -60,6 +61,13 @@ class StudentSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+    
+
+class AdminSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role']
 
 
 # NOTE: This serializer is for the students list view
@@ -175,11 +183,7 @@ class BlogUploadSerializer(serializers.Serializer):
 
         return blog
 
-TEMP_INLINE_PREFIX = "/media/temp_inline/"
-class InlineImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = InlineImage
-        fields = ['id', 'image', 'uploaded_at']
+
 class BlogUpdateSerializer(serializers.ModelSerializer):
     images = serializers.ListField(
         child=serializers.ImageField(),
@@ -264,8 +268,6 @@ class EventSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
-
-
 
     # This adds the `images` field to the `validated_data` dict
     def to_internal_value(self, data):

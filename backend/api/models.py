@@ -2,9 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from datetime import date, datetime
 from django.conf import settings
-import os
-import uuid
-
 
 class UserRole(models.TextChoices):
     STUDENT = "STUDENT", "student"
@@ -89,18 +86,3 @@ class Event(models.Model):
 class EventImage(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to=event_image_upload_path, default=f'{settings.MEDIA_ROOT}/events/default.png', blank=True, null=True)
-def temp_inline_upload_path(instance, filename):
-    """
-    Store inline images in temp_inline/ with a unique filename
-    to prevent collisions.
-    """
-    ext = os.path.splitext(filename)[1]  # keep extension (.jpg, .png, etc.)
-    unique_name = f"{uuid.uuid4().hex}{ext}"
-    return f"temp_inline/{unique_name}"
-
-class InlineImage(models.Model):
-    image = models.ImageField(upload_to=temp_inline_upload_path)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.image.url
