@@ -44,7 +44,6 @@ class StudentSerializer(serializers.ModelSerializer):
         student = Student.objects.create(user=user, **validated_data)
         return student
 
-    # TODO: Override this to handle nested field
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
 
