@@ -42,6 +42,8 @@ def api_home(request):
         })
     return Response({"message": "Server is online. API functional."})
 
+# TODO: Make this available to every user.
+# TODO: Allow user to request specific fields (Name, Picture, Designation).
 class StudentsListView(generics.ListAPIView):
     serializer_class = StudentListSerializer
     permission_classes = [IsLeadOrAdmin]
