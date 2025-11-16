@@ -3,15 +3,18 @@ from django.contrib.auth.models import AbstractUser
 from datetime import date, datetime
 from django.conf import settings
 
+
 class UserRole(models.TextChoices):
     STUDENT = "STUDENT", "student"
     LEAD = "LEAD", "lead"
     ADMIN = "ADMIN", "admin"
 
+
 class AttendanceStatus(models.TextChoices):
     PRESENT = 'PRESENT', 'present'
     ABSENT = 'ABSENT', 'absent'
     LEAVE = 'LEAVE', 'leave'
+
 
 class User(AbstractUser):
     """
@@ -42,8 +45,10 @@ def blog_image_upload_path(instance, filename):
     # Store images under: media/blog_images/<blog_uuid>/<filename>
     return f'blog_images/{instance.blog.id}/{filename}'
 
+
 def event_image_upload_path(instance, filename):
     return f'events/{instance.id}/{filename}'
+
 
 class Blog(models.Model):
     title = models.CharField(max_length=255)
@@ -52,6 +57,7 @@ class Blog(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
+
 class BlogImage(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to=blog_image_upload_path)
@@ -59,30 +65,33 @@ class BlogImage(models.Model):
     def __str__(self):
         return f'Image for blog {self.blog.id}'
 
+
 def current_time():
     return datetime.now().time()
 
+
 class Meeting(models.Model):
     date = models.DateField(default=date.today)
-    start_time = models.TimeField(default=current_time) # 12-hour format
+    start_time = models.TimeField(default=current_time)  # 12-hour format
     end_time = models.TimeField()
     venue = models.CharField(max_length=50)
     agenda = models.TextField(null=True, blank=True)
     highlights = models.TextField(null=True, blank=True)
+
 
 class MeetingAttendance(models.Model):
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='attendance')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attending_student')
     status = models.CharField(max_length=10, choices=AttendanceStatus.choices)
 
-def event_image_upload_path(instance, filename):
-    return f'events/{instance.event.id}/{filename}'
 
 class Event(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     date = models.DateField(default=date.today)
 
+
 class EventImage(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to=event_image_upload_path, default=f'{settings.MEDIA_ROOT}/events/default.png', blank=True, null=True)
+    image = models.ImageField(upload_to=event_image_upload_path, default=f'{settings.MEDIA_ROOT}/events/default.png',
+                              blank=True, null=True)
