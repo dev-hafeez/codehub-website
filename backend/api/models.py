@@ -95,3 +95,13 @@ class Bill(models.Model):
     date = models.DateField(default=date.today)
     image = models.ImageField(upload_to=bill_image_upload_path)
 
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            saved_image = self.image
+            self.image = None
+            super(Bill, self).save(*args, **kwargs)
+            self.image = saved_image
+            if 'force_insert' in kwargs:
+                kwargs.pop('force_insert')
+
+        super().save(*args, **kwargs)
