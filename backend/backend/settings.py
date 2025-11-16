@@ -102,14 +102,14 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 # Use environment variables to set the database host and port
 DB_HOST = os.getenv('DB_HOST', '127.0.0.1')  # Default to localhost
-DB_PORT = os.getenv('DB_PORT', '3406')  # Default to MySQL port
+DB_PORT = os.getenv('DB_PORT', '3306')  # Default to MySQL port
 
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'codehub_db',
-        'USER': 'backend',
-        'PASSWORD': 'test-pass',
+        'USER': 'root',
+        'PASSWORD': 'help!!',
         'HOST': DB_HOST,
         'PORT': DB_PORT,
     }

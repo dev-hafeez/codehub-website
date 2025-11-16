@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin, is_staff
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
-    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer
+    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer, PublicStudentSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -45,13 +45,26 @@ def api_home(request):
 # TODO: Make this available to every user.
 # TODO: Allow user to request specific fields (Name, Picture, Designation).
 class StudentsListView(generics.ListAPIView):
-    serializer_class = StudentListSerializer
-    permission_classes = [IsLeadOrAdmin]
+    queryset = Student.objects.all()
+    serializer_class = PublicStudentSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
-        if self.request.user.role == 'LEAD':
-            club = self.request.user.student.club
-            return Student.objects.filter(club=club)
+        user = self.request.user
+
+        # Anonymous visitors → allow seeing all members
+        if not user or not user.is_authenticated:
+            return Student.objects.all()
+
+        # Authenticated user: guard attribute access
+        role = getattr(user, "role", None)
+        if role == "LEAD":
+            # Leads see only their club
+            if hasattr(user, "student"):
+                return Student.objects.filter(club=user.student.club)
+            return Student.objects.none()
+
+        # Admins and normal authenticated users → full list
         return Student.objects.all()
 
 class StudentRUView(generics.RetrieveUpdateAPIView):
