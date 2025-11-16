@@ -2,7 +2,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage, Bill
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
@@ -282,3 +282,10 @@ class EventImageEditSerializer(serializers.ModelSerializer):
         model = EventImage
         fields = '__all__'
         read_only_fields = ['id', 'event']
+
+
+class BillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bill
+        fields = '__all__'
+        read_only_fields = ['id']
