@@ -14,7 +14,7 @@ MAX_IMAGE_SIZE = getattr(settings, "MAX_BLOG_IMAGE_SIZE", 5 * 1024 * 1024)  # by
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'username', 'password', 'role']
+        fields = ['id', 'first_name', 'last_name', 'email', 'username', 'password', 'role', 'phone_number']
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class AdminSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role']
+        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role','phone_number']
 
 
 # NOTE: This serializer is for the students list view
