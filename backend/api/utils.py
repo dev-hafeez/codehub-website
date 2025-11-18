@@ -35,3 +35,12 @@ def send_otp(destination: str, **data):
         [destination],
         fail_silently=False,
     )
+
+def send_password(destination: str, **data):
+    send_mail(
+        subject='Account Creation Notice',
+        message=f'Your account has been created with username: {data['username']} and password: {data['password']}.\nYou are advised to change the password as soon as possible.',
+        from_email='no_reply@example.com',
+        recipient_list=[destination],
+        fail_silently=False,
+    )
