@@ -84,6 +84,15 @@ class StudentListSerializer(serializers.ModelSerializer):
         model = Student
         fields = '__all__'
 
+class PublicStudentSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Student
+        fields = ['full_name', 'title', 'profile_pic']
+
+    def get_full_name(self, obj):
+        return f"{obj.user.first_name} {obj.user.last_name}"
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)

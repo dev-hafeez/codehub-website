@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin, is_staff, IsTreasurer
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
-    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer, \
+    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer, PublicStudentSerializer, \
     BillSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
@@ -59,6 +59,8 @@ def api_home(request):
         })
     return Response({"message": "Server is online. API functional."})
 
+# TODO: Make this available to every user.
+# TODO: Allow user to request specific fields (Name, Picture, Designation).
 class StudentsListView(generics.ListAPIView):
     serializer_class = StudentListSerializer
     permission_classes = [IsLeadOrAdmin]
@@ -67,6 +69,13 @@ class StudentsListView(generics.ListAPIView):
         if self.request.user.role == 'LEAD':
             club = self.request.user.student.club
             return Student.objects.filter(club=club)
+        return Student.objects.all()
+
+class PublicStudentsListView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PublicStudentSerializer
+
+    def get_queryset(self):
         return Student.objects.all()
 
 class StudentRUView(generics.RetrieveUpdateAPIView):
