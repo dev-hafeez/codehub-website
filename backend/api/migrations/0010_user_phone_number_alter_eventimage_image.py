@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='phone_number',
-            field=models.CharField(default='+92XXXXXXXXXX', max_length=13, unique=True, validators=[django.core.validators.RegexValidator(message='Enter a valid Pakistani number in the format +92XXXXXXXXXX.', regex='\\+92[0-9]{10}$')]),
+            field=models.CharField(max_length=13, validators=[django.core.validators.RegexValidator(message='Enter a valid Pakistani number in the format +92XXXXXXXXXX.', regex='\\+92[0-9]{10}$')]),
             preserve_default=False,
         ),
         migrations.AlterField(
