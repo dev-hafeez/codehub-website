@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TeamsCard from "./TeamsCard.jsx";
 import "./TeamSection.css";
 
@@ -10,17 +10,51 @@ import decorImage from "../../assets/decor.jpg";
 import Navbar from "../Navbar.jsx";
 
 const teamData = [
-  { image: codeHubImage, title: 'Code Hub', description: 'CodeHub is a dynamic club under the Association for Computing Machinery (ACM) that brings together students passionate about coding, problem-solving, and technology. It serves as a collaborative space where members can enhance their programming skills, share knowledge, and work on real-world projects. Through coding competitions, workshops, and peer-to-peer learning, CodeHub empowers students to grow as developers and innovators while fostering a strong community of tech enthusiasts.' },
-  { image: socialImage, title: 'Social Media and Marketing',  description: 'The Social Media & Marketing Club under the Association for Computing Machinery (ACM) is dedicated to building creativity, communication, and digital presence. The club focuses on exploring the latest trends in social media, content creation, branding, and marketing strategies. Members collaborate to design campaigns, manage online platforms, and develop practical skills that bridge technology with creativity. By blending innovation and outreach, the club empowers students to become effective digital storytellers and marketing leaders.' },
-  { image: eventsImage, title: 'Events and Logistics',  description: 'The Events & Logistics Club under the Association for Computing Machinery (ACM) is the backbone of planning, organizing, and executing successful activities. The club ensures that every workshop, competition, and gathering runs smoothly by handling coordination, scheduling, and on-ground management. Members develop strong leadership, teamwork, and organizational skills while gaining hands-on experience in event planning. With precision and dedication, the Events & Logistics Club transforms ideas into impactful experiences for the entire ACM community.' },
-  { image: graphicsImage, title: 'Graphics and Media',  description: 'The Graphics & Media Club under the Association for Computing Machinery (ACM) brings creativity and technology together through design and visual storytelling. The club focuses on graphic design, video editing, animation, and digital media production to support ACM’s events, promotions, and initiatives. Members learn industry-relevant tools, sharpen their artistic skills, and collaborate on real projects that showcase innovation and imagination. By combining design with technology, the Graphics & Media Club transforms ideas into engaging visual experiences.' },
-  { image: decorImage, title: 'Decor and Registration',  description: 'The Décor & Registration Club under the Association for Computing Machinery (ACM) ensures that every event feels welcoming, vibrant, and well-organized. The club manages event aesthetics through creative decorations and designs while also handling smooth registration processes for participants. Members gain experience in hospitality, planning, and creative presentation, contributing to the overall atmosphere and professionalism of ACM events. With a balance of creativity and coordination, the Décor & Registration Club makes every event both seamless and memorable.' },
+  {
+    image: codeHubImage,
+    title: "Code Hub",
+    description:
+      "CodeHub is a dynamic club under the Association for Computing Machinery (ACM) that brings together students passionate about coding, problem-solving, and technology. It serves as a collaborative space where members can enhance their programming skills, share knowledge, and work on real-world projects. Through coding competitions, workshops, and peer-to-peer learning, CodeHub empowers students to grow as developers and innovators while fostering a strong community of tech enthusiasts.",
+  },
+  {
+    image: socialImage,
+    title: "Social Media and Marketing",
+    description:
+      "The Social Media & Marketing Club under the Association for Computing Machinery (ACM) is dedicated to building creativity, communication, and digital presence. The club focuses on exploring the latest trends in social media, content creation, branding, and marketing strategies. Members collaborate to design campaigns, manage online platforms, and develop practical skills that bridge technology with creativity. By blending innovation and outreach, the club empowers students to become effective digital storytellers and marketing leaders.",
+  },
+  {
+    image: eventsImage,
+    title: "Events and Logistics",
+    description:
+      "The Events & Logistics Club under the Association for Computing Machinery (ACM) is the backbone of planning, organizing, and executing successful activities. The club ensures that every workshop, competition, and gathering runs smoothly by handling coordination, scheduling, and on-ground management. Members develop strong leadership, teamwork, and organizational skills while gaining hands-on experience in event planning. With precision and dedication, the Events & Logistics Club transforms ideas into impactful experiences for the entire ACM community.",
+  },
+  {
+    image: graphicsImage,
+    title: "Graphics and Media",
+    description:
+      "The Graphics & Media Club under the Association for Computing Machinery (ACM) brings creativity and technology together through design and visual storytelling. The club focuses on graphic design, video editing, animation, and digital media production to support ACM's events, promotions, and initiatives. Members learn industry-relevant tools, sharpen their artistic skills, and collaborate on real projects that showcase innovation and imagination. By combining design with technology, the Graphics & Media Club transforms ideas into engaging visual experiences.",
+  },
+  {
+    image: decorImage,
+    title: "Decor and Registration",
+    description:
+      "The Décor & Registration Club under the Association for Computing Machinery (ACM) ensures that every event feels welcoming, vibrant, and well-organized. The club manages event aesthetics through creative decorations and designs while also handling smooth registration processes for participants. Members gain experience in hospitality, planning, and creative presentation, contributing to the overall atmosphere and professionalism of ACM events. With a balance of creativity and coordination, the Décor & Registration Club makes every event both seamless and memorable.",
+  },
 ];
 
 const TeamSection = () => {
-  const [activeIndex, setActiveIndex] = useState(
-    Math.floor(teamData.length / 2)
-  );
+  const [activeIndex, setActiveIndex] = useState(Math.floor(teamData.length / 2));
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handlePrev = () => {
     setActiveIndex((prev) => (prev === 0 ? teamData.length - 1 : prev - 1));
@@ -35,8 +69,35 @@ const TeamSection = () => {
   };
 
   const getTransformStyles = () => {
+    let cardWidth, gap, scale;
+    
+    if (windowWidth <= 480) {
+      cardWidth = 240;
+      gap = 15;
+      scale = 1.02;
+    } else if (windowWidth <= 768) {
+      cardWidth = 260;
+      gap = 20;
+      scale = 1.05;
+    } else if (windowWidth <= 1024) {
+      cardWidth = 280;
+      gap = 40;
+      scale = 1.1;
+    } else {
+      cardWidth = 300;
+      gap = 40;
+      scale = 1.1;
+    }
+    
+    // Account for the scale transform when calculating center position
+    const scaledCardWidth = cardWidth * scale;
+    const viewportCenter = windowWidth / 2;
+    const cardCenter = scaledCardWidth / 2;
+    const totalCardWidth = cardWidth + gap;
+    const offsetForActiveCard = activeIndex * totalCardWidth;
+    
     return {
-      transform: `translateX(calc(50% - 150px - (${activeIndex} * 340px)))`,
+      transform: `translateX(${viewportCenter - cardCenter - offsetForActiveCard - 30 - (windowWidth > 1024 ? 300 : 0)}px) translateY(-50%)`,
     };
   };
 
@@ -48,7 +109,7 @@ const TeamSection = () => {
           <h1 className="team-title">Our Teams</h1>
 
           <div className="carousel-wrapper">
-            <button className="nav-btn prev-btn" onClick={handlePrev}>
+            <button className="nav-btn prev-btn" onClick={handlePrev} aria-label="Previous team">
               &#8249;
             </button>
 
@@ -72,7 +133,7 @@ const TeamSection = () => {
               })}
             </div>
 
-            <button className="nav-btn next-btn" onClick={handleNext}>
+            <button className="nav-btn next-btn" onClick={handleNext} aria-label="Next team">
               &#8250;
             </button>
           </div>
