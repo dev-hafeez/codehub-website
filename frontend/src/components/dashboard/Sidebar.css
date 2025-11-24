@@ -1,0 +1,93 @@
+/* Sidebar.css */
+
+.sidebar {
+  padding: 1rem;
+  height: 100%;
+}
+
+/* Desktop Layout (Default) */
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Sidebar Buttons */
+.sidebar-actions .btn {
+  width: 90%;
+  margin-bottom: 10px;
+  text-align: left;
+
+  /* Updated Background */
+  background-color: #0C4182;
+  color: #fff;
+  border: none;
+  transition: background 0.3s;
+}
+
+.sidebar-actions .btn:hover {
+  background-color: #0a3566; /* Slightly darker on hover */
+  color: #fff;
+}
+
+.sidebar-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 1.5rem; /* Match your mt-4 */
+  margin-bottom: 1rem;
+}
+
+/* === MOBILE RESPONSIVENESS === */
+@media (max-width: 768px) {
+  .sidebar {
+    padding: 0.5rem;
+    /* Remove fixed height to fit content */
+    height: auto; 
+  }
+
+  /* Hide the big title on mobile to save space */
+  .sidebar-title {
+    display: none; 
+  }
+
+  .sidebar-actions {
+    /* Change to horizontal row */
+    flex-direction: row; 
+    /* Align items vertically center */
+    align-items: center; 
+    /* Enable Horizontal Scrolling */
+    overflow-x: auto; 
+    /* Prevent wrapping to next line */
+    white-space: nowrap; 
+    /* Smooth scrolling */
+    -webkit-overflow-scrolling: touch; 
+    /* Remove default scrollbar padding */
+    padding-bottom: 5px; 
+  }
+
+  /* Hide the scrollbar but keep functionality (Optional - for cleaner UI) */
+  .sidebar-actions::-webkit-scrollbar {
+    height: 4px; /* Make scrollbar very thin */
+  }
+  .sidebar-actions::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+
+  .sidebar-actions .btn {
+    /* Buttons only take needed width */
+    width: auto; 
+    /* Don't shrink buttons if text is long */
+    flex-shrink: 0; 
+    /* Space between horizontal buttons */
+    margin-right: 10px; 
+    margin-bottom: 0; /* Remove bottom margin */
+    
+    /* Make them look like "Pills" */
+    font-size: 0.8rem;
+    padding: 8px 16px;
+    border-radius: 50px;
+  }
+}

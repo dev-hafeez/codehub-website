@@ -67,40 +67,46 @@ const ProfilePage = () => {
     }
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    if (!studentId) return;
+const handleSubmit = async e => {
+  e.preventDefault();
+  if (!studentId) return;
 
-    setLoading(true);
-    setMessage("");
+  // Check profile_desc length
+  if (formData.profile_desc.length > 200) {
+    alert("Profile description cannot exceed 200 characters.");
+    return;
+  }
 
-    try {
-      const data = new FormData();
-      if (formData.title) data.append("title", formData.title);
-      if (formData.profile_desc) data.append("profile_desc", formData.profile_desc);
-      if (formData.profile_pic) data.append("profile_pic", formData.profile_pic);
+  setLoading(true);
+  setMessage("");
 
-      data.append("user[id]", loggedInUserId);
-      data.append("user[first_name]", formData.user.first_name);
-      data.append("user[last_name]", formData.user.last_name);
-      data.append("user[email]", formData.user.email);
-      data.append("user[username]", formData.user.username);
+  try {
+    const data = new FormData();
+    if (formData.title) data.append("title", formData.title);
+    if (formData.profile_desc) data.append("profile_desc", formData.profile_desc);
+    if (formData.profile_pic) data.append("profile_pic", formData.profile_pic);
 
-      await axiosInstance.patch(`/students/${studentId}`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+    data.append("user[id]", loggedInUserId);
+    data.append("user[first_name]", formData.user.first_name);
+    data.append("user[last_name]", formData.user.last_name);
+    data.append("user[email]", formData.user.email);
+    data.append("user[username]", formData.user.username);
 
-      setMessage("Profile updated successfully!");
-      alert("Profile updated successfully!");
-      setStudent({ ...student, ...formData, user: { ...formData.user } });
-      setEditMode(false);
-    } catch (err) {
-      console.error(err.response?.data || err.message);
-      setMessage("Failed to update profile");
-    } finally {
-      setLoading(false);
-    }
-  };
+    await axiosInstance.patch(`/students/${studentId}`, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    setMessage("Profile updated successfully!");
+    alert("Profile updated successfully!");
+    setStudent({ ...student, ...formData, user: { ...formData.user } });
+    setEditMode(false);
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+    setMessage("Failed to update profile");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleCancel = () => {
     // Reset form data to student data and exit edit mode
@@ -124,7 +130,7 @@ const ProfilePage = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="profile-container">
         <h2>
           Profile{" "}
@@ -154,6 +160,7 @@ const ProfilePage = () => {
               <textarea
                 name="profile_desc"
                 value={formData.profile_desc}
+                placeholder="Profile Description should not exceed 200 characters"
                 onChange={handleChange}
                 rows="4"
               />

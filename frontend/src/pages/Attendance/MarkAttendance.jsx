@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar.jsx";
+// import Navbar from "../../components/Navbar.jsx"; 
 import useAttendanceStore from "../../store/useAttendanceStore.js";
 
 import AttendanceForm from "../../components/Attendance/MarkAttendane/AttendanceForm.jsx";
 import AttendanceChart from "../../components/Attendance/MarkAttendane/AttendanceChart.jsx";
 import AttendanceTable from "../../components/Attendance/MarkAttendane/AttendanceTable.jsx";
-
-
 
 const MarkAttendance = () => {
   const navigate = useNavigate();
@@ -15,14 +13,18 @@ const MarkAttendance = () => {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  
+  // State updated for split time inputs
   const [meetingDetails, setMeetingDetails] = useState({
-    startTime: "",
-    endTime: "",
+    startTimeValue: "2:00",
+    startTimeModifier: "PM",
+    endTimeValue: "3:00",
+    endTimeModifier: "PM",
     venue: "",
     highlights: "",
     agenda: "",
   });
-
+  
   const [attendance, setAttendance] = useState({});
 
   useEffect(() => {
@@ -48,14 +50,20 @@ const MarkAttendance = () => {
     setMeetingDetails((prev) => ({ ...prev, [name]: value }));
   };
 
+  /**
+   * Converts a 12-hour time string (e.g., "2:00 PM") to a 24-hour format (e.g., "14:00:00").
+   */
   function to24Hour(timeStr) {
     if (!timeStr) return "";
-    const match = timeStr.match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/i);
+    const match = timeStr.match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/i); 
     if (!match) return "";
+    
     let [_, hours, minutes, modifier] = match;
     hours = parseInt(hours, 10);
+    
     if (modifier.toUpperCase() === "PM" && hours < 12) hours += 12;
-    if (modifier.toUpperCase() === "AM" && hours === 12) hours = 0;
+    if (modifier.toUpperCase() === "AM" && hours === 12) hours = 0; 
+    
     return `${hours.toString().padStart(2, "0")}:${minutes}:00`;
   }
 
@@ -63,8 +71,22 @@ const MarkAttendance = () => {
     const unmarked = Object.values(attendance).some((status) => status === null);
     if (unmarked) return alert("Please mark attendance for all students.");
 
-    if (!meetingDetails.startTime || !meetingDetails.endTime || !meetingDetails.venue || !meetingDetails.highlights || !meetingDetails.agenda) {
+    // 1. Combine time parts
+    const fullStartTime = `${meetingDetails.startTimeValue} ${meetingDetails.startTimeModifier}`;
+    const fullEndTime = `${meetingDetails.endTimeValue} ${meetingDetails.endTimeModifier}`;
+
+    // 2. Validate essential details and time format
+    if (
+      !meetingDetails.venue ||
+      !meetingDetails.highlights ||
+      !meetingDetails.agenda
+    ) {
       return alert("Please fill in all meeting details.");
+    }
+    
+    const timeFormatRegex = /^\d{1,2}:\d{2}$/; // Strict HH:MM check
+    if (!timeFormatRegex.test(meetingDetails.startTimeValue) || !timeFormatRegex.test(meetingDetails.endTimeValue)) {
+        return alert("Start Time and End Time must be in HH:MM format (e.g., 2:00).");
     }
 
     const attendanceArray = Object.entries(attendance).map(([userId, status]) => ({
@@ -74,8 +96,8 @@ const MarkAttendance = () => {
 
     const submissionData = {
       date: selectedDate.toISOString().split("T")[0],
-      start_time: to24Hour(meetingDetails.startTime),
-      end_time: to24Hour(meetingDetails.endTime),
+      start_time: to24Hour(fullStartTime),
+      end_time: to24Hour(fullEndTime),
       venue: meetingDetails.venue,
       agenda: meetingDetails.agenda,
       highlights: meetingDetails.highlights,
@@ -100,43 +122,41 @@ const MarkAttendance = () => {
   const leaveCount = values.filter((v) => v === "LEAVE").length;
 
   return (
-    <>
-      <Navbar />
-      <div className="dashboard-container">
-        <div className="main-content">
-          <h3 className="dashboard-title text-center">ATTENDANCE</h3>
+    // <Navbar /> // Uncomment if you need Navbar
+    <div className="dashboard-container">
+      <div className="main-content">
+        <h3 className="dashboard-title text-center">ATTENDANCE</h3>
 
-          <AttendanceForm
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            showCalendar={showCalendar}
-            setShowCalendar={setShowCalendar}
-            meetingDetails={meetingDetails}
-            handleDetailChange={handleDetailChange}
-          />
+        <AttendanceForm
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          showCalendar={showCalendar}
+          setShowCalendar={setShowCalendar}
+          meetingDetails={meetingDetails}
+          handleDetailChange={handleDetailChange}
+        />
 
-          <AttendanceChart
-            total={total}
-            presentCount={presentCount}
-            absentCount={absentCount}
-            leaveCount={leaveCount}
-          />
+        <AttendanceChart
+          total={total}
+          presentCount={presentCount}
+          absentCount={absentCount}
+          leaveCount={leaveCount}
+        />
 
-          <AttendanceTable
-            students={students}
-            attendance={attendance}
-            handleAttendanceChange={handleAttendanceChange}
-            loading={loading}
-          />
+        <AttendanceTable
+          students={students}
+          attendance={attendance}
+          handleAttendanceChange={handleAttendanceChange}
+          loading={loading}
+        />
 
-          <div className="submit-container mt-4">
-            <button className="btn-design" onClick={handleSubmit} disabled={loading}>
-              {loading ? "Submitting..." : "Submit"}
-            </button>
-          </div>
+        <div className="submit-container mt-3 text-center">
+          <button className="btn-design" onClick={handleSubmit} disabled={loading}>
+            {loading ? "Submitting..." : "Submit"}
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

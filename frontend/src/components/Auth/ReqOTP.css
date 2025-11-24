@@ -1,0 +1,80 @@
+.otp-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.otp-card {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 2%, #2d66ad 50%, #0C4182 85%);
+  width: 100%;
+  height: 620px;
+  margin: -150px auto 0;
+  border-bottom-left-radius: 50% 100%;
+  border-bottom-right-radius: 50% 100%;
+  text-align: center;
+  color: #fff;
+  padding: 170px 40px 60px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .otp-card {
+    border-radius: 0%;
+  }
+}
+
+.otp-title {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 10px;
+  margin-bottom: 70px;
+  margin-top: 0;
+}
+
+.otp-input-group label {
+
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 6px;
+  width: 300px;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.otp-input {
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  width: 300px;
+  height: 40px;
+  max-width: 90%;
+  margin: 0 auto;
+  display: block;
+}
+
+
+.otp-btn {
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A font similar to the one in the image */
+  font-size: 18px;
+  font-weight: 600; /* Semi-bold */
+  color: #1a1a1a; /* Dark gray for the text */
+  padding: 7px 20px;
+  background-color: #ffffff; /* White background */
+  border-radius: 50px; /* Highly rounded corners */
+  border: 2px solid transparent;
+  background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+
+}
+.otp-btn:hover{
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15); /* Soft, subtle shadow */
+      color:black;
+}

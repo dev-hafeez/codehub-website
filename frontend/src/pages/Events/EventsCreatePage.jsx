@@ -42,7 +42,7 @@ const EventCreatePage = () => {
       await axiosInstance.post("/events/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      navigate("/events");
+      navigate("/dashboard/events");
     } catch (error) {
       console.error(error.response?.data || error.message);
     }
@@ -50,9 +50,9 @@ const EventCreatePage = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="event-create-container">
-        <h2 className="event-create-title">Create Event</h2>
+        <h2 className="dashboard-title">Create Event</h2>
         <form onSubmit={handleSubmit} encType="multipart/form-data" className="event-form">
           <label>Title</label>
           <input
@@ -101,7 +101,7 @@ const EventCreatePage = () => {
 
           <div className="form-buttons">
             <button type="submit" className="btn-design">Create Event</button>
-            <button type="button" className="btn-design" onClick={() => navigate("/events")}>
+            <button type="button" className="btn-design" onClick={() => navigate("/dashboard/events")}>
               Cancel
             </button>
           </div>

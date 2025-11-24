@@ -3,7 +3,7 @@ import Navbar from "../../components/Navbar.jsx";
 
 import BlogGrid from "../../components/Blogs/BlogGrid.jsx";
 import useAuthStore from "../../store/authStore.js";
-import BlogOwner from "../../components/Blogs/blogowner.jsx";
+import BlogOwner from "../../components/Blogs/BlogOwner.jsx";
 
 
 const MyBlogPage = () => {
@@ -11,7 +11,7 @@ const MyBlogPage = () => {
 
   return (
     <div>
-      <Navbar/>
+   
 
       <div className="container mt-4">
         <BlogOwner/>

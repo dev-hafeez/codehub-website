@@ -70,7 +70,7 @@ const ViewAttendancePage = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="dashboard-container">
         <div className="main-content">
           <h3 className="dashboard-title text-center">VIEW ATTENDANCE</h3>

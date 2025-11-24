@@ -6,7 +6,7 @@ import Regform from '../../components/Auth/Regform'
 const RegPage = () => {
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
     <Regform/>
   
 

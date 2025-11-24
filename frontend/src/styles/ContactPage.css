@@ -61,3 +61,14 @@
 .contact-details a:hover {
   color: #e1306c; 
 }
+
+
+.social-icons a {
+  text-decoration: none;
+  transition: transform 0.2s;
+ 
+}
+
+.social-icons a:hover {
+  transform: scale(1.2);
+}

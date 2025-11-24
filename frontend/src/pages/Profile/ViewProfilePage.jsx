@@ -107,7 +107,7 @@ const ViewProfilePage = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="edit-profile-container">
         <h2>
           Profile{" "}

@@ -20,7 +20,7 @@ const ResetPassword = () => {
 
   return (
     <>
-    <NavbarComponent/>
+
     <div className="login-container d-flex flex-column align-items-center">
       <div className="login-card text-center">
         <h2 className="welcome-text text-black">Reset Password</h2>

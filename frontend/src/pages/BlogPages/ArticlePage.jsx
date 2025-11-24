@@ -15,7 +15,7 @@ const ArticlePage = () => {
 
     return (
         <>
-        <Navbar/>
+        {/* <Navbar/> */}
         <ArticleEditor/>
       
         </>

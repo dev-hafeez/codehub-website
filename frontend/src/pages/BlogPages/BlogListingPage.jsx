@@ -12,7 +12,7 @@ const BlogListingPage = () => {
 
   return (
     <>
-      <Navbar/>
+      {/* <Navbar/> */}
    
       <div>
         <h2 className="mt-5 text-center">ACM CUI WAH BLOGS</h2>

@@ -5,9 +5,10 @@
 }
 
 .event-heading-text {
-  font-family: Rethink Sans, sans-serif;
-  font-size: 2.5rem;
-  text-align: center;
+   font-weight: 600;
+  font-size: 24px; 
+  margin-bottom: 15px;
+  color: #120808;
 }
 
 .event-card {

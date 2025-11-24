@@ -1,47 +1,200 @@
-import React from 'react';
-import TeamsCard from './TeamsCard.jsx';
-import './TeamSection.css';
+import React, { useState, useEffect } from "react";
+import TeamsCard from "./TeamsCard.jsx";
+import "./TeamSection.css";
 
-import codeHubImage from '../../assets/codehub.jpg';
-import socialImage from '../../assets/social.jpg';
-import eventsImage from '../../assets/events.jpg';
-import graphicsImage from '../../assets/graphics.jpg';
-import decorImage from '../../assets/decor.jpg';
-import Navbar from '../Navbar.jsx';
+import codeHubImage from "../../assets/codehub.jpg";
+import socialImage from "../../assets/social.jpg";
+import eventsImage from "../../assets/events.jpg";
+import graphicsImage from "../../assets/graphics.jpg";
+import decorImage from "../../assets/decor.jpg";
+
+import Navbar from "../Navbar.jsx";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../axios";
 
 const teamData = [
-  { image: codeHubImage, title: 'Code Hub', description: 'CodeHub is a dynamic club under the Association for Computing Machinery (ACM) that brings together students passionate about coding, problem-solving, and technology. It serves as a collaborative space where members can enhance their programming skills, share knowledge, and work on real-world projects. Through coding competitions, workshops, and peer-to-peer learning, CodeHub empowers students to grow as developers and innovators while fostering a strong community of tech enthusiasts.' },
-  { image: socialImage, title: 'Social Media and Marketing',  description: 'The Social Media & Marketing Club under the Association for Computing Machinery (ACM) is dedicated to building creativity, communication, and digital presence. The club focuses on exploring the latest trends in social media, content creation, branding, and marketing strategies. Members collaborate to design campaigns, manage online platforms, and develop practical skills that bridge technology with creativity. By blending innovation and outreach, the club empowers students to become effective digital storytellers and marketing leaders.' },
-  { image: eventsImage, title: 'Events and Logistics',  description: 'The Events & Logistics Club under the Association for Computing Machinery (ACM) is the backbone of planning, organizing, and executing successful activities. The club ensures that every workshop, competition, and gathering runs smoothly by handling coordination, scheduling, and on-ground management. Members develop strong leadership, teamwork, and organizational skills while gaining hands-on experience in event planning. With precision and dedication, the Events & Logistics Club transforms ideas into impactful experiences for the entire ACM community.' },
-  { image: graphicsImage, title: 'Graphics and Media',  description: 'The Graphics & Media Club under the Association for Computing Machinery (ACM) brings creativity and technology together through design and visual storytelling. The club focuses on graphic design, video editing, animation, and digital media production to support ACM’s events, promotions, and initiatives. Members learn industry-relevant tools, sharpen their artistic skills, and collaborate on real projects that showcase innovation and imagination. By combining design with technology, the Graphics & Media Club transforms ideas into engaging visual experiences.' },
-  { image: decorImage, title: 'Decor and Registration',  description: 'The Décor & Registration Club under the Association for Computing Machinery (ACM) ensures that every event feels welcoming, vibrant, and well-organized. The club manages event aesthetics through creative decorations and designs while also handling smooth registration processes for participants. Members gain experience in hospitality, planning, and creative presentation, contributing to the overall atmosphere and professionalism of ACM events. With a balance of creativity and coordination, the Décor & Registration Club makes every event both seamless and memorable.' },
+  {
+    image: codeHubImage,
+    title: "Code Hub",
+    description:
+      "CodeHub is a dynamic club under ACM that brings together students passionate about coding, problem-solving, and technology."
+  },
+  {
+    image: socialImage,
+    title: "Social Media and Marketing",
+    description:
+      "Dedicated to building creativity, communication, and digital presence through modern marketing strategies."
+  },
+  {
+    image: eventsImage,
+    title: "Events and Logistics",
+    description:
+      "The backbone of planning, coordinating, and executing successful ACM events with precision."
+  },
+  {
+    image: graphicsImage,
+    title: "Graphics and Media",
+    description:
+      "Bringing creativity and technology together through design, animation, and visual storytelling."
+  },
+  {
+    image: decorImage,
+    title: "Decor and Registration",
+    description:
+      "Ensuring events feel welcoming, vibrant, and well-organized with creative decoration and planning."
+  }
 ];
 
 const TeamSection = () => {
-  
+  const [activeIndex, setActiveIndex] = useState(Math.floor(teamData.length / 2));
+  const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+
+  const [members, setMembers] = useState([]);
+  const navigate = useNavigate();
+
+  // ✅ Fetch all members (NOT filtered by club)
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const res = await axiosInstance.get("/students/");
+        const data = res.data;
+
+        const filtered = data.filter(
+  m => m.title && m.title.trim() !== "" && m.title.toUpperCase() !== "NULL"
+);
+
+
+        setMembers(filtered);
+      } catch (error) {
+        console.error("Error fetching members:", error);
+      }
+    };
+
+    fetchMembers();
+  }, []);
+
+  const handleOpenCard = (team) => {
+    navigate(`/team/${encodeURIComponent(team.title)}`, {
+      state: {
+        image: team.image,
+        description: team.description
+      }
+    });
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev === 0 ? teamData.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev === teamData.length - 1 ? 0 : prev + 1));
+  };
+
+  const getTransformStyles = () => {
+    let cardWidth, gap, scale;
+
+    if (windowWidth <= 480) {
+      cardWidth = 240;
+      gap = 15;
+      scale = 1.02;
+    } else if (windowWidth <= 768) {
+      cardWidth = 260;
+      gap = 20;
+      scale = 1.05;
+    } else if (windowWidth <= 1024) {
+      cardWidth = 280;
+      gap = 40;
+      scale = 1.1;
+    } else {
+      cardWidth = 300;
+      gap = 40;
+      scale = 1.1;
+    }
+
+    const scaledCardWidth = cardWidth * scale;
+    const viewportCenter = windowWidth / 2;
+    const cardCenter = scaledCardWidth / 2;
+    const totalCardWidth = cardWidth + gap;
+    const offsetForActiveCard = activeIndex * totalCardWidth;
+
+    return {
+      transform: `translateX(${viewportCenter - cardCenter - offsetForActiveCard - 30 - (windowWidth > 1024 ? 300 : 0)}px) translateY(-50%)`
+    };
+  };
 
   return (
     <>
-    <Navbar/>
-    <div className="team-section">
-      <div className="team-container">
-        <h1 className="team-title">Our Teams</h1>
-       
+      <Navbar />
+      <div className="team-section">
+        <div className="team-container">
+          <h1 className="team-title">Our Teams</h1>
 
-        <div className="team-cards">
-          {teamData.map((team, index) => (
-            <div key={index} className="card-wrapper">
-              <TeamsCard
-                image={team.image}
-                title={team.title}
-                description={team.description}
-              />
+          <div className="carousel-wrapper">
+            <button className="nav-btn prev-btn" onClick={handlePrev} aria-label="Previous team">
+              &#8249;
+            </button>
+
+            <div className="team-track" style={getTransformStyles()}>
+              {teamData.map((team, index) => {
+                const isActive = index === activeIndex;
+
+                return (
+                  <div
+                    key={index}
+                    className={`card-wrapper ${isActive ? "active" : "inactive"}`}
+                    onClick={isActive ? () => handleOpenCard(team) : undefined}
+                  >
+                    <TeamsCard
+                      image={team.image}
+                      title={team.title}
+                      description={team.description}
+                    />
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </div>
+
+            <button className="nav-btn next-btn" onClick={handleNext} aria-label="Next team">
+              &#8250;
+            </button>
+          </div>
+
+          {/* 🔥 NEW: SHOW ALL MEMBERS WITH NON-NULL TITLES */}
+           <div className="team-members-preview-container">
+      <h2 className="team-members-heading">Club Leads & Coordinators</h2>
+
+      <div className="team-members-grid">
+        {members.map((m) => (
+          <div
+            className="preview-member"
+            key={m.id}
+            onClick={() =>
+              navigate(`/member/${m.id}`, { state: m }) // Send data to page
+            }
+            style={{ cursor: "pointer" }}   // optional, shows it's clickable
+          >
+            <img src={m.profile_pic} alt={m.user.first_name} />
+            <p className="name">
+              {m.user.first_name} {m.user.last_name}
+            </p>
+            <p className="role">{m.title}</p>
+          </div>
+        ))}
       </div>
     </div>
- 
+
+        </div>
+      </div>
     </>
   );
 };

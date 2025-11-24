@@ -38,7 +38,7 @@ const EventDetailPage = () => {
 
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
     <div className="container my-5 mx-9">
      
 

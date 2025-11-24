@@ -1,27 +1,29 @@
 .event-create-container {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 25px;
+  max-width: 480px; 
+  margin: 20px auto; 
+  padding: 15px; 
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .event-create-title {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  font-weight: 600;
+  font-size: 24px; 
+  margin-bottom: 15px;
+  color: #120808;
 }
 
 .event-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px; /* tighter gap */
 }
 
 .event-form label {
   font-weight: 600;
-  margin-bottom: 5px;
+  font-size: 13px;
+  margin-bottom: 3px;
   color: #444;
 }
 
@@ -29,32 +31,31 @@
 .event-form input[type="date"],
 .event-form textarea,
 .event-form input[type="file"] {
-  padding: 10px;
+  padding: 8px; /* smaller padding */
   border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 13px;
 }
 
 .event-form textarea {
-  min-height: 120px;
-  resize: vertical;
+  min-height: 100px; /* slightly smaller */
 }
 
 .image-preview-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 8px; /* smaller gap */
+  margin-top: 8px;
 }
 
 .image-preview-box {
   position: relative;
-  width: 120px;
-  height: 100px;
+  width: 90px; /* smaller box */
+  height: 75px; /* smaller box */
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 .image-preview {
@@ -65,20 +66,21 @@
 
 .remove-image-btn {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 3px;
+  right: 3px;
   background: rgba(255, 0, 0, 0.8);
   border: none;
   color: white;
-  font-size: 14px;
+  font-size: 12px; /* smaller */
   border-radius: 50%;
   cursor: pointer;
-  width: 22px;
-  height: 22px;
+  width: 18px; /* smaller */
+  height: 18px; /* smaller */
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .remove-image-btn:hover {
   background: red;
 }
@@ -86,27 +88,22 @@
 .form-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 8px; /* smaller margin */
 }
 
 .btn-design {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A font similar to the one in the image */
-  font-size: 18px;
+  font-size: 14px; /* smaller font */
   font-weight: 600; 
   color: #1a1a1a; 
-  padding: 7px 20px;
-  background-color: #ffffff;
-  border-radius: 50px; 
+  padding: 5px 12px; /* smaller padding */
+  border-radius: 25px; 
   border: 2px solid transparent;
   background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
   background-origin: border-box;
   background-clip: padding-box, border-box;
-
-}
-.btn-design:hover{
-      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15); 
-
 }
 
-
+.btn-design:hover {
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+}

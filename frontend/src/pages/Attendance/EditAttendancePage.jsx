@@ -47,7 +47,7 @@ const EditAttendancePage = () => {
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="main-content">
         <h3 className="dashboard-title text-center">EDIT MEETING & ATTENDANCE</h3>
 

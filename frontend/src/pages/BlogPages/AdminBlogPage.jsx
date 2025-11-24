@@ -10,7 +10,7 @@ const AdminBlogPage = () => {
 
   return (
     <>
-      <Navbar/>
+      {/* <Navbar/> */}
       <div>
         <h2 className="mt-5 text-center">ACM CUI WAH BLOGS</h2>
         <p className="text-center" style={{fontSize:'20px'}}>Home</p>

@@ -73,7 +73,7 @@ const TrackMembersPage = () => {
 
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
     <div className="dashboard-container">
       
       <div className="track-members-container">
@@ -86,6 +86,7 @@ const TrackMembersPage = () => {
                 <th>Username</th>
                 <th>Roll No.</th>
                 <th>Email</th>
+                <th>Phone</th>
                 <th>Role</th>
                 <th>Club</th>
                 <th className="actions-header">Actions</th>
@@ -97,6 +98,7 @@ const TrackMembersPage = () => {
                   <td>{member.user.username}</td>
                   <td>{member.roll_no}</td>
                   <td>{member.user.email}</td>
+                  <td>{member.user.phone_number}</td>
                   <td>
                     <span className={`role-badge ${getRoleClass(member.user.role)}`}>
                       {member.user.role}

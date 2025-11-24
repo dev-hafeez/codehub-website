@@ -19,14 +19,14 @@ const ProfileOptions = () => {
       </div>
       <button
         className="option-btn"
-        onClick={() => navigate("/edit-profile")}
+        onClick={() => navigate("/dashboard/edit-profile")}
       >
         Edit Profile
       </button>
 
       <button
         className="option-btn"
-        onClick={() => navigate("/otp")}
+        onClick={() => navigate("/dashboard/otp")}
       >
         Reset Password
       </button>
