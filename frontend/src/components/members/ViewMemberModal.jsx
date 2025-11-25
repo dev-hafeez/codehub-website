@@ -31,6 +31,9 @@ const ViewMemberModal = ({ isOpen, onClose, member }) => {
             <strong>Club:</strong> <span>{member.club}</span>
           </div>
           <div className="detail-item">
+            <strong>Club:</strong> <span>{member.title}</span>
+          </div>
+          <div className="detail-item">
             <strong>Phone:</strong> <span>{member.user.phone_number}</span>
           </div>
         </div>

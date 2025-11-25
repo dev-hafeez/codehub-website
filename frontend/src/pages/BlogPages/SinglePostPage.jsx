@@ -6,7 +6,7 @@ import Navbar from '../../components/Navbar.jsx';
 const SinglePostPage = () => {
   return (
     <div>
-{/* <Navbar/> */}
+<Navbar/>
         <BlogContent blog={sampleBlog}/>
       
     </div>

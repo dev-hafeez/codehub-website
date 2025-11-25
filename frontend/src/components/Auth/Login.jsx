@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { PersonFill } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../../store/authStore.js'
@@ -9,21 +9,25 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const { login, loading, token } = useAuthStore()
   const navigate = useNavigate()
+  const isLoggingIn = useRef(false)
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token') || token
-    if (storedToken) {
+    // Only check on initial mount, not when token changes during login
+    const storedToken = localStorage.getItem('token')
+    if (storedToken && !isLoggingIn.current) {
       alert('You are already logged in. Please logout first!')
       navigate('/dashboard')
     }
-  }, [token, navigate])
+  }, [navigate]) // Remove token from dependencies
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    isLoggingIn.current = true // Set flag before login
     const success = await login(username, password)
     if (success) {
       navigate('/dashboard')
     } else {
+      isLoggingIn.current = false // Reset flag if login fails
       alert("Invalid credentials. Please try again.")
     }
   }

@@ -11,43 +11,46 @@ function BillsListPage() {
       .catch(err => console.error(err));
   }, []);
 
-  return (
+ return (
     <div className="container mt-5">
       <h2>Bills</h2>
-   
-
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Image</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {bills.map(b => (
-            <tr key={b.id}>
-              <td>{b.description}</td>
-              <td>{b.amount}</td>
-              <td>{b.date}</td>
-              <td>
-                <img src={b.image} height="80" />
-              </td>
-              <td>
-                <Link to={`/dashboard/bills/${b.id}`} className="btn btn-design btn-sm">
-                  View 
-                </Link>
-              </td>
+      
+      {/* 💡 Custom class 'bills-table-wrapper' is used for CSS targeting */}
+      <div className="bills-table-wrapper"> 
+        <table className="table table-bordered bills-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th className="d-none d-sm-table-cell">Image</th> {/* Hide on extra small screens */}
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
+          </thead>
 
-      </table>
+          <tbody>
+            {bills.map(b => (
+              <tr key={b.id}>
+                <td data-label="Description">{b.description}</td>
+                <td data-label="Amount">{b.amount}</td>
+                <td data-label="Date">{b.date}</td>
+                <td data-label="Image" className="d-none d-sm-table-cell"> 
+                  <img src={b.image} height="80" alt="Bill" />
+                </td>
+                <td data-label="Action">
+                  <Link to={`/dashboard/bills/${b.id}`} className="btn btn-design btn-sm w-100">
+                    Edit
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+
+        </table>
+      </div>
     </div>
   );
 }
+
 
 export default BillsListPage;
