@@ -3,7 +3,7 @@ from .views import SignupView, OTPView, LoginView, PasswordChangeView, LogoutVie
     BlogEditView, BlogDeleteView, MeetingRUDView, MeetingCreateView, MeetingListView, MeetingAttendanceListView, \
     MeetingAttendanceRUDView, StudentsListView, StudentRUView, MeetingPDFView, api_home, \
     EventRUDView, EventImageRUDView, AdminRUDView, EventListCreateView, PublicStudentsListView, \
-    BillListCreateView, BillRUDView
+    BillListCreateView, BillRUDView,InlineImageUploadView
 
 # NOTE: 'RUD' means the endpoint will accept these request types (single instance):
 #  GET , PUT, PATCH, DELETE
@@ -31,6 +31,7 @@ urlpatterns = [
     path('blogs/upload/', BlogUploadView.as_view(), name='blog-upload'),
     path('blogs/<int:pk>/edit/', BlogEditView.as_view(), name='blog-edit'),
     path('blogs/<int:pk>/delete/', BlogDeleteView.as_view(), name='blog-delete'),
+     path('blogs/upload-inline-image/', InlineImageUploadView.as_view(), name='inline-image-upload'),
 
     # Meetings
     path('meetings/', MeetingListView.as_view(), name='meeting-list'),

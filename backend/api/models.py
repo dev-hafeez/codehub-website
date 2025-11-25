@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 from datetime import date, datetime
 from django.conf import settings
 from django.core.validators import MinValueValidator
+import os
+import uuid
 
 
 class UserRole(models.TextChoices):
@@ -81,7 +83,18 @@ class BlogImage(models.Model):
     def __str__(self):
         return f'Image for blog {self.blog.id}'
 
+def temp_inline_upload_path(instance, filename):
+    """
+    Store inline images in temp_inline/ with a unique filename
+    to prevent collisions.
+    """
+    ext = os.path.splitext(filename)[1]  # keep extension (.jpg, .png, etc.)
+    unique_name = f"{uuid.uuid4().hex}{ext}"
+    return f"temp_inline/{unique_name}"
 
+class InlineImage(models.Model):
+    image = models.ImageField(upload_to=temp_inline_upload_path)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 def current_time():
     return datetime.now().time()
 

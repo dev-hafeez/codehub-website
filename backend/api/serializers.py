@@ -2,7 +2,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage, Bill
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage, Bill,InlineImage
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
@@ -143,7 +143,11 @@ class BlogImageSerializer(serializers.ModelSerializer):
         if obj.image and request:
             return request.build_absolute_uri(obj.image.url)
         return None
-
+TEMP_INLINE_PREFIX = "/media/temp_inline/"
+class InlineImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InlineImage
+        fields = ['id', 'image', 'uploaded_at']
 
 class BlogSerializer(serializers.ModelSerializer):
     images = BlogImageSerializer(many=True, read_only=True)

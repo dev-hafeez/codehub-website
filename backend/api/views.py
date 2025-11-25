@@ -27,7 +27,7 @@ from .models import Bill
 from .models import Blog, Meeting, MeetingAttendance, Student, Event, EventImage
 from .permissions import IsAdmin, IsLeadOrAdmin, is_staff
 from .permissions import IsTreasurer
-from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
+from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer,InlineImageSerializer
 from .serializers import PublicStudentSerializer, \
     BillSerializer
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
@@ -633,6 +633,19 @@ class BlogListAPIView(generics.ListAPIView):
         )
     ],
 )
+
+class InlineImageUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = InlineImageSerializer(data=request.data)
+        if serializer.is_valid():
+            image = serializer.save()
+            image_url = request.build_absolute_uri(image.image.url)
+            return Response({"url": image_url}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class BlogEditView(APIView):
     permission_classes = [IsAuthenticated,IsAdmin]
     parser_classes = [MultiPartParser, FormParser]
