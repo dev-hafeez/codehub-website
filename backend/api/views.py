@@ -3,7 +3,7 @@ from io import BytesIO
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin, is_staff, IsTreasurer
+from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin, is_staff, IsTreasurer, SignUpPermission
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
     MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer, PublicStudentSerializer, \
     BillSerializer
@@ -125,7 +125,7 @@ class StudentRUView(generics.RetrieveUpdateAPIView):
 )
 class SignupView(APIView):
     serializer_class = StudentSerializer
-    permission_classes = [IsLeadOrAdmin]
+    permission_classes = [SignUpPermission]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
