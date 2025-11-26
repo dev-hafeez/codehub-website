@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../../axios";
 import "./EventsList.css";
 import { Link } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+
 
 const EventListPage = () => {
   const [events, setEvents] = useState([]);
@@ -98,9 +98,9 @@ const handleEditImageChange = (e) => {
 
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
     <div className="event-list-container">
-      <h2 className="event-heading-text">Events</h2>
+      <h2 className="dashboard-title">Events</h2>
       {events.map((event) => (
         <div key={event.id} className="event-card">
           <div className="event-image-container">

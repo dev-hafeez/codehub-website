@@ -30,7 +30,7 @@ const NavbarComponent = () => {
             className="me-2"
           />
           <span className="custom-navbar-title text-white">
-            ACM CUI Wah Chapter
+            ACM CUI WAH CHAPTER
           </span>
         </Navbar.Brand>
 
@@ -61,7 +61,7 @@ const NavbarComponent = () => {
               <Nav.Link
                 as={Link}
                 to="/login"
-                className="custom-login-link px-4 py-2 ms-lg-3 fw-semibold"
+                className="custom-login-link1 px-4 py-2 ms-lg-3 fw-semibold"
               >
                 Log In
               </Nav.Link>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Navbar from "../../components/Navbar.jsx";
+import Navbar from "../../components/DashboardNavbar/Navbar.jsx";
 import useAttendanceStore from "../../store/useAttendanceStore.js";
 import axiosInstance from "../../axios.js";
 
@@ -70,7 +70,7 @@ const ViewAttendancePage = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="dashboard-container">
         <div className="main-content">
           <h3 className="dashboard-title text-center">VIEW ATTENDANCE</h3>

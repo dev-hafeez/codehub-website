@@ -1,15 +1,12 @@
-
 import React, { useEffect, useState, useCallback } from "react";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/DashboardNavbar/Navbar";
 import axiosInstance from "../../axios";
 import { FaEye, FaEdit } from "react-icons/fa";
 import "./TrackMemberPage.css";
 
-// Import your new modal components
 import ViewMemberModal from "../../components/members/ViewMemberModal";
 import EditMemberModal from "../../components/members/EditMemberModal";
 
-// ... (getRoleClass function remains the same)
 const getRoleClass = (role) => {
   const roleLower = role?.toLowerCase() || 'other';
   if (roleLower.includes('student')) return 'role-student';
@@ -17,18 +14,16 @@ const getRoleClass = (role) => {
   return 'role-other';
 };
 
-
 const TrackMembersPage = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // State for modals
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
 
-  // Function to fetch members
   const fetchMembers = useCallback(async () => {
     try {
       setLoading(true);
@@ -44,8 +39,16 @@ const TrackMembersPage = () => {
   useEffect(() => {
     fetchMembers();
   }, [fetchMembers]);
-  
-  // Handlers to open modals
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleView = (member) => {
     setSelectedMember(member);
     setViewModalOpen(true);
@@ -55,70 +58,147 @@ const TrackMembersPage = () => {
     setSelectedMember(member);
     setEditModalOpen(true);
   };
-  
-  // Handler to close any modal
+
   const handleCloseModals = () => {
     setViewModalOpen(false);
     setEditModalOpen(false);
     setSelectedMember(null);
   };
 
-  // Handler to refresh data after a successful save
   const handleSaveSuccess = () => {
-    fetchMembers(); // Refetch the list of members to show the update
+    fetchMembers();
   };
 
   if (loading) return <p className="status-message">Loading members...</p>;
   if (error) return <p className="status-message error-message">{error}</p>;
 
-  return (
-    <>
-    <Navbar/>
-    <div className="dashboard-container">
-      
-      <div className="track-members-container">
-        <h1 className="track-members-title">Track Members</h1>
-        <div className="members-table-card">
-          <table className="members-table">
-            <thead>
-              {/* ... table headers ... */}
-              <tr>
-                <th>Username</th>
-                <th>Roll No.</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Club</th>
-                <th className="actions-header">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+  // Mobile card view
+  if (isMobile) {
+    return (
+      <>
+        <div className="dashboard-container">
+          <div className="track-members-container">
+            <h1 className="dashboard-title">Track Members</h1>
+            <div className="members-mobile-list">
               {members.map((member) => (
-                <tr key={member.user.id}>
-                  <td>{member.user.username}</td>
-                  <td>{member.roll_no}</td>
-                  <td>{member.user.email}</td>
-                  <td>
+                <div key={member.user.id} className="member-card">
+                  <div className="member-card-header">
+                    <div className="member-name">{member.user.username}</div>
                     <span className={`role-badge ${getRoleClass(member.user.role)}`}>
                       {member.user.role}
                     </span>
-                  </td>
-                  <td>{member.club}</td>
-                  <td className="actions-cell">
-                    <button className="action-btn btn-view" onClick={() => handleView(member)} title="View Member">
-                      <FaEye />
+                  </div>
+                  <div className="member-card-body">
+                    <div className="card-item">
+                      <span className="card-label">Roll No.</span>
+                      <span className="card-value">{member.roll_no}</span>
+                    </div>
+                    <div className="card-item">
+                      <span className="card-label">Email</span>
+                      <span className="card-value">{member.user.email}</span>
+                    </div>
+                    <div className="card-item">
+                      <span className="card-label">Phone</span>
+                      <span className="card-value">{member.user.phone_number || 'N/A'}</span>
+                    </div>
+                    <div className="card-item">
+                      <span className="card-label">Club</span>
+                      <span className="card-value">{member.club}</span>
+                    </div>
+                  </div>
+                  <div className="member-card-actions">
+                    <button 
+                      className="action-btn btn-view" 
+                      onClick={() => handleView(member)} 
+                      title="View Member"
+                    >
+                      <FaEye /> View
                     </button>
-                    <button className="action-btn btn-edit2" onClick={() => handleEdit(member)} title="Edit Member">
-                      <FaEdit />
+                    <button 
+                      className="action-btn btn-edit2" 
+                      onClick={() => handleEdit(member)} 
+                      title="Edit Member"
+                    >
+                      <FaEdit /> Edit
                     </button>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
+        </div>
+        
+        <ViewMemberModal 
+          isOpen={isViewModalOpen}
+          onClose={handleCloseModals}
+          member={selectedMember}
+        />
+        <EditMemberModal 
+          isOpen={isEditModalOpen}
+          onClose={handleCloseModals}
+          member={selectedMember}
+          onSave={handleSaveSuccess}
+        />
+      </>
+    );
+  }
+
+  // Desktop table view
+  return (
+    <>
+      <div className="dashboard-container">
+        <div className="track-members-container">
+          <h1 className="dashboard-title">Track Members</h1>
+          <div className="members-table-card">
+            <table className="members-table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Roll No.</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Role</th>
+                  <th>Club</th>
+                  <th className="actions-header">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {members.map((member) => (
+                  <tr key={member.user.id}>
+                    <td>{member.user.username}</td>
+                    <td>{member.roll_no}</td>
+                    <td>{member.user.email}</td>
+                    <td>{member.user.phone_number}</td>
+                    <td>
+                      <span className={`role-badge ${getRoleClass(member.user.role)}`}>
+                        {member.user.role}
+                      </span>
+                    </td>
+                    <td>{member.club}</td>
+                    <td className="actions-cell">
+                      <button 
+                        className="action-btn btn-view" 
+                        onClick={() => handleView(member)} 
+                        title="View Member"
+                      >
+                        <FaEye />
+                      </button>
+                      <button 
+                        className="action-btn btn-edit2" 
+                        onClick={() => handleEdit(member)} 
+                        title="Edit Member"
+                      >
+                        <FaEdit />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       
-      {/* Render the Modals */}
       <ViewMemberModal 
         isOpen={isViewModalOpen}
         onClose={handleCloseModals}
@@ -130,7 +210,6 @@ const TrackMembersPage = () => {
         member={selectedMember}
         onSave={handleSaveSuccess}
       />
-    </div>
     </>
   );
 };

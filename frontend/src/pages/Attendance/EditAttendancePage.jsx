@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/DashboardNavbar/Navbar";
 import useAttendanceStore from "../../store/useAttendanceStore";
 import axiosInstance from "../../axios";
 import EditMeeting from "../../components/Attendance/Edit/EditMeeting";
@@ -47,7 +47,7 @@ const EditAttendancePage = () => {
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="main-content">
         <h3 className="dashboard-title text-center">EDIT MEETING & ATTENDANCE</h3>
 

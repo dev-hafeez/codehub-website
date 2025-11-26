@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/DashboardNavbar/Navbar";
 import MemberCard from "../components/members/MemberCard"; 
 import "../styles/TeamPage.css";
+import axiosInstance from "../axios";
 
 const TeamPage = () => {
   const { title } = useParams();
@@ -10,18 +11,42 @@ const TeamPage = () => {
   const { image, role, description } = location.state || {};
 
   const [members, setMembers] = useState([]);
+  const clubMap = {
+  "Code Hub": "codehub",
+  "Graphics and Media": "graphics_and_media",
+  "Social Media and Marketing": "social_media_and_marketing",
+  "Decor and Registration": "registration_and_decor",
+  "Events and Logistics": "events_and_logistics"
+};
 
-  useEffect(() => {
-    // ... (Keep your API logic / Dummy Data logic here) ...
-    const dummyData = [
-      { id: 1, name: "Ali Khan", designation: "Team Lead", image: "https://i.pravatar.cc/150?u=1" },
-      { id: 2, name: "Sara Ahmed", designation: "Senior Developer", image: "https://i.pravatar.cc/150?u=5" },
-      { id: 3, name: "Bilal Raza", designation: "Creative Director", image: "https://i.pravatar.cc/150?u=3" },
-      { id: 4, name: "Ayesha Noor", designation: "Event Coordinator", image: "https://i.pravatar.cc/150?u=9" },
-      { id: 5, name: "Usman Zafar", designation: "Marketing Head", image: "https://i.pravatar.cc/150?u=12" },
-    ];
-    setMembers(dummyData);
-  }, [title]);
+useEffect(() => {
+  const fetchMembers = async () => {
+    try {
+      const res = await axiosInstance.get("/students/");
+      const data = res.data;
+
+      const decodedTitle = decodeURIComponent(title);
+      const backendClub = clubMap[decodedTitle];
+
+      const filtered = data.filter(student => student.club === backendClub);
+
+      const formatted = filtered.map(student => ({
+        id: student.id,
+        name: `${student.user.first_name} ${student.user.last_name}`,
+        designation: student.profile_desc,
+        image: student.profile_pic
+      }));
+
+      setMembers(formatted);
+    } catch (err) {
+      console.error("Error fetching members:", err);
+    }
+  };
+
+  fetchMembers();
+}, [title]);
+
+
 
   return (
     <div>

@@ -13,6 +13,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
   const [formData, setFormData] = useState({
     roll_no: "",
     club: "",
+    title: "",
     user: {
       first_name: "",
       last_name: "",
@@ -20,6 +21,7 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
       username: "",
       password: "",
       role: "STUDENT",
+      phone_number: "", 
     },
   });
 
@@ -27,41 +29,47 @@ const EditMemberModal = ({ isOpen, onClose, member, onSave }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   
-  useEffect(() => {
-    if (member) {
-      setFormData({
-        roll_no: member.roll_no || "",
-        club: member.club || "",
-        user: {
-          id: member.user?.id || "", 
-          first_name: member.user?.first_name || "",
-          last_name: member.user?.last_name || "",
-          email: member.user?.email || "",
-          username: member.user?.username || "",
-          password: "", 
-          role: member.user?.role || "STUDENT",
-        },
-      });
-    }
-  }, [member]);
+useEffect(() => {
+  if (member) {
+    setFormData({
+      roll_no: member.roll_no || "",
+      club: member.club || "",
+      title: member.title || "",
+      user: {
+        id: member.user?.id || "",
+        first_name: member.user?.first_name || "",
+        last_name: member.user?.last_name || "",
+        email: member.user?.email || "",
+        username: member.user?.username || "",
+        password: "",
+        role: member.user?.role || "STUDENT",
+        phone_number: member.user?.phone_number || "",
+      },
+    });
+  }
+}, [member]);
+
 
   if (!isOpen || !member) return null;
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (["roll_no", "club"].includes(name)) {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        user: {
-          ...prev.user,
-          [name]: value,
-        },
-      }));
-    }
-  };
+ if (name === "title") {
+    setFormData((prev) => ({ ...prev, title: value.toUpperCase() }));
+    return;
+  }
+  if (["roll_no", "club"].includes(name)) {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  } else {
+    setFormData((prev) => ({
+      ...prev,
+      user: {
+        ...prev.user,
+        [name]: value,
+      },
+    }));
+  }
+};
 
 
 const handleSubmit = async (e) => {
@@ -78,9 +86,14 @@ const handleSubmit = async (e) => {
     if (formData.club !== member.club) {
       dataToSend.club = formData.club;
     }
+    if ((formData.title || "") !== (member.title || "")) {
+  dataToSend.title = formData.title.trim() === "" ? null : formData.title;
+}
+
 
     const updatedUserFields = {};
-    const userFields = ["first_name", "last_name", "email", "username", "password", "role"];
+    const userFields = ["first_name", "last_name", "email", "username", "password", "role", "phone_number"];
+
 
     userFields.forEach((field) => {
       if (field === "password") {
@@ -224,6 +237,18 @@ const handleSubmit = async (e) => {
                 style={inputStyle}
               />
             </div>
+<div className="form-group">
+  <label htmlFor="phone_number">Phone Number</label>
+  <input
+    type="text"
+    id="phone_number"
+    name="phone_number"
+    value={formData.user.phone_number}
+    onChange={handleChange}
+    placeholder="+92XXXXXXXXXX"
+    style={inputStyle}
+  />
+</div>
 
 
             <div className="form-group">
@@ -238,6 +263,19 @@ const handleSubmit = async (e) => {
                 style={inputStyle}
               />
             </div>
+            <div className="form-group">
+  <label htmlFor="title">Title</label>
+  <input
+  type="text"
+  id="title"
+  name="title"
+  value={formData.title}
+  onChange={handleChange}
+  style={{ ...inputStyle, textTransform: "uppercase" }}
+/>
+
+</div>
+
 
 
             <div className="form-group">

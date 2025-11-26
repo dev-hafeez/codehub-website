@@ -23,12 +23,13 @@ const useAuthStore = create((set, get) => ({
       const token = res.data?.token || res.data?.data?.token;
       const role = res.data?.role || res.data?.data?.role;
       const user_id = res.data?.user || res.data?.data?.user_id;
+      const student_id = res.data?.user || res.data?.data?.student_id;
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
 
       localStorage.setItem("user_id", user_id);
-
+ localStorage.setItem("student_id", student_id);
 
       set({ user_id, token, role, loading: false });
       return true;
@@ -109,30 +110,39 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
-  signup: async (signupData) => {
-    set({ loading: true, error: null });
-    try {
-      const res = await axiosInstance.post("/auth/signup/", signupData);
+signup: async (signupData) => {
+  set({ loading: true, error: null });
+  try {
+    const res = await axiosInstance.post("/auth/signup/", signupData);
 
-      const newUserToken = res.data?.data?.token;
-      const newUserRole = res.data?.data?.role;
-      const newUserId = res.data?.data?.user_id;
+    const newUserToken = res.data?.data?.token;
+    const newUserRole = res.data?.data?.role;
+    const newUserId = res.data?.data?.user_id;
 
-      console.log("Signup success:", res.data);
+    console.log("Signup success:", res.data);
 
-      set({ loading: false });
-      return {
-        success: true,
-        data: { token: newUserToken, role: newUserRole, user_id: newUserId },
-      };
-    } catch (err) {
-      set({
-        error: err.response?.data?.message || "Signup failed",
-        loading: false,
-      });
-      return { success: false, error: err.response?.data?.message };
-    }
-  },
+    set({ loading: false });
+    return {
+      success: true,
+      data: { token: newUserToken, role: newUserRole, user_id: newUserId },
+    };
+  } catch (err) {
+    console.log("Signup error response:", err.response?.data);
+
+    set({
+      error: err.response?.data?.message || "Signup failed",
+      loading: false,
+    });
+
+    // Return backend message as `message` so frontend can extract properly
+    return {
+      success: false,
+      message: err.response?.data?.message || "Signup failed",
+      data: err.response?.data || null,
+    };
+  }
+},
+
 
   logout: () => {
     localStorage.removeItem("token");

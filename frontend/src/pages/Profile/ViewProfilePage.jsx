@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../axios";
-import "./ViewProfilePage.css"; // reuse your CSS
-import Navbar from "../../components/Navbar";
+import "./ViewProfilePage.css"; 
 
 
 const ViewProfilePage = () => {
@@ -107,7 +106,7 @@ const ViewProfilePage = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="edit-profile-container">
         <h2>
           Profile{" "}

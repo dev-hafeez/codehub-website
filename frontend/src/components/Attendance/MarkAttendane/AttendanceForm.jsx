@@ -4,9 +4,29 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./AttendanceForm.css";
 
 const AttendanceForm = ({ selectedDate, setSelectedDate, showCalendar, setShowCalendar, meetingDetails, handleDetailChange }) => {
+  
+  // FIX: Relaxed regex to allow partial input while typing (e.g., '2', '2:', '2:3')
+  const handleTimeValueChange = (e) => {
+    const { value } = e.target;
+    
+    // Allows empty string, up to 2 digits for hours, optionally a colon, and up to 2 digits for minutes.
+    const timeRegex = /^\d{0,2}:?\d{0,2}$/;
+    
+    if (value === "" || timeRegex.test(value)) {
+      handleDetailChange(e);
+    }
+  };
+
+  const handleTimeModifierChange = (e, timeType) => {
+    // Manually create a structure matching e.target for the parent handler
+    handleDetailChange({ target: { name: `${timeType}Modifier`, value: e.target.value } });
+  };
+  
   return (
     <div className="attendance-form">
       <div className="filter-container">
+        
+        {/* Date Picker Button */}
         <button className="btn-design" onClick={() => setShowCalendar(!showCalendar)}>
           DATE: {selectedDate.toLocaleDateString()}
         </button>
@@ -16,9 +36,57 @@ const AttendanceForm = ({ selectedDate, setSelectedDate, showCalendar, setShowCa
           </div>
         )}
 
-        <input type="text" name="startTime" placeholder="Start Time" value={meetingDetails.startTime} onChange={handleDetailChange} className="meeting-input"/>
-        <input type="text" name="endTime" placeholder="End Time" value={meetingDetails.endTime} onChange={handleDetailChange} className="meeting-input"/>
-        <input type="text" name="venue" placeholder="Venue" value={meetingDetails.venue} onChange={handleDetailChange} className="meeting-input"/>
+        {/* Start Time Group (Input + Dropdown) */}
+        <div className="time-input-group">
+          <input 
+            type="text" 
+            name="startTimeValue" 
+            placeholder="Start HH:MM" 
+            value={meetingDetails.startTimeValue} 
+            onChange={handleTimeValueChange} 
+            className="time-value-input"
+          />
+          <select
+            name="startTimeModifier"
+            value={meetingDetails.startTimeModifier}
+            onChange={(e) => handleTimeModifierChange(e, 'startTime')}
+            className="time-modifier-select"
+          >
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
+
+        {/* End Time Group (Input + Dropdown) */}
+        <div className="time-input-group">
+          <input 
+            type="text" 
+            name="endTimeValue" 
+            placeholder="End HH:MM" 
+            value={meetingDetails.endTimeValue} 
+            onChange={handleTimeValueChange} 
+            className="time-value-input"
+          />
+          <select
+            name="endTimeModifier"
+            value={meetingDetails.endTimeModifier}
+            onChange={(e) => handleTimeModifierChange(e, 'endTime')}
+            className="time-modifier-select"
+          >
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+          </select>
+        </div>
+
+        {/* Venue Input */}
+        <input 
+          type="text" 
+          name="venue" 
+          placeholder="Venue" 
+          value={meetingDetails.venue} 
+          onChange={handleDetailChange} 
+          className="meeting-input"
+        />
       </div>
 
       <div className="notes-section">

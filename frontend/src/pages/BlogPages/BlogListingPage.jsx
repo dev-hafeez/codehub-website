@@ -1,9 +1,7 @@
 import React from 'react'
 import BlogBanner from '../../components/Blogs/BlogBanner'
 import BlogGrid from '../../components/Blogs/BlogGrid'
-import BlogOwner from '../../components/Blogs/BlogOwner'
-import Footer from '../../components/Footer/Footer'
-import Navbar from '../../components/Navbar'
+
 import useAuthStore from '../../store/authStore' // import store
 
 const BlogListingPage = () => {
@@ -12,7 +10,7 @@ const BlogListingPage = () => {
 
   return (
     <>
-      <Navbar/>
+      {/* <Navbar/> */}
    
       <div>
         <h2 className="mt-5 text-center">ACM CUI WAH BLOGS</h2>

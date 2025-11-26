@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../axios";
-import "./ProfilePage.css"; // separate CSS for profile page
-import Navbar from "../../components/Navbar";
+import { FiEdit } from "react-icons/fi"; // <-- Import pencil icon
+import "./ProfilePage.css"; 
 
 const ProfilePage = () => {
   const loggedInUserId = parseInt(localStorage.getItem("user_id"));
@@ -34,7 +34,6 @@ const ProfilePage = () => {
         setStudent(foundStudent);
 
         setFormData({
-          title: foundStudent.title || "",
           profile_desc: foundStudent.profile_desc || "",
           profile_pic: null,
           user: {
@@ -71,12 +70,16 @@ const ProfilePage = () => {
     e.preventDefault();
     if (!studentId) return;
 
+    if (formData.profile_desc.length > 200) {
+      alert("Profile description cannot exceed 200 characters.");
+      return;
+    }
+
     setLoading(true);
     setMessage("");
 
     try {
       const data = new FormData();
-      if (formData.title) data.append("title", formData.title);
       if (formData.profile_desc) data.append("profile_desc", formData.profile_desc);
       if (formData.profile_pic) data.append("profile_pic", formData.profile_pic);
 
@@ -103,9 +106,7 @@ const ProfilePage = () => {
   };
 
   const handleCancel = () => {
-    // Reset form data to student data and exit edit mode
     setFormData({
-      title: student.title || "",
       profile_desc: student.profile_desc || "",
       profile_pic: null,
       user: {
@@ -123,82 +124,79 @@ const ProfilePage = () => {
   if (!studentId) return <p>Loading your profile...</p>;
 
   return (
-    <>
-      <Navbar />
-      <div className="profile-container">
-        <h2>
-          Profile{" "}
-          <span
-            className="edit-icon"
-            title="Edit Profile"
-            onClick={() => setEditMode(!editMode)}
-          >
-            ✏️
-          </span>
-        </h2>
-        {message && <p className="message">{message}</p>}
+    <div className="profile-container">
+      <h2>
+        Profile{" "}
+        <span
+          className="edit-icon"
+          title="Edit Profile"
+          onClick={() => setEditMode(!editMode)}
+          style={{ cursor: "pointer" }}
+        >
+          <FiEdit size={20} /> {/* <-- Pencil icon */}
+        </span>
+      </h2>
+      {message && <p className="message">{message}</p>}
 
-        <form onSubmit={handleSubmit} className="profile-form">
-          <div>
-            <label>Title</label>
-            {editMode ? (
-              <input type="text" name="title" value={formData.title} onChange={handleChange} />
-            ) : (
-              <p>{student.title || "-"}</p>
-            )}
-          </div>
+      <form onSubmit={handleSubmit} className="profile-form">
+        <div>
+          <label>Profile Description</label>
+          {editMode ? (
+            <textarea
+              name="profile_desc"
+              value={formData.profile_desc}
+              placeholder="Profile Description should not exceed 200 characters"
+              onChange={handleChange}
+              rows="4"
+            />
+          ) : (
+            <p>{student.profile_desc || "-"}</p>
+          )}
+        </div>
 
-          <div>
-            <label>Profile Description</label>
+        <div>
+          <label>Profile Picture</label>
+          {editMode && (
+            <input
+              type="file"
+              name="profile_pic"
+              accept="image/*"
+              onChange={handleChange}
+            />
+          )}
+          {preview && (
+            <img src={preview} alt="Preview" className="profile-preview" />
+          )}
+        </div>
+
+        {["first_name", "last_name", "email", "username"].map(field => (
+          <div key={field}>
+            <label>{field.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}</label>
             {editMode ? (
-              <textarea
-                name="profile_desc"
-                value={formData.profile_desc}
+              <input
+                type={field === "email" ? "email" : "text"}
+                name={field}
+                value={formData.user[field]}
                 onChange={handleChange}
-                rows="4"
               />
             ) : (
-              <p>{student.profile_desc || "-"}</p>
+              <p>{student.user[field]}</p>
             )}
           </div>
+        ))}
 
-          <div>
-            <label>Profile Picture</label>
-            {editMode && (
-              <input type="file" name="profile_pic" accept="image/*" onChange={handleChange} />
-            )}
-            {preview && <img src={preview} alt="Preview" className="profile-preview" />}
+        {editMode && (
+          <div className="button-group">
+            <button type="submit" disabled={loading} className="submit-btn">
+              {loading ? "Updating..." : "Save Changes"}
+            </button>
+            <button type="button" className="cancel-btn" onClick={handleCancel}>
+              Cancel
+            </button>
           </div>
-
-          {["first_name", "last_name", "email", "username"].map(field => (
-            <div key={field}>
-              <label>{field.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}</label>
-              {editMode ? (
-                <input
-                  type={field === "email" ? "email" : "text"}
-                  name={field}
-                  value={formData.user[field]}
-                  onChange={handleChange}
-                />
-              ) : (
-                <p>{student.user[field]}</p>
-              )}
-            </div>
-          ))}
-
-          {editMode && (
-            <div className="button-group">
-              <button type="submit" disabled={loading} className="submit-btn">
-                {loading ? "Updating..." : "Save Changes"}
-              </button>
-              <button type="button" className="cancel-btn" onClick={handleCancel}>
-                Cancel
-              </button>
-            </div>
-          )}
-        </form>
-      </div>
-    </>
+        )}
+      </form>
+    </div>
   );
 };
 

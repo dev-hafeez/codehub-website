@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../../axios";
 import ArticleEditor from "./ArticleEditor";
-import Navbar from "../Navbar";
+import Navbar from "../DashboardNavbar/Navbar";
 
 function EditBlogWrapper() {
   const { id } = useParams();

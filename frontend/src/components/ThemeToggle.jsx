@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BsSun, BsMoon } from "react-icons/bs"; 
-import "../styles/Navbar.css"; 
+import "./DashboardNavbar/Navbar.css"; 
 
 const ThemeToggle = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => {

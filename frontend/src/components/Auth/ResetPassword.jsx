@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../../store/authStore'
-import NavbarComponent from '../LandingPage/Navbar/NavbarComponent'
-
+// Import the same CSS file used for the OTP form
+import './ReqOTP.css' 
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('')
@@ -20,31 +20,38 @@ const ResetPassword = () => {
 
   return (
     <>
-    <NavbarComponent/>
-    <div className="login-container d-flex flex-column align-items-center">
-      <div className="login-card text-center">
-        <h2 className="welcome-text text-black">Reset Password</h2>
-        <form className="mt-4" onSubmit={handleSubmit}>
-          <div className="form-group mb-3 text-start">
-            <label htmlFor="password" className="text-black">New Password</label>
-            <input
-              type="password"
-              id="password"
-              className="form-control custom-input"
-              placeholder="Enter new password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-dark login-btn" disabled={loading}>
-            {loading ? 'Resetting...' : 'Reset Password'}
-          </button>
-        </form>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-      </div>
-    </div>
+      <div className="req-otp-container">
+        <div className="req-otp-card">
+          <h2 className="dashboard-title">Reset Password</h2>
 
+          <form className="otp-form" onSubmit={handleSubmit}>
+            <div className="otp-form-group">
+              <label htmlFor="password">New Password</label>
+              <input
+                type="password"
+                id="password"
+                className="otp-input"
+                placeholder="Enter new password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="otp-button-row">
+              <button 
+                type="submit" 
+                className="btn-design" 
+                disabled={loading}
+              >
+                Reset Password
+              </button>
+            </div>
+          </form>
+
+          {error && <p className="error-text">{error}</p>}
+        </div>
+      </div>
     </>
   )
 }

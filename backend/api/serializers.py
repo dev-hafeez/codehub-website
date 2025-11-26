@@ -2,7 +2,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage, Bill,InlineImage
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
@@ -14,7 +14,7 @@ MAX_IMAGE_SIZE = getattr(settings, "MAX_BLOG_IMAGE_SIZE", 5 * 1024 * 1024)  # by
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'username', 'password', 'role']
+        fields = ['id', 'first_name', 'last_name', 'email', 'username', 'password', 'role', 'phone_number']
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -44,7 +44,6 @@ class StudentSerializer(serializers.ModelSerializer):
         student = Student.objects.create(user=user, **validated_data)
         return student
 
-    # TODO: Override this to handle nested field
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', None)
 
@@ -67,14 +66,14 @@ class AdminSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role']
+        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role','phone_number']
 
 
 # NOTE: This serializer is for the students list view
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'username']
+        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'username','phone_number' ]
 
 
 class StudentListSerializer(serializers.ModelSerializer):
@@ -84,6 +83,15 @@ class StudentListSerializer(serializers.ModelSerializer):
         model = Student
         fields = '__all__'
 
+class PublicStudentSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Student
+        fields = ['full_name', 'title', 'profile_pic']
+
+    def get_full_name(self, obj):
+        return f"{obj.user.first_name} {obj.user.last_name}"
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
@@ -135,7 +143,11 @@ class BlogImageSerializer(serializers.ModelSerializer):
         if obj.image and request:
             return request.build_absolute_uri(obj.image.url)
         return None
-
+TEMP_INLINE_PREFIX = "/media/temp_inline/"
+class InlineImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InlineImage
+        fields = ['id', 'image', 'uploaded_at']
 
 class BlogSerializer(serializers.ModelSerializer):
     images = BlogImageSerializer(many=True, read_only=True)
@@ -282,3 +294,10 @@ class EventImageEditSerializer(serializers.ModelSerializer):
         model = EventImage
         fields = '__all__'
         read_only_fields = ['id', 'event']
+
+
+class BillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bill
+        fields = '__all__'
+        read_only_fields = ['id']

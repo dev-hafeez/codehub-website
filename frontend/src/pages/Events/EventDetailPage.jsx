@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios";
 import "./EventDetail.css";
-import Navbar from "../../components/Navbar";
 
 const EventDetailPage = () => {
   const { id } = useParams();
@@ -38,7 +37,7 @@ const EventDetailPage = () => {
 
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
     <div className="container my-5 mx-9">
      
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./MeetingList.css";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/DashboardNavbar/Navbar";
 import { Link } from "react-router-dom";
 import useAttendanceStore from "../../store/useAttendanceStore";
 
@@ -35,7 +35,7 @@ const MeetingList = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="attendance-section">
         <h3 className="dashboard-title text-center">MEETING HISTORY</h3>
 
@@ -62,13 +62,13 @@ const MeetingList = () => {
 
                  
                   <Link
-                    to={`/meetings/${meeting.id}/`}
+                    to={`/dashboard/meetings/${meeting.id}/`}
                     className="btn btn-design me-2"
                   >
                     View
                   </Link>
                   <Link
-                    to={`/meetings/${meeting.id}/edit`}
+                    to={`/dashboard/meetings/${meeting.id}/edit`}
                     className="btn btn-design"
                     state={{ meeting }}
                   >

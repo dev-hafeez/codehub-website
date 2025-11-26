@@ -2,7 +2,8 @@ from django.urls import path
 from .views import SignupView, OTPView, LoginView, PasswordChangeView, LogoutView, BlogUploadView, BlogListAPIView, \
     BlogEditView, BlogDeleteView, MeetingRUDView, MeetingCreateView, MeetingListView, MeetingAttendanceListView, \
     MeetingAttendanceRUDView, StudentsListView, StudentRUView, MeetingPDFView, api_home, \
-    EventRUDView, EventImageRUDView, AdminRUDView, EventListCreateView
+    EventRUDView, EventImageRUDView, AdminRUDView, EventListCreateView, PublicStudentsListView, \
+    BillListCreateView, BillRUDView,InlineImageUploadView
 
 # NOTE: 'RUD' means the endpoint will accept these request types (single instance):
 #  GET , PUT, PATCH, DELETE
@@ -19,6 +20,7 @@ urlpatterns = [
 
     # Students (except creation)
     path('students/', StudentsListView.as_view(), name='students-list'),
+    path("students/public/", PublicStudentsListView.as_view(), name="public-students"),
     path('students/<int:pk>', StudentRUView.as_view(), name='student-RU'),
     
     # Admins
@@ -29,6 +31,7 @@ urlpatterns = [
     path('blogs/upload/', BlogUploadView.as_view(), name='blog-upload'),
     path('blogs/<int:pk>/edit/', BlogEditView.as_view(), name='blog-edit'),
     path('blogs/<int:pk>/delete/', BlogDeleteView.as_view(), name='blog-delete'),
+     path('blogs/upload-inline-image/', InlineImageUploadView.as_view(), name='inline-image-upload'),
 
     # Meetings
     path('meetings/', MeetingListView.as_view(), name='meeting-list'),
@@ -42,5 +45,9 @@ urlpatterns = [
     # Events
     path('events/', EventListCreateView.as_view(), name='event-list-create'),
     path('events/<int:pk>/', EventRUDView.as_view(), name='event-RUD'),
-    path('events/<int:pk>/image/<int:img_pk>', EventImageRUDView.as_view(), name='eventimage-RUD')
+    path('events/<int:pk>/image/<int:img_pk>', EventImageRUDView.as_view(), name='eventimage-RUD'),
+
+    # Bills
+    path('bills/', BillListCreateView.as_view(), name='bill-list-create'),
+    path('bills/<int:pk>/', BillRUDView.as_view(), name='bill-RUD')
 ]

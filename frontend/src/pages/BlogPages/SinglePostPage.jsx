@@ -1,13 +1,12 @@
 import React from 'react'
 import BlogContent from '../../components/Blogs/BlogContent'
-import { sampleBlog } from "../../SampleData.js";
-import Navbar from '../../components/Navbar.jsx';
+import Navbar from '../../components/DashboardNavbar/Navbar.jsx';
 
 const SinglePostPage = () => {
   return (
     <div>
 <Navbar/>
-        <BlogContent blog={sampleBlog}/>
+        <BlogContent />
       
     </div>
   )

@@ -40,9 +40,8 @@
   margin-top: 0;
 }
 
-.form-group label {
-  font-family: 'Rounded Mplus 1c Bold';
-  display: block;
+.form-group1 label {
+    display: block;
   font-size: 14px;
   font-weight: 500;
   color: #222;
@@ -54,7 +53,7 @@
 }
 
 
-.custom-input {             
+.custom-input1 {             
   border-radius: 8px;
   padding: 12px;
   font-size: 16px;
