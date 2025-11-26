@@ -1,80 +1,84 @@
-.otp-container {
+/* Container - Centered Layout */
+.req-otp-container {
   width: 100%;
-  height: auto;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+ 
+  padding: 20px;
 }
 
-.otp-card {
-  position: relative;
-  background: linear-gradient(135deg, #ffffff 2%, #2d66ad 50%, #0C4182 85%);
+/* Form Card */
+.req-otp-card {
   width: 100%;
-  height: 620px;
-  margin: -150px auto 0;
-  border-bottom-left-radius: 50% 100%;
-  border-bottom-right-radius: 50% 100%;
-  text-align: center;
-  color: #fff;
-  padding: 170px 40px 60px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  z-index: 1;
+  max-width: 450px; /* Narrower than Reg form for single input */
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
-@media (max-width: 768px) {
-  .otp-card {
-    border-radius: 0%;
-  }
+
+
+/* Form Group */
+.otp-form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
 }
 
-.otp-title {
-  font-size: 28px;
-  font-weight: bold;
-  letter-spacing: 10px;
-  margin-bottom: 70px;
-  margin-top: 0;
-}
-
-.otp-input-group label {
-
-  display: block;
+/* Labels */
+.otp-form-group label {
+  color: #333;
+  font-weight: 600;
   font-size: 14px;
-  font-weight: 500;
-  color: #222;
-  margin-bottom: 6px;
-  width: 300px;
-  max-width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+/* Inputs */
 .otp-input {
   border-radius: 8px;
-  padding: 12px;
+  padding: 12px 15px;
   font-size: 16px;
-  width: 300px;
-  height: 40px;
-  max-width: 90%;
-  margin: 0 auto;
-  display: block;
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  outline: none;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Ensures padding doesn't overflow width */
+}
+
+.otp-input:focus {
+  border-color: #0C4182;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(12, 65, 130, 0.1);
+}
+
+/* Button Wrapper */
+.otp-button-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 
-.otp-btn {
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A font similar to the one in the image */
-  font-size: 18px;
-  font-weight: 600; /* Semi-bold */
-  color: #1a1a1a; /* Dark gray for the text */
-  padding: 7px 20px;
-  background-color: #ffffff; /* White background */
-  border-radius: 50px; /* Highly rounded corners */
-  border: 2px solid transparent;
-  background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(to right, #4182E6, #1A54A6);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-
+/* Error Text */
+.error-text {
+  color: #d9534f;
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 500;
 }
-.otp-btn:hover{
-      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15); /* Soft, subtle shadow */
-      color:black;
+
+/* Responsive */
+@media screen and (max-width: 500px) {
+  .req-otp-card {
+    padding: 30px 20px;
+    max-width: 100%;
+  }
 }

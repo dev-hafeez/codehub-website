@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import axiosInstance from "../../axios";
 import "./MemberProfile.css";
-import Navbar from "../Navbar";
+import Navbar from "../DashboardNavbar/Navbar";
 
 
 const MemberProfile = () => {

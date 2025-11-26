@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ArticleEditor from '../../components/Blogs/ArticleEditor.jsx';
 import "./articlePage.css";
-import Navbar from '../../components/Navbar.jsx';
+import Navbar from '../../components/DashboardNavbar/Navbar.jsx';
 
 
 const ArticlePage = () => {

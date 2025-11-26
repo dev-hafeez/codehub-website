@@ -5,7 +5,6 @@
 }
 
 .team-section {
-
   padding: 60px 20px;
   background: #f7f9fc;
   overflow: hidden;
@@ -24,8 +23,8 @@
   font-size: 2.5rem;
   font-weight: 800;
   color: #0c4182;
-  margin-bottom: 40px;
-  animation: glow 1.5s ease-in-out infinite;
+  margin-bottom: 20px;
+ 
 }
 
 .carousel-wrapper {
@@ -40,7 +39,7 @@
 
 .team-track {
   display: flex;
-  gap: 40px;
+ 
   position: absolute;
   left: 0;
   top: 50%;
@@ -239,8 +238,8 @@
 }
 /* Container */
 .team-members-preview-container {
-  margin-top: 40px;
-  padding: 20px;
+  margin-top: 0px;
+  padding: 0px;
 }
 
 /* Section title */
@@ -252,13 +251,14 @@
   color: #0e2a58;
 }
 
-/* Grid layout */
 .team-members-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, max-content));
   gap: 25px;
+  justify-content: center;   /* centers the whole row */
   justify-items: center;
 }
+
 
 /* Individual member card */
 .preview-member {

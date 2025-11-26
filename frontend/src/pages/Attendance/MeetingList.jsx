@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./MeetingList.css";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/DashboardNavbar/Navbar";
 import { Link } from "react-router-dom";
 import useAttendanceStore from "../../store/useAttendanceStore";
 

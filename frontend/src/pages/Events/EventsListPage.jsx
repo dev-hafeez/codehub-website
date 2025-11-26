@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../../axios";
 import "./EventsList.css";
 import { Link } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+
 
 const EventListPage = () => {
   const [events, setEvents] = useState([]);

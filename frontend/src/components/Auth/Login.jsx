@@ -37,24 +37,24 @@ const Login = () => {
       <div className="login-card text-center">
         <h2 className="welcome-text text-black">WELCOME BACK</h2>
         <form className="mt-4" onSubmit={handleSubmit}>
-          <div className="form-group mb-3 text-start">
-            <label htmlFor="username" className="text-black">Username</label>
+          <div className="form-group1 mb-3 text-start">
+            <label htmlFor="username" className="text-black ">Username</label>
             <input
               type="text"
               id="username"
-              className="form-control custom-input"
+              className="form-control1 custom-input1"
               placeholder="Enter your username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
-          <div className="form-group mb-4 text-start">
-            <label htmlFor="password" className="text-black">Password</label>
+          <div className="form-group1 mb-4 text-start">
+            <label htmlFor="password" className="text-black label1">Password</label>
             <input
               type="password"
               id="password"
-              className="form-control custom-input"
+              className="form-control1 custom-input1"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

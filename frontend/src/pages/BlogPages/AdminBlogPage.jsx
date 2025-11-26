@@ -2,7 +2,7 @@ import React from 'react'
 import BlogBanner from '../../components/Blogs/BlogBanner'
 import BlogGrid from '../../components/Blogs/BlogGrid'
 
-import Navbar from '../../components/Navbar'
+import Navbar from '../../components/DashboardNavbar/Navbar'
 import useAuthStore from '../../store/authStore' 
 
 const AdminBlogPage = () => {

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../../store/authStore'
 import './ReqOTP.css'
+
 const ReqOTP = () => {
   const [email, setEmail] = useState('')
   const { requestOtp, loading, error } = useAuthStore()
@@ -16,34 +17,34 @@ const ReqOTP = () => {
   }
 
   return (
-    <>
-      <div className="otp-container d-flex flex-column align-items-center">
-        <div className="otp-card text-center">
-          <h2 className=" text-black dashboard-title">Reset Password</h2>
+    <div className="req-otp-container">
+      <div className="req-otp-card">
+        <h2 className="dashboard-title">Reset Password</h2>
 
-          <form className="mt-4" onSubmit={handleSubmit}>
-            <div className="otp-input-group mb-3 text-start">
-              <label htmlFor="email" className="otp-label text-black">Email</label>
-              <input
-                type="email"
-                id="email"
-                className="otp-input form-control"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
+        <form className="otp-form" onSubmit={handleSubmit}>
+          <div className="otp-form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              className="otp-input"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-            <button type="submit" className="otp-btn btn btn-dark" disabled={loading}>
-              {loading ? 'Sending OTP...' : 'Send OTP'}
+          <div className="otp-button-row">
+            <button type="submit" className="btn-design" disabled={loading}>
+              SendOtp
             </button>
-          </form>
+          </div>
+        </form>
 
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-        </div>
+        {error && <p className="error-text">{error}</p>}
       </div>
-    </>
+    </div>
   )
 }
 

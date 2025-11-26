@@ -6,7 +6,7 @@ import "./styles/layout.css";
 
 // Pages
 import LandingPage from "./pages/Landing/LandingPage.jsx";
-import DashboardPage from "./pages/DashboardPage.jsx";
+import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
 
 // Blog
 import AdminBlogPage from "./pages/BlogPages/AdminBlogPage.jsx";
@@ -39,7 +39,7 @@ import TrackMembersPage from "./pages/Members/TrackMembersPage.jsx";
 import TeamPage from "./pages/TeamPage.jsx";
 import MissionPage from "./pages/MissionPage.jsx";
 import TeamSection from "./components/teams/TeamSection.jsx";
-import ContactPage from "./pages/ContactPage.jsx";
+import ContactPage from "./pages/Contact/ContactPage.jsx";
 
 // Profile
 import ViewProfilePage from "./pages/Profile/ViewProfilePage.jsx";
@@ -96,6 +96,8 @@ const DashboardHome = () => (
         <Route path="/contact" element={<><ContactPage /><Footer /></>} />
         <Route path="/mission" element={<><MissionPage /><Footer /></>} />
         <Route path="/member/:id" element={<MemberProfile/>} />
+        <Route path="/blogs" element={<BlogListingPage/>} />
+  
   
 
     

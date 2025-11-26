@@ -4,8 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./BlogCard.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
-import defaultImage from "../../assets/author-1.jpg";
-import defaultBlogImage from "../../assets/blog1.jpg";
+
 import axios from "axios";
 
 const BlogCard = ({
@@ -63,7 +62,7 @@ const BlogCard = ({
         <div className="blogCard-container border container">
           <div className="blog-img-container py-3">
             <img
-              src={image || defaultBlogImage}
+              src={image }
               alt="Blog"
               className="blog-image img-fluid"
             />
@@ -82,7 +81,7 @@ const BlogCard = ({
           <div className="d-flex pt-3 flex-row align-items-center justify-content-start bottom w-100">
             <span className="d-flex blog-author-pfp">
               <img
-                src={authorImg || defaultImage}
+                src={authorImg }
                 alt="Author"
                 className="author-image img-fluid"
               />

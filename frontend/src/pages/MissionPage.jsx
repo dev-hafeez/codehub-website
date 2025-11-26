@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
+import Navbar from '../components/DashboardNavbar/Navbar'
 import MissionSection from '../components/LandingPage/Mission/MissionSection'
 
 

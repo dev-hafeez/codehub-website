@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios";
 import "./EventDetail.css";
-import Navbar from "../../components/Navbar";
 
 const EventDetailPage = () => {
   const { id } = useParams();

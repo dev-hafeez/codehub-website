@@ -191,10 +191,13 @@ const Sidebar = () => {
       return (
         <>
           <Link to="/dashboard/article" className="btn btn-primary m-2">
-            Post Article
+            Post Blog
           </Link>
           <Link to="/dashboard/myblog" className="btn btn-primary m-2">
             My BlogPosts
+          </Link>
+           <Link to="/dashboard/blogs" className="btn btn-primary m-2">
+              All Blogs
           </Link>
           <Link to="/dashboard/events" className="btn btn-primary m-2">
             Upcoming Events

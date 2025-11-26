@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/DashboardNavbar/Navbar";
 import axiosInstance from "../../axios";
 import { FaEye, FaEdit } from "react-icons/fa";
 import "./TrackMemberPage.css";

@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../../components/Navbar.jsx";
+import Navbar from "../../components/DashboardNavbar/Navbar.jsx";
 
 import BlogGrid from "../../components/Blogs/BlogGrid.jsx";
 import useAuthStore from "../../store/authStore.js";

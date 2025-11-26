@@ -1,6 +1,6 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer/Footer'
+
+import Navbar from '../components/DashboardNavbar/Navbar'
+
 import Achievements from '../components/LandingPage/Achievements/Achievements'
 
 const AchievementPage = () => {

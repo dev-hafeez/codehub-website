@@ -8,7 +8,7 @@ import eventsImage from "../../assets/events.jpg";
 import graphicsImage from "../../assets/graphics.jpg";
 import decorImage from "../../assets/decor.jpg";
 
-import Navbar from "../Navbar.jsx";
+import Navbar from "../DashboardNavbar/Navbar.jsx";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios";
 
@@ -124,7 +124,7 @@ const TeamSection = () => {
     const scaledCardWidth = cardWidth * scale;
     const viewportCenter = windowWidth / 2;
     const cardCenter = scaledCardWidth / 2;
-    const totalCardWidth = cardWidth + gap;
+    const totalCardWidth = cardWidth;
     const offsetForActiveCard = activeIndex * totalCardWidth;
 
     return {
@@ -171,7 +171,7 @@ const TeamSection = () => {
 
           {/* 🔥 NEW: SHOW ALL MEMBERS WITH NON-NULL TITLES */}
            <div className="team-members-preview-container">
-      <h2 className="team-members-heading">Club Leads & Coordinators</h2>
+      <h2 className="team-members-heading">Executive</h2>
 
       <div className="team-members-grid">
         {members.map((m) => (
