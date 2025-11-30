@@ -117,10 +117,36 @@ function App() {
         <Route path="/events/:id" element={<><EventDetailPage /><Footer /></>} />
         <Route path="/team/:title" element={<><TeamPage /><Footer /></>} />
 
+          {/* Blogs */}
+          <Route path="blogs" element={<BlogListingPage />} />
+          <Route path="admin-blogs" element={<AdminBlogPage />} />
+          <Route path="myblog" element={<MyBlogPage />} />
+          <Route path="article" element={<ArticlePage />} />
+
+          {/* Profile - (You didn't have links, but you might want to add them) */}
+          <Route path="edit-profile" element={<ProfilePage />} />
+          <Route path="view-profile" element={<ViewProfilePage />} />
+
+          {/* Events */}
+          <Route path="events" element={<EventsListPage />} />
+          <Route path="events/create" element={<EventCreatePage />} />
+
+        </Route> {/* <-- 1. This is the closing tag for the parent route */}
+
+
+        
+           <Route path="/teams" element={<><TeamSection /><Footer /></>} />
+
+        <Route path="/blog/:id" element={<><SinglePostPage /><Footer /></>} />
+        <Route path="/blogs/:id/edit" element={<><EditBlogWrapper /><Footer /></>} />
+        <Route path="/events/:id" element={<><EventDetailPage /><Footer /></>} />
+        <Route path="/team/:title" element={<><TeamPage /><Footer /></>} />
+        
         <Route path="/achievement" element={<><AchievementPage /><Footer /></>} />
       </Routes>
     </Router>
   );
+
 }
 
 export default App;

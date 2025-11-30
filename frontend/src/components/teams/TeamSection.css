@@ -301,3 +301,72 @@
   color: #4d4d4d;
   margin-top: 4px;
 }
+
+/* Member image */
+.preview-member img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #e3e3e3;
+  margin-bottom: 12px;
+}
+
+/* Member name */
+.preview-member .name {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 4px 0;
+  color: #0e2a58;
+}
+
+/* Member role/title */
+.preview-member .role {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4d4d4d;
+  margin-top: 4px;
+}
+
+/* Small mobile styles */
+@media (max-width: 480px) {
+  .team-section {
+    padding: 20px 5px;
+    min-height: 500px;
+  }
+
+  .team-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .carousel-wrapper {
+    height: 420px;
+  }
+
+  .team-track {
+    gap: 15px;
+  }
+
+  .card-wrapper {
+    width: 240px;
+  }
+
+  .card-wrapper.active {
+    transform: scale(1.02);
+  }
+
+  .nav-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1.3rem;
+  }
+
+  .prev-btn {
+    left: 5px;
+  }
+
+  .next-btn {
+    right: 5px;
+  }
+}

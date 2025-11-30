@@ -101,6 +101,7 @@ function Regform() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic Regex for Reg No
     const regPattern = /^(FA|SP)\d{2}-[A-Z]{3}-\d{3}$/;
     if (!regPattern.test(formData.roll_no)) {
       alert("Invalid Reg No format. Please use FA22-BCS-001.");

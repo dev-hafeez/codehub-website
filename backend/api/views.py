@@ -22,6 +22,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, schema
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -188,6 +189,11 @@ class LoginView(APIView):
         if serializer.is_valid(raise_exception=False):
             user = serializer.validated_data['user']
             token, _ = Token.objects.get_or_create(user=user)
+
+            # Safely get student_id (None if user has no student)
+            student = getattr(user, "student", None)
+            student_id = student.id if student else None
+
             return Response({
                 "status": "success",
                 "message": "Login successful",
@@ -198,6 +204,7 @@ class LoginView(APIView):
                     "student_id": user.student.id
                 }
             }, status=status.HTTP_200_OK)
+
         return Response({
             'status': 'error',
             'message': serializer.errors,
@@ -637,6 +644,19 @@ class BlogListAPIView(generics.ListAPIView):
         )
     ],
 )
+
+class InlineImageUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = InlineImageSerializer(data=request.data)
+        if serializer.is_valid():
+            image = serializer.save()
+            image_url = request.build_absolute_uri(image.image.url)
+            return Response({"url": image_url}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class BlogEditView(APIView):
     permission_classes = [IsAuthenticated,IsAdmin]
     parser_classes = [MultiPartParser, FormParser]
