@@ -1,13 +1,12 @@
-
 import { create } from "zustand";
-import axiosInstance from "../axios"; //  use axios.js
+import axiosInstance from "../axios";
 
 const useAuthStore = create((set, get) => ({
 
-  user_id: localStorage.getItem("user_id")||null,
-
+  user_id: localStorage.getItem("user_id") || null,
   token: localStorage.getItem("token") || null,
   role: localStorage.getItem("role") || null,
+  club: localStorage.getItem("club") || null,
   resetToken: null,
   loading: false,
   error: null,
@@ -27,11 +26,33 @@ const useAuthStore = create((set, get) => ({
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
-
       localStorage.setItem("user_id", user_id);
- localStorage.setItem("student_id", student_id);
+      localStorage.setItem("student_id", student_id);
 
       set({ user_id, token, role, loading: false });
+
+      // Fetch student details to get club only for LEAD role
+      if (role === "LEAD") {
+        try {
+          const studentRes = await axiosInstance.get(`/students/${student_id}`, {
+            headers: {
+              Authorization: `Token ${token}`
+            }
+          });
+          const club = studentRes.data?.club;
+          
+          console.log("Student data:", studentRes.data);
+          console.log("Club fetched:", club);
+          
+          if (club) {
+            localStorage.setItem("club", club);
+            set({ club });
+          }
+        } catch (err) {
+          console.log("Could not fetch student club:", err.response?.data || err.message);
+        }
+      }
+
       return true;
     } catch (err) {
       const apiError = err.response?.data;
@@ -87,6 +108,7 @@ const useAuthStore = create((set, get) => ({
 
       localStorage.removeItem("token");
       localStorage.removeItem("role");
+      localStorage.removeItem("club");
 
       set({
         loading: false,
@@ -94,6 +116,7 @@ const useAuthStore = create((set, get) => ({
         token: null,
         user_id: null,
         role: null,
+        club: null,
       });
 
       return { success: true, data: res.data };
@@ -143,14 +166,36 @@ signup: async (signupData) => {
   }
 },
 
+      set({ loading: false });
+      return {
+        success: true,
+        data: { token: newUserToken, role: newUserRole, user_id: newUserId },
+      };
+    } catch (err) {
+      console.log("Signup error response:", err.response?.data);
+
+      const errorData = err.response?.data;
+
+      set({
+        error: "Signup failed",
+        loading: false,
+      });
+
+      return {
+        success: false,
+        message: errorData || "Signup failed",
+        error: "Signup failed",
+        data: errorData || null,
+      };
+    }
+  },
 
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    set({ role: null, token: null, user_id: null });
+    localStorage.removeItem("club");
+    set({ role: null, token: null, user_id: null, club: null });
   },
 }));
 
-
 export default useAuthStore;
-

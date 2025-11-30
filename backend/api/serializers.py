@@ -66,14 +66,14 @@ class AdminSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role','phone_number']
+        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'role', 'phone_number']
 
 
 # NOTE: This serializer is for the students list view
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'username','phone_number' ]
+        fields = ['id', 'first_name', 'last_name', 'email', 'role', 'username', 'phone_number']
 
 
 class StudentListSerializer(serializers.ModelSerializer):
@@ -88,7 +88,7 @@ class PublicStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ['full_name', 'title', 'profile_pic']
+        fields = ['full_name', 'title', 'profile_pic','user_id','club']
 
     def get_full_name(self, obj):
         return f"{obj.user.first_name} {obj.user.last_name}"
@@ -143,11 +143,14 @@ class BlogImageSerializer(serializers.ModelSerializer):
         if obj.image and request:
             return request.build_absolute_uri(obj.image.url)
         return None
+    
 TEMP_INLINE_PREFIX = "/media/temp_inline/"
 class InlineImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = InlineImage
         fields = ['id', 'image', 'uploaded_at']
+
+
 
 class BlogSerializer(serializers.ModelSerializer):
     images = BlogImageSerializer(many=True, read_only=True)

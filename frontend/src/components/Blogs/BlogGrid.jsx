@@ -18,18 +18,27 @@ const BlogGrid = ({ userId = null, userRole, filterByUser = false, blogListing =
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const res = await axiosInstance.get("/blogs/"); 
-        const blogsData = res.data;
+        
+        // Fetch blogs (public endpoint)
+        const blogsRes = await axiosInstance.get("/blogs/"); 
+        const blogsData = blogsRes.data;
 
-     
-        const studentsRes = await axiosInstance.get("/students/"); 
-        const students = Array.isArray(studentsRes.data)
-          ? studentsRes.data
-          : [studentsRes.data];
+        // Fetch public students (no auth required)
+        let students = [];
+        try {
+          const studentsRes = await axiosInstance.get("/students/public/"); 
+          students = Array.isArray(studentsRes.data)
+            ? studentsRes.data
+            : [studentsRes.data];
+        } catch (err) {
+          console.warn("Could not fetch public students:", err);
+          // Continue without student data
+        }
 
         const mappedBlogs = blogsData.map((blog) => {
+          // Match student by user_id
           const authorProfile = students.find(
-            (s) => s.user?.id === blog.created_by.id
+            (s) => s.user_id === blog.created_by.id
           );
 
           return {
@@ -44,17 +53,18 @@ const BlogGrid = ({ userId = null, userRole, filterByUser = false, blogListing =
             }),
             tag: "General",
             image: blog.images?.length > 0 ? blog.images[0].image_url : null,
-            authorImg: authorProfile?.profile_pic || null, // assign profile pic
+            authorImg: authorProfile?.profile_pic || null,
+            authorName: authorProfile?.full_name || blog.createdBy || "Unknown",
           };
         });
 
-        const filteredBlogs = filterByUser
+        const filteredBlogs = filterByUser && user_id
           ? mappedBlogs.filter((b) => String(b.authorId) === String(user_id))
           : mappedBlogs;
 
         setBlogs(filteredBlogs);
       } catch (err) {
-        console.error("Error fetching blogs or authors:", err);
+        console.error("Error fetching blogs:", err);
         setError("Failed to load blogs");
       } finally {
         setLoading(false);

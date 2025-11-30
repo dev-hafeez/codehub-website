@@ -11,42 +11,47 @@ const TeamPage = () => {
   const { image, role, description } = location.state || {};
 
   const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const clubMap = {
-  "Code Hub": "codehub",
-  "Graphics and Media": "graphics_and_media",
-  "Social Media and Marketing": "social_media_and_marketing",
-  "Decor and Registration": "registration_and_decor",
-  "Events and Logistics": "events_and_logistics"
-};
-
-useEffect(() => {
-  const fetchMembers = async () => {
-    try {
-      const res = await axiosInstance.get("/students/");
-      const data = res.data;
-
-      const decodedTitle = decodeURIComponent(title);
-      const backendClub = clubMap[decodedTitle];
-
-      const filtered = data.filter(student => student.club === backendClub);
-
-      const formatted = filtered.map(student => ({
-        id: student.id,
-        name: `${student.user.first_name} ${student.user.last_name}`,
-        designation: student.profile_desc,
-        image: student.profile_pic
-      }));
-
-      setMembers(formatted);
-    } catch (err) {
-      console.error("Error fetching members:", err);
-    }
+    "Code Hub": "codehub",
+    "Graphics and Media": "graphics_and_media",
+    "Social Media and Marketing": "social_media_and_marketing",
+    "Decor and Registration": "registration_and_decor",
+    "Events and Logistics": "events_and_logistics"
   };
 
-  fetchMembers();
-}, [title]);
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        setLoading(true);
+        // Fetch from PUBLIC endpoint
+        const res = await axiosInstance.get("/students/public/");
+        const data = res.data;
 
+        const decodedTitle = decodeURIComponent(title);
+        const backendClub = clubMap[decodedTitle];
 
+        // Filter by club
+        const filtered = data.filter(student => student.club === backendClub);
+
+        const formatted = filtered.map(student => ({
+          id: student.id,
+          name: student.full_name,
+          designation: student.profile_desc,
+          image: student.profile_pic
+        }));
+
+        setMembers(formatted);
+      } catch (err) {
+        console.error("Error fetching members:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, [title]);
 
   return (
     <div>
@@ -73,16 +78,23 @@ useEffect(() => {
       <div className="members-section">
         <div className="members-container">
           <h2 className="members-title">Team Members</h2>
-          <div className="members-grid">
-            {members.map((member) => (
-              <MemberCard
-                key={member.id}
-                image={member.image}
-                name={member.name}
-                designation={member.designation}
-              />
-            ))}
-          </div>
+          
+          {loading ? (
+            <p>Loading members...</p>
+          ) : members.length === 0 ? (
+            <p>No members found for this team.</p>
+          ) : (
+            <div className="members-grid">
+              {members.map((member) => (
+                <MemberCard
+                  key={member.id}
+                  image={member.image}
+                  name={member.name}
+                  designation={member.designation}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

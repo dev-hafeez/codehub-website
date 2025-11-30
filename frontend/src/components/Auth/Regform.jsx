@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
 import "./Regform.css";
@@ -19,10 +19,20 @@ function Regform() {
     title: ""
   });
 
-  const { signup, loading } = useAuthStore();
-  // eslint-disable-next-line
+  const [titleInputMode, setTitleInputMode] = useState(false); // Track if user is typing custom title
+  const { signup, loading, club: userClub } = useAuthStore();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+
+  // Set the user's club by default when component mounts
+  useEffect(() => {
+    if (userClub) {
+      setFormData((prev) => ({
+        ...prev,
+        club: userClub
+      }));
+    }
+  }, [userClub]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -38,7 +48,9 @@ function Regform() {
         }
       }));
     } else if (id === "reg") {
-      setFormData((prev) => ({ ...prev, roll_no: value }));
+      // Convert to uppercase and only allow valid characters
+      const upperValue = value.toUpperCase();
+      setFormData((prev) => ({ ...prev, roll_no: upperValue }));
     } else if (id === "phone") {
       setFormData((prev) => ({
         ...prev,
@@ -66,7 +78,19 @@ function Regform() {
         ...prev,
         user: { ...prev.user, role: value }
       }));
-    } else if (id === "title") {
+    } else if (id === "title-select") {
+      if (value === "NULL") {
+        setFormData((prev) => ({ ...prev, title: "" }));
+        setTitleInputMode(false);
+      } else if (value === "custom") {
+        setTitleInputMode(true);
+        setFormData((prev) => ({ ...prev, title: "" }));
+      } else {
+        // For predefined titles like PRESIDENT, TREASURER, etc.
+        setFormData((prev) => ({ ...prev, title: value }));
+        setTitleInputMode(false);
+      }
+    } else if (id === "title-input") {
       setFormData((prev) => ({
         ...prev,
         title: value.toUpperCase()
@@ -84,21 +108,22 @@ function Regform() {
       return;
     }
 
-    const validClubs = [
-      "codehub",
-      "graphics_and_media",
-      "social_media_and_marketing",
-      "registration_and_decor",
-      "events_and_logistics"
-    ];
-
-    if (!validClubs.includes(formData.club)) {
-      alert("Invalid Club. Please select a valid club.");
+    if (!formData.club) {
+      alert("Club selection is required.");
       return;
     }
 
-    const result = await signup(formData);
-    console.log("SIGNUP RESPONSE =>", result);
+    // Prepare data to send - convert empty title to "NULL"
+    const dataToSend = {
+      ...formData,
+      title: formData.title === "" ? "NULL" : formData.title
+    };
+
+    const result = await signup(dataToSend);
+    console.log("=== SIGNUP RESULT ===");
+    console.log("result:", result);
+    console.log("result.message:", result.message);
+    console.log("=== END RESULT ===");
 
     if (result.success) {
       alert("User registered successfully!");
@@ -108,49 +133,62 @@ function Regform() {
           last_name: "",
           email: "",
           username: "",
-          password: "",
+          password: "12345",
           role: "STUDENT",
           phone_number: ""
         },
         roll_no: "",
-        club: "",
+        club: userClub || "",
         title: ""
       });
+      setTitleInputMode(false);
       return;
     }
 
     let allErrors = [];
+
     if (result.message) {
+      console.log("Extracting from result.message:", result.message);
+
       if (typeof result.message === "string") {
         allErrors.push(result.message);
       } else if (typeof result.message === "object") {
-        Object.entries(result.message).forEach(([field, value]) => {
-          if (Array.isArray(value)) {
-            allErrors.push(`${field}: ${value.join(", ")}`);
-          } else if (typeof value === "object") {
-            Object.entries(value).forEach(([subField, subValue]) => {
-              allErrors.push(
-                `${field}.${subField}: ${Array.isArray(subValue) ? subValue.join(", ") : subValue}`
-              );
-            });
-          } else {
-            allErrors.push(`${field}: ${value}`);
-          }
-        });
+        const extractErrors = (obj, prefix = "") => {
+          Object.entries(obj).forEach(([field, value]) => {
+            const fieldPath = prefix ? `${prefix}.${field}` : field;
+
+            if (Array.isArray(value)) {
+              value.forEach(err => {
+                allErrors.push(`${fieldPath}: ${err}`);
+              });
+            } else if (typeof value === "object" && value !== null) {
+              extractErrors(value, fieldPath);
+            } else if (value) {
+              allErrors.push(`${fieldPath}: ${value}`);
+            }
+          });
+        };
+        extractErrors(result.message);
       }
     }
 
     if (allErrors.length === 0) {
-      allErrors.push("Registration failed. Try again.");
+      if (result.error) {
+        allErrors.push(result.error);
+      } else if (result.data) {
+        allErrors.push(JSON.stringify(result.data));
+      } else {
+        allErrors.push("Registration failed. Please try again.");
+      }
     }
 
+    console.log("Final allErrors:", allErrors);
     alert(allErrors.join("\n"));
   };
 
   return (
     <>
       <div className="regform-container">
-        {/* Form Only */}
         <div className="form-oval">
           <h2 className="dashboard-title">Registration</h2>
           <form className="form" onSubmit={handleSubmit}>
@@ -240,14 +278,10 @@ function Regform() {
                   className="form-control2"
                   value={formData.club}
                   onChange={handleChange}
+                  disabled
                   required
                 >
-                  <option value="">-- Select a Club --</option>
-                  <option value="codehub">CodeHub</option>
-                  <option value="graphics_and_media">Graphics & Media</option>
-                  <option value="social_media_and_marketing">Social Media & Marketing</option>
-                  <option value="registration_and_decor">Registration & Decor</option>
-                  <option value="events_and_logistics">Events & Logistics</option>
+                  <option value={userClub}>{userClub || "-- No Club Assigned --"}</option>
                 </select>
               </div>
             </div>
@@ -283,18 +317,39 @@ function Regform() {
               </div>
             </div>
 
-            {/* Title */}
+            {/* Title - Dropdown with custom input option */}
             <div className="form-row">
               <div className="form-group2 w-100">
-                <label htmlFor="title">Title </label>
-                <input
-                  type="text"
+                <label htmlFor="title-select">Title </label>
+                <select
+                  id="title-select"
                   className="form-control2"
-                  id="title"
-                  placeholder="e.g., Treasurer, President"
-                  value={formData.title}
+                  value={
+                    titleInputMode ? "custom" : 
+                    (formData.title === "" ? "NULL" : formData.title)
+                  }
                   onChange={handleChange}
-                />
+                >
+                  <option value="NULL">-- NULL (STUDENT AND LEADS) --</option>
+                  <option value="PRESIDENT">PRESIDENT</option>
+                  <option value="VICE PRESIDENT">VICE PRESIDENT</option>
+                  <option value="TREASURER">TREASURER</option>
+                  <option value="SECRETARY">SECRETARY</option>
+                  
+                  <option value="custom">-- ENTER CUSTOM TITLE --</option>
+                </select>
+
+                {titleInputMode && (
+                  <input
+                    type="text"
+                    id="title-input"
+                    className="form-control2"
+                    placeholder="Enter your custom title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    style={{ marginTop: "10px" }}
+                  />
+                )}
               </div>
             </div>
 

@@ -95,6 +95,8 @@ def temp_inline_upload_path(instance, filename):
 class InlineImage(models.Model):
     image = models.ImageField(upload_to=temp_inline_upload_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    
 def current_time():
     return datetime.now().time()
 

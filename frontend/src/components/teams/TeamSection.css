@@ -110,89 +110,6 @@
   right: 40px;
 }
 
-.carousel-wrapper {
-  position: relative;
-  width: 100%;
-  height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.team-track {
-  display: flex;
-  gap: 40px;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
-  padding-left: 0;
-}
-
-.card-wrapper {
-  width: 300px;
-  flex-shrink: 0;
-  transition: all 0.5s ease;
-  position: relative;
-  z-index: 1;
-}
-
-.card-wrapper.inactive {
-  opacity: 0.5;
-  transform: scale(0.85);
-  filter: blur(2px);
-  pointer-events: none;
-}
-
-.card-wrapper.active {
-  opacity: 1;
-  transform: scale(1.1);
-  filter: blur(0);
-  z-index: 10;
-  cursor: pointer;
-}
-
-.nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #0c4182;
-  color: white;
-  border: none;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 20;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: background 0.3s, transform 0.2s;
-  line-height: 0;
-  padding-bottom: 6px;
-}
-
-.nav-btn:hover {
-  background-color: #082d5c;
-  transform: translateY(-50%) scale(1.1);
-}
-
-.nav-btn:active {
-  transform: translateY(-50%) scale(0.95);
-}
-
-.prev-btn {
-  left: 40px;
-}
-
-.next-btn {
-  right: 40px;
-}
-
 @keyframes glow {
   0%, 100% {
     text-shadow: -4px 0 4px #0c4182dc;
@@ -357,6 +274,32 @@
 
 .preview-member:hover {
   transform: translateY(-4px);
+}
+
+/* Member image */
+.preview-member img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #e3e3e3;
+  margin-bottom: 12px;
+}
+
+/* Member name */
+.preview-member .name {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 4px 0;
+  color: #0e2a58;
+}
+
+/* Member role/title */
+.preview-member .role {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4d4d4d;
+  margin-top: 4px;
 }
 
 /* Member image */
