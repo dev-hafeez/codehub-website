@@ -50,23 +50,27 @@ const TeamSection = () => {
   const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
 
   const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // ✅ Fetch all members (NOT filtered by club)
+  // ✅ Fetch all members from PUBLIC endpoint
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const res = await axiosInstance.get("/students/");
+        setLoading(true);
+        const res = await axiosInstance.get("/students/public/");
         const data = res.data;
 
+        // Filter members with non-null, non-empty titles
         const filtered = data.filter(
-  m => m.title && m.title.trim() !== "" && m.title.toUpperCase() !== "NULL"
-);
-
+          m => m.title && m.title.trim() !== "" && m.title.toUpperCase() !== "NULL"
+        );
 
         setMembers(filtered);
       } catch (error) {
         console.error("Error fetching members:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -169,30 +173,33 @@ const TeamSection = () => {
             </button>
           </div>
 
-          {/* 🔥 NEW: SHOW ALL MEMBERS WITH NON-NULL TITLES */}
-           <div className="team-members-preview-container">
-      <h2 className="team-members-heading">Executive</h2>
+          {/* SHOW ALL MEMBERS WITH NON-NULL TITLES */}
+          <div className="team-members-preview-container">
+            <h2 className="team-members-heading">Executive</h2>
 
-      <div className="team-members-grid">
-        {members.map((m) => (
-          <div
-            className="preview-member"
-            key={m.id}
-            onClick={() =>
-              navigate(`/member/${m.id}`, { state: m }) // Send data to page
-            }
-            style={{ cursor: "pointer" }}   // optional, shows it's clickable
-          >
-            <img src={m.profile_pic} alt={m.user.first_name} />
-            <p className="name">
-              {m.user.first_name} {m.user.last_name}
-            </p>
-            <p className="role">{m.title}</p>
+            {loading ? (
+              <p>Loading members...</p>
+            ) : members.length === 0 ? (
+              <p>No executive members found.</p>
+            ) : (
+              <div className="team-members-grid">
+                {members.map((m) => (
+                  <div
+                    className="preview-member"
+                    key={m.id}
+                    onClick={() =>
+                      navigate(`/member/${m.id}`, { state: m })
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    <img src={m.profile_pic} alt={m.full_name} />
+                    <p className="name">{m.full_name}</p>
+                    <p className="role">{m.title}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        ))}
-      </div>
-    </div>
-
         </div>
       </div>
     </>

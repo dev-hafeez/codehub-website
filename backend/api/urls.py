@@ -31,7 +31,7 @@ urlpatterns = [
     path('blogs/upload/', BlogUploadView.as_view(), name='blog-upload'),
     path('blogs/<int:pk>/edit/', BlogEditView.as_view(), name='blog-edit'),
     path('blogs/<int:pk>/delete/', BlogDeleteView.as_view(), name='blog-delete'),
-     path('blogs/upload-inline-image/', InlineImageUploadView.as_view(), name='inline-image-upload'),
+    path('blogs/upload-inline-image/', InlineImageUploadView.as_view(), name='inline-image-upload'),
 
     # Meetings
     path('meetings/', MeetingListView.as_view(), name='meeting-list'),
