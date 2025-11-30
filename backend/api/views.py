@@ -2,10 +2,18 @@ from datetime import datetime
 from io import BytesIO
 
 from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin, is_staff, IsTreasurer, SignUpPermission
+from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
+    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer, PublicStudentSerializer, \
+    BillSerializer, BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
+from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
+from drf_spectacular.types import OpenApiTypes
+from rest_framework_simplejwt.tokens import UntypedToken
+from rest_framework_simplejwt.exceptions import TokenError
 from django.db import transaction
 from django.http import HttpResponse
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -14,24 +22,13 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, schema
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework_simplejwt.tokens import UntypedToken
 
 from .models import Bill
 from .models import Blog, Meeting, MeetingAttendance, Student, Event, EventImage
-from .permissions import IsAdmin, IsLeadOrAdmin, is_staff
-from .permissions import IsTreasurer
-from .serializers import BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
-from .serializers import PublicStudentSerializer, \
-    BillSerializer
-from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
-    MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer
 from .utils import get_tokens_for_user, send_otp
 from .utils import send_password
 
@@ -114,7 +111,7 @@ class StudentRUView(generics.RetrieveUpdateAPIView):
 )
 class SignupView(APIView):
     serializer_class = StudentSerializer
-    permission_classes = [IsLeadOrAdmin]
+    permission_classes = [SignUpPermission]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
