@@ -47,3 +47,13 @@ Now the server should be available at `http://localhost:8000/`. If you are a sup
 ### API Reference:
 The API reference can be accessed at the `api/schema` endpoint when the server is running. Accessing the endpoint will allow you to download
 a `yml` file. Accessing `api/schema/swagger-ui` will direct you to the API docs page. 
+
+## To run Frontend
+1. Installation:
+```bash
+npm i
+```
+2. Run Development Server
+```bash
+npm run dev
+```

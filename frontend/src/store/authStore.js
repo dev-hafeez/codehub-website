@@ -11,8 +11,12 @@ const useAuthStore = create((set, get) => ({
   loading: false,
   error: null,
 
+  // ===========================
+  // LOGIN
+  // ===========================
   login: async (username, password) => {
     set({ loading: true, error: null });
+
     try {
       const res = await axiosInstance.post("/auth/login/", {
         username,
@@ -31,7 +35,7 @@ const useAuthStore = create((set, get) => ({
 
       set({ user_id, token, role, loading: false });
 
-      // Fetch student details to get club only for LEAD role
+      // Fetch club for LEAD role
       if (role === "LEAD") {
         try {
           const studentRes = await axiosInstance.get(`/students/${student_id}`, {
@@ -39,11 +43,9 @@ const useAuthStore = create((set, get) => ({
               Authorization: `Token ${token}`
             }
           });
+
           const club = studentRes.data?.club;
-          
-          console.log("Student data:", studentRes.data);
-          console.log("Club fetched:", club);
-          
+
           if (club) {
             localStorage.setItem("club", club);
             set({ club });
@@ -54,20 +56,16 @@ const useAuthStore = create((set, get) => ({
       }
 
       return true;
+
     } catch (err) {
       const apiError = err.response?.data;
       let errorMessage = "Login failed";
 
       if (apiError) {
-        if (apiError.non_field_errors) {
-          errorMessage = apiError.non_field_errors.join(", ");
-        } else if (apiError.detail) {
-          errorMessage = apiError.detail;
-        } else if (typeof apiError === "string") {
-          errorMessage = apiError;
-        } else {
-          errorMessage = JSON.stringify(apiError);
-        }
+        if (apiError.non_field_errors) errorMessage = apiError.non_field_errors.join(", ");
+        else if (apiError.detail) errorMessage = apiError.detail;
+        else if (typeof apiError === "string") errorMessage = apiError;
+        else errorMessage = JSON.stringify(apiError);
       }
 
       set({ error: errorMessage, loading: false });
@@ -75,15 +73,21 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
+  // ===========================
+  // REQUEST OTP
+  // ===========================
   requestOtp: async (email) => {
     set({ loading: true, error: null });
+
     try {
       const res = await axiosInstance.post("/auth/otp/", { email });
 
       const resetToken = res.data?.token?.access;
+
       set({ resetToken, loading: false });
 
       return { success: true, resetToken };
+
     } catch (err) {
       const apiError = err.response?.data;
       let errorMessage = "OTP request failed";
@@ -97,8 +101,12 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
+  // ===========================
+  // RESET PASSWORD
+  // ===========================
   resetPassword: async (newPassword) => {
     set({ loading: true, error: null });
+
     try {
       const { resetToken } = get();
       const res = await axiosInstance.put("/auth/password/reset", {
@@ -120,6 +128,7 @@ const useAuthStore = create((set, get) => ({
       });
 
       return { success: true, data: res.data };
+
     } catch (err) {
       const apiError = err.response?.data;
       let errorMessage = "Password reset failed";
@@ -133,69 +142,54 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
-signup: async (signupData) => {
-  set({ loading: true, error: null });
-  try {
-    const res = await axiosInstance.post("/auth/signup/", signupData);
+  // ===========================
+  // SIGNUP
+  // ===========================
+  signup: async (signupData) => {
+    set({ loading: true, error: null });
 
-    const newUserToken = res.data?.data?.token;
-    const newUserRole = res.data?.data?.role;
-    const newUserId = res.data?.data?.user_id;
+    try {
+      const res = await axiosInstance.post("/auth/signup/", signupData);
 
-    console.log("Signup success:", res.data);
+      const newUserToken = res.data?.data?.token;
+      const newUserRole = res.data?.data?.role;
+      const newUserId = res.data?.data?.user_id;
 
-    set({ loading: false });
-    return {
-      success: true,
-      data: { token: newUserToken, role: newUserRole, user_id: newUserId },
-    };
-  } catch (err) {
-    console.log("Signup error response:", err.response?.data);
-
-    set({
-      error: err.response?.data?.message || "Signup failed",
-      loading: false,
-    });
-
-    // Return backend message as `message` so frontend can extract properly
-    return {
-      success: false,
-      message: err.response?.data?.message || "Signup failed",
-      data: err.response?.data || null,
-    };
-  }
-},
+      console.log("Signup success:", res.data);
 
       set({ loading: false });
+
       return {
         success: true,
         data: { token: newUserToken, role: newUserRole, user_id: newUserId },
       };
+
     } catch (err) {
       console.log("Signup error response:", err.response?.data);
 
-      const errorData = err.response?.data;
-
       set({
-        error: "Signup failed",
+        error: err.response?.data?.message || "Signup failed",
         loading: false,
       });
 
       return {
         success: false,
-        message: errorData || "Signup failed",
-        error: "Signup failed",
-        data: errorData || null,
+        message: err.response?.data?.message || "Signup failed",
+        data: err.response?.data || null,
       };
     }
   },
 
+  // ===========================
+  // LOGOUT
+  // ===========================
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("club");
     set({ role: null, token: null, user_id: null, club: null });
   },
+
 }));
 
 export default useAuthStore;
