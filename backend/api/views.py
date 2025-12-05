@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin, is_staff, IsTreasurer, SignUpPermission
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
     MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer, PublicStudentSerializer, \
-    BillSerializer, BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer,InlineImageSerializer
+    BillSerializer, BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer, InlineImageSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -22,7 +22,6 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, schema
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -393,6 +392,8 @@ class InlineImageUploadView(APIView):
             return Response({"url": image_url}, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+      
+      
 @extend_schema(
     summary="Upload a new blog post with images",
     description=(
@@ -645,6 +646,7 @@ class BlogListAPIView(generics.ListAPIView):
     ],
 )
 
+
 class InlineImageUploadView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
@@ -657,6 +659,8 @@ class InlineImageUploadView(APIView):
             return Response({"url": image_url}, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+      
+      
 class BlogEditView(APIView):
     permission_classes = [IsAuthenticated,IsAdmin]
     parser_classes = [MultiPartParser, FormParser]

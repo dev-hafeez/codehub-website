@@ -3,7 +3,7 @@ from .views import SignupView, OTPView, LoginView, PasswordChangeView, LogoutVie
     BlogEditView, BlogDeleteView, MeetingRUDView, MeetingCreateView, MeetingListView, MeetingAttendanceListView, \
     MeetingAttendanceRUDView, StudentsListView, StudentRUView, MeetingPDFView, api_home, \
     EventRUDView, EventImageRUDView, AdminRUDView, EventListCreateView, PublicStudentsListView, \
-    BillListCreateView, BillRUDView,InlineImageUploadView
+    BillListCreateView, BillRUDView, InlineImageUploadView
 
 # NOTE: 'RUD' means the endpoint will accept these request types (single instance):
 #  GET , PUT, PATCH, DELETE

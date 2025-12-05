@@ -2,7 +2,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage, Bill,InlineImage
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage, Bill, InlineImage
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
