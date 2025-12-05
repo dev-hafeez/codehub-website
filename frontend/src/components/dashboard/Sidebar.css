@@ -1,0 +1,144 @@
+.sidebar {
+  padding: 1rem;
+  height: 100%;
+}
+
+/* Desktop Layout (Default) */
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Standard Buttons and Dropdown Toggles */
+.sidebar-actions .btn {
+  width: 90%;
+  margin-bottom: 10px;
+  text-align: left;
+  background-color: #0C4182;
+  color: #fff;
+  border: none;
+  transition: background 0.3s;
+}
+
+.sidebar-actions .btn:hover {
+  background-color: #0a3566;
+  color: #fff;
+}
+
+/* === DROPDOWN STYLING === */
+
+/* The wrapper for a group */
+.sidebar-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The button that opens the dropdown */
+.dropdown-toggle-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* The Arrow Icon */
+.arrow {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* The Container for the hidden links */
+.dropdown-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.05); /* Slight dark background for grouping area */
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px 0;
+  animation: slideDown 0.3s ease-out;
+}
+
+/* The Links inside the dropdown */
+.sub-link {
+  width: 80% !important; /* Slightly narrower than main buttons */
+  background-color: #1a5cad !important; /* Lighter blue to distinguish from parent */
+  font-size: 0.9rem;
+  padding: 8px 12px;
+}
+
+.sub-link:hover {
+  background-color: #256bbd !important;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sidebar-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* === MOBILE RESPONSIVENESS === */
+@media (max-width: 768px) {
+  .sidebar {
+    padding: 0.5rem;
+    height: auto; 
+  }
+
+  .sidebar-title {
+    display: none; 
+  }
+
+  .sidebar-actions {
+    flex-direction: row; 
+    align-items: flex-start; /* Align top so dropdowns expand down properly */
+    overflow-x: auto; 
+    
+    white-space: nowrap; 
+    padding-bottom: 15px; /* Extra space for scrollbar */
+    min-height: 60px; /* Ensure space for buttons */
+  }
+
+  .sidebar-actions::-webkit-scrollbar {
+    height: 4px;
+  }
+  .sidebar-actions::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+
+  
+
+  .sidebar-actions .btn {
+    width: auto; 
+    flex-shrink: 0; 
+    margin-right: 0; 
+    margin-bottom: 0; 
+    font-size: 0.8rem;
+    padding: 8px 16px;
+    border-radius: 50px;
+  }
+
+  
+  
+  .sub-link {
+    width: 90% !important;
+    margin: 5px auto !important;
+    border-radius: 5px !important;
+  }
+}

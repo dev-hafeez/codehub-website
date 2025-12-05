@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsLead, IsAdmin, IsAdminOrReadOnly, IsLeadOrAdmin, is_staff, IsTreasurer, SignUpPermission
 from .serializers import StudentSerializer, LoginSerializer, OTPSerializer, PasswordChangeSerializer, MeetingSerializer, \
     MeetingAttendanceSerializer, StudentListSerializer, EventSerializer, EventImageEditSerializer, AdminSerializer, PublicStudentSerializer, \
-    BillSerializer, BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer
+    BillSerializer, BlogSerializer, BlogUploadSerializer, BlogUpdateSerializer, InlineImageSerializer
 from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 from rest_framework_simplejwt.tokens import UntypedToken
@@ -188,6 +188,11 @@ class LoginView(APIView):
         if serializer.is_valid(raise_exception=False):
             user = serializer.validated_data['user']
             token, _ = Token.objects.get_or_create(user=user)
+
+            # Safely get student_id (None if user has no student)
+            student = getattr(user, "student", None)
+            student_id = student.id if student else None
+
             return Response({
                 "status": "success",
                 "message": "Login successful",
@@ -198,6 +203,7 @@ class LoginView(APIView):
                     "student_id": user.student.id
                 }
             }, status=status.HTTP_200_OK)
+
         return Response({
             'status': 'error',
             'message': serializer.errors,
@@ -372,7 +378,22 @@ class LogoutView(APIView):
             'status': 'success',
             'message': 'Logged out successfully'
         }, status=status.HTTP_200_OK)
+    
+    
+class InlineImageUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
+    def post(self, request, *args, **kwargs):
+        serializer = InlineImageSerializer(data=request.data)
+        if serializer.is_valid():
+            image = serializer.save()
+            image_url = request.build_absolute_uri(image.image.url)
+            return Response({"url": image_url}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+      
+      
 @extend_schema(
     summary="Upload a new blog post with images",
     description=(
@@ -624,6 +645,22 @@ class BlogListAPIView(generics.ListAPIView):
         )
     ],
 )
+
+
+class InlineImageUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = InlineImageSerializer(data=request.data)
+        if serializer.is_valid():
+            image = serializer.save()
+            image_url = request.build_absolute_uri(image.image.url)
+            return Response({"url": image_url}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+      
+      
 class BlogEditView(APIView):
     permission_classes = [IsAuthenticated,IsAdmin]
     parser_classes = [MultiPartParser, FormParser]

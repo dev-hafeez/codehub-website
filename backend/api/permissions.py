@@ -46,4 +46,3 @@ class SignUpPermission(permissions.BasePermission):
             if request.user.role == LEAD and request.user.student.club != request.data['club']:
                 raise PermissionDenied('Registering users of another club is not allowed.')
         return True
-

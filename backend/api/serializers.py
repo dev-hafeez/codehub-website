@@ -2,7 +2,7 @@ from typing import Optional
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage, Bill
+from .models import User, Student, Blog, BlogImage, Meeting, MeetingAttendance, Event, EventImage, Bill, InlineImage
 from rest_framework.exceptions import ValidationError
 from django.conf import settings
 
@@ -88,7 +88,7 @@ class PublicStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ['full_name', 'title', 'profile_pic']
+        fields = ['full_name', 'title', 'profile_pic','user_id','club']
 
     def get_full_name(self, obj):
         return f"{obj.user.first_name} {obj.user.last_name}"
@@ -143,6 +143,13 @@ class BlogImageSerializer(serializers.ModelSerializer):
         if obj.image and request:
             return request.build_absolute_uri(obj.image.url)
         return None
+    
+TEMP_INLINE_PREFIX = "/media/temp_inline/"
+class InlineImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InlineImage
+        fields = ['id', 'image', 'uploaded_at']
+
 
 
 class BlogSerializer(serializers.ModelSerializer):
