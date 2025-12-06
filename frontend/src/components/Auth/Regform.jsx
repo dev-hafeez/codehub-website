@@ -19,20 +19,81 @@ function Regform() {
     title: ""
   });
 
-  const [titleInputMode, setTitleInputMode] = useState(false); // Track if user is typing custom title
-  const { signup, loading, club: userClub } = useAuthStore();
+  // Define all available clubs
+  const clubOptions = [
+    { value: 'codehub', label: 'CodeHub' },
+    { value: 'graphics_and_media', label: 'Graphics and Media' },
+    { value: 'social_media_and_marketing', label: 'Social Media and Marketing' },
+    { value: 'registration_and_decor', label: 'Registration and Decor' },
+    { value: 'events_and_logistics', label: 'Events and Logistics' }
+  ];
+
+  const [titleInputMode, setTitleInputMode] = useState(false);
+  const { signup, loading } = useAuthStore();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  // Validation error states
+  const [regNoError, setRegNoError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+
+  // Get user data from localStorage (stored as separate keys)
+  const currentUserRole = localStorage.getItem('role');
+  const currentUserClub = localStorage.getItem('club');
+
+  // Check if current logged-in user is ADMIN or LEAD
+  const isAdmin = currentUserRole === "ADMIN";
+  const isLead = currentUserRole === "LEAD";
+
+  // Debug logs - remove after fixing
+  console.log("Current User Role:", currentUserRole);
+  console.log("Is Admin:", isAdmin);
+  console.log("Is Lead:", isLead);
+  console.log("Current User Club:", currentUserClub);
+
   // Set the user's club by default when component mounts
   useEffect(() => {
-    if (userClub) {
+    if (isLead && currentUserClub) {
+      // LEADs can only assign their own club
       setFormData((prev) => ({
         ...prev,
-        club: userClub
+        club: currentUserClub
       }));
     }
-  }, [userClub]);
+    // ADMINs don't need any default club - they select from dropdown
+  }, [currentUserClub, isAdmin, isLead]);
+
+  // Validation functions
+  const validateRegNo = (value) => {
+    // Pattern: AB12-ABS-000 (2 letters, 2 digits, dash, 3 letters, dash, 3 digits)
+    const regPattern = /^[A-Z]{2}\d{2}-[A-Z]{3}-\d{3}$/;
+    if (!value) {
+      setRegNoError("");
+      return true;
+    }
+    if (!regPattern.test(value)) {
+      setRegNoError("Format: AB12-ABS-000 (2 letters, 2 digits, dash, 3 letters, dash, 3 digits)");
+      return false;
+    }
+    setRegNoError("");
+    return true;
+  };
+
+ const validatePhoneNumber = (value) => {
+  // Strict +92XXXXXXXXXX format
+  const phonePattern = /^\+92[0-9]{10}$/;
+  if (!value) {
+    setPhoneError("");
+    return true;
+  }
+  if (!phonePattern.test(value)) {
+    setPhoneError("Phone number must be in format: +923001234567");
+    return false;
+  }
+  setPhoneError("");
+  return true;
+};
+
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -48,14 +109,33 @@ function Regform() {
         }
       }));
     } else if (id === "reg") {
-      // Convert to uppercase and only allow valid characters
+      // Convert to uppercase and validate format
       const upperValue = value.toUpperCase();
-      setFormData((prev) => ({ ...prev, roll_no: upperValue }));
+      
+      // Only allow valid characters: letters, numbers, and dash
+      const sanitized = upperValue.replace(/[^A-Z0-9-]/g, '');
+      
+      // Limit length to match pattern AB12-ABS-000 (12 characters)
+      const limited = sanitized.slice(0, 12);
+      
+      setFormData((prev) => ({ ...prev, roll_no: limited }));
+      validateRegNo(limited);
     } else if (id === "phone") {
+      // Only allow numbers, plus sign at start
+      const sanitized = value.replace(/[^\d+]/g, '');
+      
+      // Ensure + is only at the start
+      let formatted = sanitized;
+      if (sanitized.includes('+')) {
+        const firstPlus = sanitized.indexOf('+');
+        formatted = '+' + sanitized.slice(firstPlus + 1).replace(/\+/g, '');
+      }
+      
       setFormData((prev) => ({
         ...prev,
-        user: { ...prev.user, phone_number: value }
+        user: { ...prev.user, phone_number: formatted }
       }));
+      validatePhoneNumber(formatted);
     } else if (id === "email") {
       setFormData((prev) => ({
         ...prev,
@@ -72,7 +152,7 @@ function Regform() {
         user: { ...prev.user, password: value }
       }));
     } else if (id === "club") {
-      setFormData((prev) => ({ ...prev, club: value.trim() }));
+      setFormData((prev) => ({ ...prev, club: value }));
     } else if (id === "role") {
       setFormData((prev) => ({
         ...prev,
@@ -86,7 +166,6 @@ function Regform() {
         setTitleInputMode(true);
         setFormData((prev) => ({ ...prev, title: "" }));
       } else {
-        // For predefined titles like PRESIDENT, TREASURER, etc.
         setFormData((prev) => ({ ...prev, title: value }));
         setTitleInputMode(false);
       }
@@ -101,19 +180,26 @@ function Regform() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic Regex for Reg No
-    const regPattern = /^(FA|SP)\d{2}-[A-Z]{3}-\d{3}$/;
+    // Validate Registration Number
+    const regPattern = /^[A-Z]{2}\d{2}-[A-Z]{3}-\d{3}$/;
     if (!regPattern.test(formData.roll_no)) {
-      alert("Invalid Reg No format. Please use FA22-BCS-001.");
+      alert("Invalid Registration Number format.\nPlease use: AB12-ABS-000\n(2 letters, 2 digits, dash, 3 letters, dash, 3 digits)");
       return;
     }
+
+    // Validate Phone Number
+    const phonePattern = /^\+92[0-9]{10}$/;
+if (!phonePattern.test(formData.user.phone_number)) {
+  alert("Invalid Phone Number format.\nPlease use: +923001234567");
+  return;
+}
+
 
     if (!formData.club) {
       alert("Club selection is required.");
       return;
     }
 
-    // Prepare data to send - convert empty title to "NULL"
     const dataToSend = {
       ...formData,
       title: formData.title === "" ? "NULL" : formData.title
@@ -138,10 +224,12 @@ function Regform() {
           phone_number: ""
         },
         roll_no: "",
-        club: userClub || "",
+        club: isLead ? currentUserClub : "",
         title: ""
       });
       setTitleInputMode(false);
+      setRegNoError("");
+      setPhoneError("");
       return;
     }
 
@@ -213,11 +301,17 @@ function Regform() {
                   type="text"
                   className="form-control2"
                   id="reg"
-                  placeholder="FA22-BCS-001"
+                  placeholder="AB12-ABS-000"
                   value={formData.roll_no}
                   onChange={handleChange}
                   required
+                  style={{ borderColor: regNoError ? '#dc3545' : '' }}
                 />
+                {regNoError && (
+                  <small style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '4px', display: 'block' }}>
+                    {regNoError}
+                  </small>
+                )}
               </div>
             </div>
 
@@ -278,10 +372,25 @@ function Regform() {
                   className="form-control2"
                   value={formData.club}
                   onChange={handleChange}
-                  disabled
+                  disabled={isLead}
                   required
                 >
-                  <option value={userClub}>{userClub || "-- No Club Assigned --"}</option>
+                  {isAdmin ? (
+                    <>
+                      <option value="">-- Select Club --</option>
+                      {clubOptions.map(club => (
+                        <option key={club.value} value={club.value}>
+                          {club.label}
+                        </option>
+                      ))}
+                    </>
+                  ) : isLead ? (
+                    <option value={currentUserClub}>
+                      {clubOptions.find(c => c.value === currentUserClub)?.label || currentUserClub || "-- No Club Assigned --"}
+                    </option>
+                  ) : (
+                    <option value="">-- No Club Assigned --</option>
+                  )}
                 </select>
               </div>
             </div>
@@ -313,7 +422,13 @@ function Regform() {
                   value={formData.user.phone_number}
                   onChange={handleChange}
                   required
+                  style={{ borderColor: phoneError ? '#dc3545' : '' }}
                 />
+                {phoneError && (
+                  <small style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '4px', display: 'block' }}>
+                    {phoneError}
+                  </small>
+                )}
               </div>
             </div>
 
@@ -358,7 +473,7 @@ function Regform() {
                 type="submit"
                 className="btn-design btn"
                 style={{ padding: 13 }}
-                disabled={loading}
+                disabled={loading || regNoError || phoneError}
               >
                 Register
               </button>
